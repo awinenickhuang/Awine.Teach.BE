@@ -1,0 +1,98 @@
+﻿@model ConsentViewModel
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">授权请求</div>
+                <div class="layui-card-body">
+                    <ul>
+                        @if (Model.ClientLogoUrl != null)
+                        {
+                            <li><img src="@Model.ClientLogoUrl"></li>
+                        }
+                        <li>
+                            @Model.ClientName
+                            <span>需要你的授权，你可以取消选中不希望授予的权限。</span>
+                        </li>
+                        <li>
+                            <partial name="_ValidationSummary" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <form class="layui-form" asp-action="Index">
+                <input type="hidden" asp-for="ReturnUrl" />
+                <div class="layui-row">
+                    <div class="layui-col-md12">
+                        @if (Model.IdentityScopes.Any())
+                        {
+                            <div class="layui-card">
+                                <div class="layui-card-header">个人</div>
+                                <div class="layui-card-body">
+                                    <ul>
+                                        @foreach (var scope in Model.IdentityScopes)
+                                        {
+                                            <li><partial name="_ScopeListItem" model="@scope" /></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.ApiScopes.Any())
+                        {
+                            <div class="layui-card">
+                                <div class="layui-card-header">应用</div>
+                                <div class="layui-card-body">
+                                    <ul>
+                                        @foreach (var scope in Model.ApiScopes)
+                                        {
+                                            <li><partial name="_ScopeListItem" model="scope" /></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                        <div class="layui-card">
+                            <div class="layui-card-header">描述</div>
+                            <div class="layui-card-body">
+                                <input class="layui-input" placeholder="设备的描述或名称" asp-for="Description" autofocus>
+                            </div>
+                        </div>
+                        @if (Model.AllowRememberConsent)
+                        {
+                            <div class="layui-form-item">
+                                <input type="checkbox" asp-for="RememberConsent">
+                                <label asp-for="RememberConsent">
+                                    <strong>记住</strong>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-md12">
+                        <div class="layui-form-item">
+                            @if (Model.ClientUrl != null)
+                            {
+                                <span class="layui-badge-dot layui-bg-orange"></span>
+                                <a class="layui-btn layui-btn-sm" href="@Model.ClientUrl">
+                                    <strong>@Model.ClientName</strong>
+                                </a>
+                            }
+                            <button name="button" value="yes" class="layui-btn layui-btn-warm layui-btn layui-btn-sm" autofocus>允许</button>
+                            <button name="button" value="no" class="layui-btn layui-btn-danger layui-btn layui-btn-sm">拒绝</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+﻿@model LoginViewModel
+<div class="layui-row">
+    <div class="layui-col-sm12 layui-col-md12">
+        <div class="layui-carousel login_container" id="carousel_container" lay-filter="carousel_container">
+            <div carousel-item="">
+                <div>
+                    <div class="awine_login_container"></div>
+                </div>
+                <div>
+                    <img src="~/img/carousel/01.jpg" />
+                </div>
+                <div>
+                    <div class="background">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+                <div>
+                    <img src="~/img/carousel/02.jpg" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layui-tab layui-tab-brief local_login_container" lay-filter="login_filter">
+    <ul class="layui-tab-title">
+        <li class="layui-this"><i class="layui-icon layui-icon-password"></i>  账密登录</li>
+        <li><i class="layui-icon layui-icon-vercode"></i>  手机验证码登录</li>
+        <li><i class="layui-icon layui-icon-login-wechat"></i>  第三方社交账号登录</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            @if (Model.EnableLocalLogin)
+            {
+                <div class="layui-row">
+                    <form class="layui-form" asp-route="Login">
+                        <partial name="_ValidationSummary" />
+                        <div class="layui-form-item">
+                            <input type="text" asp-for="Account" autofocus lay-verify="required" autocomplete="off" placeholder="账号" class="layui-input" maxlength="32">
+                        </div>
+                        <div class="layui-form-item">
+                            <input type="password" asp-for="Password" lay-verify="required" autocomplete="off" placeholder="密码" class="layui-input" maxlength="32">
+                        </div>
+                        <div class="layui-form-item content-center">
+                            <button class="layui-btn layui-btn-fluid" lay-submit name="button" value="login"><i class="layui-icon layui-icon-release"></i> 立即登录</button>
+                            @*<button class="layui-btn layui-btn-fluid" name="button" value="cancel">取消登录</button>*@
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+        <div class="layui-tab-item">
+            <form class="layui-form" asp-route="SMSLogin">
+                <div class="layui-form-item">
+                    <input type="text" asp-for="Account" autofocus lay-verify="required" autocomplete="off" placeholder="手机号码" class="layui-input" maxlength="32">
+                </div>
+                <div class="layui-form-item">
+                    <input type="password" asp-for="Password" lay-verify="required" autocomplete="off" placeholder="短信验证码" class="layui-input" maxlength="32">
+                </div>
+                <div class="layui-form-item content-center">
+                    <button class="layui-btn layui-btn-fluid" lay-submit name="button" value="login"><i class="layui-icon layui-icon-release"></i> 立即登录</button>
+                </div>
+            </form>
+        </div>
+        <div class="layui-tab-item">
+            @if (Model.VisibleExternalProviders.Any())
+            {
+                <ul class="list-inline">
+                    @foreach (var provider in Model.VisibleExternalProviders)
+                    {
+                        <li class="list-inline-item">
+                            <a class="btn btn-secondary"
+                               asp-controller="External"
+                               asp-action="Challenge"
+                               asp-route-scheme="@provider.AuthenticationScheme"
+                               asp-route-returnUrl="@Model.ReturnUrl">
+                                <blockquote class="layui-elem-quote"><span class="layui-badge-dot layui-bg-green"></span>    <span class="layui-badge layui-bg-cyan">@provider.DisplayName</span></blockquote>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+    @if (!Model.EnableLocalLogin && !Model.VisibleExternalProviders.Any())
+    {
+        <div class="layui-card">
+            <div class="layui-card-header">无效的登录请求</div>
+            <div class="layui-card-body">
+                没有为此请求配置登录方案。
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts
+{
+    <script src="~/js/login.js"></script>
+}

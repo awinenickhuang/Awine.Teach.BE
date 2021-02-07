@@ -1,0 +1,37 @@
+﻿.title {
+    font-size: 18px;
+}
+
+.layui-elem-quote {
+    background-color: inherit !important;
+    font-size: 18px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    background-color: inherit;
+    padding-left: 15px;
+}
+
+.error_message_box {
+    margin-bottom: 5px;
+    border-radius: 3px;
+}
+
+.layui-footer {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    line-height: 25px;
+}
+
+.lay_current_user {
+    position: absolute;
+    right: 15px;
+    font-size: 12px;
+}
+
+.content-center {
+    text-align: center;
+}

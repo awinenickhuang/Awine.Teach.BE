@@ -1,0 +1,6 @@
+﻿@if (ViewContext.ModelState.IsValid == false)
+{
+    <div class="layui-bg-orange error_message_box">
+        <div asp-validation-summary="All"></div>
+    </div>
+}

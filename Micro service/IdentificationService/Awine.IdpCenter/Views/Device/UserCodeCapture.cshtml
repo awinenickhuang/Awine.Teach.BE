@@ -1,0 +1,37 @@
+@model string
+
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">设备代码</div>
+                <div class="layui-card-body">
+                    <ul>
+                        <li>请输入设备上显示的代码。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">设备代码</div>
+                <div class="layui-card-body">
+                    <ul>
+                        <li><partial name="_ValidationSummary" /></li>
+                        <li>
+                            <form asp-action="UserCodeCapture">
+                                <div class="form-group">
+                                    <label for="userCode">设备代码:</label>
+                                    <input class="form-control" for="userCode" name="userCode" autofocus />
+                                </div>
+
+                                <button class="layui-btn layui-btn-warm layui-btn-sm" name="button">提交</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>

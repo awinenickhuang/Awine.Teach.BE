@@ -1,0 +1,23 @@
+﻿@using System.Diagnostics
+
+@{
+    var version = FileVersionInfo.GetVersionInfo(typeof(IdentityServer4.Hosting.IdentityServerMiddleware).Assembly.Location).ProductVersion.Split('+').First();
+}
+<div class="layui-row">
+    <div class="layui-card">
+        <div class="layui-card-header">功能清单(version @version)</div>
+        <div class="layui-card-body">
+            <ul>
+                <li>
+                    <i class="layui-icon layui-icon-console"></i>  <a href="~/.well-known/openid-configuration">接口发现文档</a>
+                </li>
+                <li>
+                    <i class="layui-icon layui-icon-vercode"></i>  <a href="~/diagnostics">授权身份信息</a>
+                </li>
+                <li>
+                    <i class="layui-icon layui-icon-password"></i>  <a href="~/grants">授权应用信息</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

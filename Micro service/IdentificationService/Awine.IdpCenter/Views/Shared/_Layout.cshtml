@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>知识索引科技统一身份认证中心</title>
+    <link rel="stylesheet" href="~/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="~/css/login.css" media="all" />
+    <link rel="stylesheet" href="~/css/site.css" media="all" />
+    <!-- Jquery Js -->
+    <script type="text/javascript" src="~/lib/jquery/jquery.min.js"></script>
+    <!-- Layui Js -->
+    <script type="text/javascript" src="~/layui/layui.js"></script>
+    <!-- Jqarticle Js -->
+    <script type="text/javascript" src="~/js/jparticle.min.js"></script>
+</head>
+<body>
+    <partial name="_Nav" />
+    <!-- 内容页 -->
+    @RenderBody()
+    <!-- 内容页 -->
+    <!-- 底部 -->
+    <div class="layui-footer">
+        <div class="layui-row">
+            <div class="layui-col-sm12 layui-col-md12 text_align_center margin_top_01">
+                成都知识索引科技有限公司<br />
+                nick2020cd@sina.com<br />
+                成都市成华区熊猫大道1248号  备案/许可证编号：蜀ICP备2020037128号
+            </div>
+        </div>
+    </div>
+    <!-- 底部 -->
+    @RenderSection("scripts", required: false)
+</body>
+</html>

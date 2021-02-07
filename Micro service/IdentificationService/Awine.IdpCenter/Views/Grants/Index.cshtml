@@ -1,0 +1,93 @@
+﻿@model GrantsViewModel
+
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">客户机应用程序权限</div>
+                <div class="layui-card-body">
+                    <p>下面是您授予权限的应用程序的列表，以及它们可以访问的资源。</p>
+                    <ul>
+                        @if (Model.Grants.Any() == false)
+                        {
+                            <li>
+                                你没有对任何应用授予权限。
+                            </li>
+                        }
+                        else
+                        {
+                            foreach (var grant in Model.Grants)
+                            {
+                                <li>
+                                    @if (grant.ClientLogoUrl != null)
+                                    {
+                                        <img src="@grant.ClientLogoUrl">
+                                    }
+                                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                                        <legend><i class="layui-icon layui-icon-component"></i>  @grant.ClientName</legend>
+                                    </fieldset>
+                                </li>
+
+                                <li>
+                                    <form asp-action="Revoke">
+                                        <input type="hidden" name="clientId" value="@grant.ClientId">
+                                        <button class="layui-btn layui-btn-sm layui-btn-danger"><i class="layui-icon layui-icon-face-surprised"></i>  撤销授权</button>
+                                    </form>
+                                </li>
+
+                                @if (grant.Description != null)
+                                {
+                                    <li class="list-group-item">
+                                        <label>描述信息:</label> @grant.Description
+                                    </li>
+                                }
+                                <li>
+                                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                                        <legend><i class="layui-icon layui-icon-time"></i> 授权时间</legend>
+                                    </fieldset>
+                                </li>
+                                <li class="list-group-item">
+                                    <i class="layui-icon layui-icon-time"></i>  <label>授权时间:</label> @grant.Created.ToString("yyyy-MM-dd")
+                                </li>
+                                @if (grant.Expires.HasValue)
+                                {
+                                    <li class="list-group-item">
+                                        <i class="layui-icon layui-icon-time"></i>  <label>过期时间:</label> @grant.Expires.Value.ToString("yyyy-MM-dd")
+                                    </li>
+                                }
+                                @if (grant.IdentityGrantNames.Any())
+                                {
+                                    <li class="list-group-item">
+                                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                                            <legend><i class="layui-icon layui-icon-user"></i>  <label>身份资源</label></legend>
+                                        </fieldset>
+                                        <ul>
+                                            @foreach (var name in grant.IdentityGrantNames)
+                                            {
+                                                <li>@name</li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (grant.ApiGrantNames.Any())
+                                {
+                                    <li class="list-group-item">
+                                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                                            <legend><i class="layui-icon layui-icon-upload-drag"></i>  <label>API 资源</label></legend>
+                                        </fieldset>
+                                        <ul>
+                                            @foreach (var name in grant.ApiGrantNames)
+                                            {
+                                                <li>@name</li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

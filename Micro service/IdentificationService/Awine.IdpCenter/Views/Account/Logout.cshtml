@@ -1,0 +1,16 @@
+﻿@model LogoutViewModel
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">确定退出？</div>
+            <div class="layui-card-body">
+                <form asp-action="Logout">
+                    <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+                    <div>
+                        <button class="layui-btn layui-btn-primary layui-btn-sm"><i class="layui-icon layui-icon-logou"></i>退出</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

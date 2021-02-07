@@ -1,0 +1,51 @@
+﻿@model DiagnosticsViewModel
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>Authentication Cookie</legend>
+</fieldset>
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">Claims</div>
+            <div class="layui-card-body">
+                <ul>
+                    @foreach (var claim in Model.AuthenticateResult.Principal.Claims)
+                    {
+                        <li><span class="layui-badge-dot layui-bg-orange"></span> &nbsp;@claim.Type：@claim.Value</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-row">
+    <div class="layui-col-md12">
+        <div class="layui-card">
+            <div class="layui-card-header">Claims</div>
+            <div class="layui-card-body">
+                <ul>
+                    @foreach (var prop in Model.AuthenticateResult.Properties.Items)
+                    {
+                        <li><span class="layui-badge-dot layui-bg-orange"></span> &nbsp;@prop.Key：@prop.Value</li>
+                    }
+                    @if (Model.Clients.Any())
+                    {
+                        <li>Clients</li>
+                        <li>
+                            @{
+                                var clients = Model.Clients.ToArray();
+                                for (var i = 0; i < clients.Length; i++)
+                                {
+                                    <text>@clients[i]</text>
+                                    if (i < clients.Length - 1)
+                                    {
+                                        <text>, </text>
+                                    }
+                                }
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
