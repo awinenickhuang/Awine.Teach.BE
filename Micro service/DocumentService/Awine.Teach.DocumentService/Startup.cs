@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Awine.Framework.AspNetCore.Consul;
 using Awine.Teach.DocumentService.Configurations;
+using Awine.Teach.DocumentService.Models;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -64,6 +65,15 @@ namespace Awine.Teach.DocumentService
                 );
             });
 
+            //Add TencentCos
+            services.Configure<FileUploadOptions>(Configuration.GetSection("Upload"));
+            services.Configure<CosUploadOptions>(Configuration.GetSection("Upload"));
+            services.AddTencentCos(options =>
+            {
+                options.SecretId = Configuration["TencentCos:SecretId"];
+                options.SecretKey = Configuration["TencentCos:SecretKey"];
+            });
+
             /*
             //关闭了JWT的Claim 类型映射, 以便允许well-known claims 保证它不会更新任何从Authorization Server返回的Claims
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -81,7 +91,7 @@ namespace Awine.Teach.DocumentService
              */
 
             //Add service discovery with Consul
-            services.AddAwineConsul(Configuration);
+            //services.AddAwineConsul(Configuration);
         }
 
         /// <summary>
@@ -113,7 +123,7 @@ namespace Awine.Teach.DocumentService
             app.UseSwaggerSetup();
 
             // Use service discovery with Consul
-            app.UseConsulRegisterService(Configuration);
+            //app.UseConsulRegisterService(Configuration);
         }
     }
 }

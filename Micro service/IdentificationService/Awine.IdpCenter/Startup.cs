@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WeChat;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,12 +25,15 @@ namespace Awine.IdpCenter
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+
+        public IWebHostEnvironment Environment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
-
-        public IConfiguration Configuration { get; }
 
         /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
@@ -38,8 +43,28 @@ namespace Awine.IdpCenter
         {
             services.AddMvc();
 
-            //暂时不使用HTTPS
-            services.ConfigureNonBreakingSameSiteCookies();
+            if (Environment.IsDevelopment())
+            {
+                //开发环境下不使用HTTPS
+                services.ConfigureNonBreakingSameSiteCookies();
+            }
+            else
+            {
+                //services.AddHsts(options =>
+                //{
+                //    options.Preload = true;
+                //    options.IncludeSubDomains = true;
+                //    options.MaxAge = TimeSpan.FromDays(60);
+                //    options.ExcludedHosts.Add("example.com");
+                //    options.ExcludedHosts.Add("www.example.com");
+                //});
+
+                //services.AddHttpsRedirection(options =>
+                //{
+                //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                //    options.HttpsPort = 5001;
+                //});
+            }
 
             services.AddIdentityServer(options =>
             {
@@ -155,9 +180,14 @@ namespace Awine.IdpCenter
             else
             {
                 app.UseExceptionHandler("/Error");
+                //app.UseHsts();
+                //app.UseHttpsRedirection();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseRouting();
 
