@@ -17,7 +17,7 @@ namespace Awine.Teach.DocumentService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class TencentCosController : ControllerBase
+    public class TencentCosController : ApiController
     {
         private readonly FileUploadOptions _fileUploadOptions;
 
@@ -43,7 +43,7 @@ namespace Awine.Teach.DocumentService.Controllers
         /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost("tencentcosupload")]
-        public async Task<StatusCodeResult> CosUpload(IFormFile file)
+        public async Task<IActionResult> CosUpload(IFormFile file)
         {
             if (file == null)
             {
@@ -53,29 +53,41 @@ namespace Awine.Teach.DocumentService.Controllers
             var uploadOptions = _cosUploadOptions;
 
             if (file.Length > uploadOptions.MaxLength)
-                return NotValidUpload();
+            {
+                return Response(success: false, message: "文件大小超限");
+            }
 
             string extension = Path.GetExtension(file.FileName);
             if (extension == null)
-                return NotValidUpload();
+            {
+                return Response(success: false, message: "文件类型不明确");
+            }
 
             extension = extension.ToLowerInvariant();
             if (!uploadOptions.SupportedExtensions.Contains(extension))
-                return NotValidUpload();
+            {
+                return Response(success: false, message: "不被支持的文件类型");
+            }
 
             var storageUri = uploadOptions.CosStorageUri;
             var containerExists = await _cosHandler.ExistsAsync(storageUri);
+
             if (!containerExists)
-                return NotValidUpload();
+            {
+                return Response(success: false, message: "未找到指定文件");
+            }
 
             var filePath = new Uri(new Uri(storageUri), file.FileName);
             var fileExists = await _cosHandler.ExistsAsync(filePath.ToString());
+
             if (fileExists && !uploadOptions.IsOverrideEnabled)
-                return NotValidUpload();
+            {
+                return Response(success: false, message: "未找到指定文件");
+            }
 
             var uploadedUri = await _cosHandler.PutObjectAsync(filePath.ToString(), file.OpenReadStream());
 
-            return Ok();
+            return Response(success: true, data: uploadedUri);
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Awine.Teach.DocumentService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class TencentCosBucketsController : ControllerBase
+    public class TencentCosBucketsController : ApiController
     {
         private readonly ITencentCosHandler _cosHandler;
 
@@ -30,7 +30,7 @@ namespace Awine.Teach.DocumentService.Controllers
         public async Task<IActionResult> AllBuckets()
         {
             var buckets = await _cosHandler.AllBucketsAsync();
-            return Ok();
+            return Response(success: true, data: buckets);
         }
 
         /// <summary>
@@ -42,10 +42,10 @@ namespace Awine.Teach.DocumentService.Controllers
         public async Task<IActionResult> AllObjects(string url)
         {
             url = Uri.UnescapeDataString(url);
-            // return Ok();
 
             var cloudObjects = await _cosHandler.AllObjectsAsync(url, "", "");
-            return Ok();
+
+            return Response(success: true, data: cloudObjects);
         }
     }
 }
