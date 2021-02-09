@@ -37,7 +37,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         Task<bool> DeleteBucketAsync(string name, string region);
 
         /// <summary>
-        /// 
+        /// 所有对象
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="prefix"></param>

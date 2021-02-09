@@ -6,11 +6,12 @@ using System.Runtime.Serialization;
 namespace Awine.Teach.DocumentService.TencentCos
 {
     /// <summary>
-    /// COS请求失败错误描述。
+    /// COS请求失败错误描述
     /// </summary>
     public class RequestFailureException : ApplicationException
     {
         public HttpMethod HttpMethod { get; set; }
+
         public ErrorResult ErrorResult { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }

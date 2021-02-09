@@ -4,6 +4,9 @@ using System.Xml.Serialization;
 
 namespace Awine.Teach.DocumentService.TencentCos
 {
+    /// <summary>
+    /// 存储桶
+    /// </summary>
     public class ListAllMyBucketsResult
     {
         public ListAllMyBucketsResult()

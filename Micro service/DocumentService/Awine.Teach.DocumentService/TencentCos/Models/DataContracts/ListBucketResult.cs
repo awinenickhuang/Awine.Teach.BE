@@ -111,7 +111,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         public int GetSize() { return int.Parse(Size); }
 
         /// <summary>
-        /// 容器所有者。
+        /// 容器所有者
         /// </summary>
         /// <remarks>对于存储对象来说，其容器就是存储桶，存储桶的所有者就是应用，应用的唯一标识是AppId</remarks>
         public ContainerOwner Owner { get; set; }

@@ -14,7 +14,7 @@ using System.Xml.Serialization;
 namespace Awine.Teach.DocumentService.TencentCos
 {
     /// <summary>
-    /// COS客户端，执行COS的请求。
+    /// 腾讯云COS客户端，执行COS的请求
     /// </summary>
     public class TencentCosHandler : ITencentCosHandler
     {
@@ -47,7 +47,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         }
 
         /// <summary>
-        /// ListBucketsAsync返回所有存储空间列表。
+        /// ListBucketsAsync 返回所有存储空间列表
         /// </summary>
         /// <remarks>See: https://cloud.tencent.com/document/product/436/8291 </remarks>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         }
 
         /// <summary>
-        /// 
+        /// 所有对象
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="prefix"></param>
@@ -84,11 +84,13 @@ namespace Awine.Teach.DocumentService.TencentCos
                 //{ "marker",         "" },
                 { "max-keys",       maxKeys },
             };
+
             uri += query;
 
             var req = new HttpRequestMessage(HttpMethod.Get, uri);
 
             using var resp = await SendAsync(req);
+
             if (!resp.IsSuccessStatusCode)
             {
                 RequestFailure(HttpMethod.Get, resp.StatusCode, await resp.Content.ReadAsStringAsync());

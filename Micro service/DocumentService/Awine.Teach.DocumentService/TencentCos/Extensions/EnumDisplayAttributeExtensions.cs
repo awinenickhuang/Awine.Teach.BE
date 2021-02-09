@@ -10,7 +10,7 @@ namespace Awine.Teach.DocumentService.TencentCos
     internal static class EnumDisplayAttributeExtensions
     {
         /// <summary>
-        /// Flags supported!
+        /// Flags supported
         /// </summary>
         /// <param name="enumValue"></param>
         /// <returns></returns>
@@ -39,7 +39,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         }
 
         /// <summary>
-        /// Flags supported!
+        /// Flags supported
         /// </summary>
         /// <param name="enumValue"></param>
         /// <returns></returns>

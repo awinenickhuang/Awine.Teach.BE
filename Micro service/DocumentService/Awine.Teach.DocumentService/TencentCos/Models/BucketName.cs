@@ -26,8 +26,6 @@ namespace Awine.Teach.DocumentService.TencentCos
             return $"{Name}-{AppId}";
         }
 
-        #region public methods
-
         /// <summary>
         /// Parse a string to <see cref="BucketName"/>
         /// </summary>
@@ -46,7 +44,5 @@ namespace Awine.Teach.DocumentService.TencentCos
 
             return (bucketName, "");
         }
-
-        #endregion
     }
 }
