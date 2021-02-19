@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,12 @@ using System.Threading.Tasks;
 
 namespace Awine.Teach.DocumentService.Controllers
 {
+    /// <summary>
+    /// 文件服务控制器基类
+    /// </summary>
+    [Route("api/[controller]")]
+    [ApiController]
+    //[Authorize]
     public class ApiController : ControllerBase
     {
         /// <summary>

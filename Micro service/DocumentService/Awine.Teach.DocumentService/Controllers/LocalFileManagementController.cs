@@ -32,13 +32,10 @@ namespace Awine.Teach.DocumentService.Controllers
      * **/
 
     /// <summary>
-    /// 文件管理
+    /// 文件管理 - 本地服务器
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
-    [EnableCors(PolicyName = "ccar142fileservice")]
-    //[Authorize]
-    public class FileManagementController : ControllerBase
+    [EnableCors(PolicyName = "awineteachfileservice")]
+    public class LocalFileManagementController : ApiController
     {
         /// <summary>
         /// Host Environment
@@ -61,7 +58,7 @@ namespace Awine.Teach.DocumentService.Controllers
         /// <param name="environment"></param>
         /// <param name="fileOptions"></param>
         /// <param name="configuration"></param>
-        public FileManagementController(IWebHostEnvironment environment, IOptions<AwineFileOptions> fileOptions, IConfiguration configuration)
+        public LocalFileManagementController(IWebHostEnvironment environment, IOptions<AwineFileOptions> fileOptions, IConfiguration configuration)
         {
             _environment = environment;
             _fileOptions = fileOptions.Value;
@@ -69,7 +66,7 @@ namespace Awine.Teach.DocumentService.Controllers
         }
 
         /// <summary>
-        /// 文件上传 -> 单个文件上传 -> 返回文件绝对路径
+        /// 本地文件上传 -> 单个文件上传 -> 返回文件绝对路径
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>

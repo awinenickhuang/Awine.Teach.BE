@@ -26,6 +26,8 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// 初始化新的<see cref="TencentCosHandler"/>实例。
         /// </summary>
         /// <param name="optionsAccessor">密钥配置</param>
+        /// <param name="httpClientFactory"></param>
+        /// <param name="logger"></param>
         public TencentCosHandler(IOptions<TencentCosOptions> optionsAccessor,
             IHttpClientFactory httpClientFactory,
             ILogger<TencentCosHandler> logger)
@@ -105,9 +107,10 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <summary>
         /// 创建一个新的存储桶
         /// </summary>
-        /// <remarks>See: https://cloud.tencent.com/document/product/436/7738 </remarks>
-        /// <param name="header">自定义附加请求的标头</param>
+        /// <param name="bucket"></param>
+        /// <param name="headers">自定义附加请求的标头</param>
         /// <returns>返回新创建的<see cref="CosBucket"/>，失败则抛出异常。</returns>
+        /// <remarks>See: https://cloud.tencent.com/document/product/436/7738 </remarks>
         public async Task<CosBucket> PutBucketAsync(CosBucket bucket, Dictionary<string, string> headers = null)
         {
             if (bucket == null)
@@ -141,7 +144,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <remarks>See: https://cloud.tencent.com/document/product/436/7738 </remarks>
         /// <param name="name">存储桶名称，自动适应带或不带AppId，例如：dorr 或 dorr-1243608725 </param>
         /// <param name="cosRegionCode">存储桶所在区域（代码），例如：ap-guangzhou </param>
-        /// <param name="header">自定义附加请求的标头</param>
+        /// <param name="headers">自定义附加请求的标头</param>
         /// <returns>返回新创建的<see cref="CosBucket"/>，失败则抛出异常。</returns>
         public async Task<CosBucket> PutBucketAsync(string name, string cosRegionCode, Dictionary<string, string> headers = null)
         {
@@ -192,7 +195,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// </summary>
         /// <remarks>See: https://cloud.tencent.com/document/product/436/7732 </remarks>
         /// <param name="name">桶名称</param>
-        /// <param name="region">桶在区域</param>
+        /// <param name="cosRegionCode">桶在区域</param>
         /// <returns></returns>
         public async Task<bool> DeleteBucketAsync(string name, string cosRegionCode)
         {
@@ -220,9 +223,9 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// 上传文件到指定位置
         /// https://cloud.tencent.com/document/product/436/7749
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="objectUri"></param>
         /// <param name="content"></param>
-        /// <param name="header"></param>
+        /// <param name="headers"></param>
         /// <returns></returns>
         public async Task<Uri> PutObjectAsync(string objectUri, Stream content, Dictionary<string, string> headers = null)
         {
@@ -262,8 +265,8 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <summary>
         /// 上传文件到指定位置
         /// </summary>
-        /// <param name="bucketName"></param>
-        /// <param name="region"></param>
+        /// <param name="baseUri"></param>
+        /// <param name="relativeContainer"></param>
         /// <param name="objectName"></param>
         /// <param name="content"></param>
         /// <param name="headers"></param>
@@ -286,9 +289,11 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <summary>
         /// 读取文件内容
         /// </summary>
-        /// <remarks>See: https://cloud.tencent.com/document/product/436/7753 </remarks>
-        /// <param name="url"></param>
+        /// <param name="requestUri"></param>
+        /// <param name="actionHandleStream"></param>
+        /// <param name="headers"></param>
         /// <returns></returns>
+        /// <remarks>See: https://cloud.tencent.com/document/product/436/7753 </remarks>
         public async Task<Stream> GetObjectAsync(string requestUri, Action<Stream> actionHandleStream, Dictionary<string, string> headers = null)
         {
             var req = new HttpRequestMessage(HttpMethod.Get, requestUri);
@@ -318,7 +323,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <summary>
         /// 删除一个文件
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="requestUri"></param>
         /// <returns></returns>
         public async Task<bool> DeleteObjectAsync(string requestUri)
         {
@@ -336,6 +341,8 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <summary>
         /// 判断存储桶或文件是否存在
         /// </summary>
+        /// <param name="requestUri"></param>
+        /// <returns></returns>
         public async Task<bool> ExistsAsync(string requestUri)
         {
             var req = new HttpRequestMessage(HttpMethod.Head, requestUri);

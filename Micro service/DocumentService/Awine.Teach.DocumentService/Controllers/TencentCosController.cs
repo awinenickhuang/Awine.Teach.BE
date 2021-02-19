@@ -25,6 +25,12 @@ namespace Awine.Teach.DocumentService.Controllers
 
         private readonly ITencentCosHandler _cosHandler;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileUploadOptionsAccessor"></param>
+        /// <param name="cosUploadOptionsAccessor"></param>
+        /// <param name="cosHandler"></param>
         public TencentCosController(
             IOptions<FileUploadOptions> fileUploadOptionsAccessor,
             IOptions<CosUploadOptions> cosUploadOptionsAccessor,
@@ -35,6 +41,10 @@ namespace Awine.Teach.DocumentService.Controllers
             _cosHandler = cosHandler ?? throw new ArgumentNullException(nameof(cosHandler));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private StatusCodeResult NotValidUpload() => BadRequest();
 
         /// <summary>
@@ -43,7 +53,7 @@ namespace Awine.Teach.DocumentService.Controllers
         /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost("tencentcosupload")]
-        public async Task<IActionResult> CosUpload(IFormFile file)
+        public async Task<IActionResult> UploadCloudObject(IFormFile file)
         {
             if (file == null)
             {
@@ -54,7 +64,7 @@ namespace Awine.Teach.DocumentService.Controllers
 
             if (file.Length > uploadOptions.MaxLength)
             {
-                return Response(success: false, message: "文件大小超限");
+                return Response(success: false, message: "文件大小超限，文件大小最大为：2MB");
             }
 
             string extension = Path.GetExtension(file.FileName);
@@ -87,14 +97,14 @@ namespace Awine.Teach.DocumentService.Controllers
 
             var uploadedUri = await _cosHandler.PutObjectAsync(filePath.ToString(), file.OpenReadStream());
 
-            return Response(success: true, data: uploadedUri);
+            return Response(success: true, data: new UploadResult { UploadedUri = uploadedUri.OriginalString, FileName = file.FileName });
         }
 
         /// <summary>
         /// 读取文件
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="type"></param>
+        /// <param name="fileName">文件名称</param>
+        /// <param name="type">响应类型</param>
         /// <returns></returns>
         [HttpGet("tencentcos/{fileName}/{type?}")]
         public async Task<IActionResult> GetCloudObject(string fileName, string type)
@@ -146,27 +156,61 @@ namespace Awine.Teach.DocumentService.Controllers
                     }
                 case "3":
                     {
-                        FileStreamResult fs = null;
+                        FileStreamResult fileStreamResult = null;
                         await _cosHandler.GetObjectAsync(fileUri.ToString(), stream =>
                         {
-                            fs = new FileStreamResult(stream, contentType);
+                            fileStreamResult = new FileStreamResult(stream, contentType);
                         });
-                        return fs;
+                        return fileStreamResult;
                     }
                 case "4":
                 default:
                     {
-                        FileContentResult fs = null;
+                        FileContentResult fileStreamResult = null;
                         await _cosHandler.GetObjectAsync(fileUri.ToString(), stream =>
                         {
                             var len = stream.Length;
                             var bytes = new byte[len];
                             stream.Read(bytes, 0, (int)len);
-                            fs = new FileContentResult(bytes, contentType);
+                            fileStreamResult = new FileContentResult(bytes, contentType);
                         });
-                        return fs;
+                        return fileStreamResult;
                     }
             }
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="fileName">文件名称</param>
+        /// <returns></returns>
+        [HttpPost("tencentcosdelete")]
+        public async Task<IActionResult> DeleteCloudObject(string fileName)
+        {
+            var uploadOptions = _cosUploadOptions;
+
+            var storageUri = uploadOptions.CosStorageUri;
+            var containerExists = await _cosHandler.ExistsAsync(storageUri);
+
+            if (!containerExists)
+            {
+                return Response(success: false, message: "未找到指定文件");
+            }
+
+            var filePath = new Uri(new Uri(storageUri), fileName);
+            var fileExists = await _cosHandler.ExistsAsync(filePath.ToString());
+
+            if (fileExists && !uploadOptions.IsOverrideEnabled)
+            {
+                return Response(success: false, message: "未找到指定文件");
+            }
+
+            if (await _cosHandler.DeleteObjectAsync(filePath.OriginalString))
+            {
+                return Response(success: true, message: "操作成功");
+            }
+
+            return Response(success: false, message: "操作失败");
         }
     }
 }

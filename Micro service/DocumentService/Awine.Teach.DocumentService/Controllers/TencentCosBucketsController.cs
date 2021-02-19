@@ -9,14 +9,21 @@ using System.Threading.Tasks;
 namespace Awine.Teach.DocumentService.Controllers
 {
     /// <summary>
-    /// 腾讯云对象存储存储桶
+    /// 腾讯云对象存储 - 存储桶
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TencentCosBucketsController : ApiController
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly ITencentCosHandler _cosHandler;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cosHandler"></param>
         public TencentCosBucketsController(ITencentCosHandler cosHandler)
         {
             _cosHandler = cosHandler;
