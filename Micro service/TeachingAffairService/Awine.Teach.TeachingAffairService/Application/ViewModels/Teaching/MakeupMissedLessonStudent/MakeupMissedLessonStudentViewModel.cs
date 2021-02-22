@@ -40,7 +40,7 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         public string MakeupMissedLessonId { get; set; }
 
         /// <summary>
-        /// 建造时间
+        /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
 

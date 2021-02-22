@@ -80,7 +80,7 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         public int Status { get; set; }
 
         /// <summary>
-        /// 建造时间
+        /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
     }

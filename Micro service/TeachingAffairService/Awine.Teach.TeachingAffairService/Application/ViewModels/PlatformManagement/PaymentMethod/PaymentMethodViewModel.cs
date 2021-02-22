@@ -30,7 +30,7 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         public int DisplayOrder { get; set; }
 
         /// <summary>
-        /// 建造时间
+        /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
     }

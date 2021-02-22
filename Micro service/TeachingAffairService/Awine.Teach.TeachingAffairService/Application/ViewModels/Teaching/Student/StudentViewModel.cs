@@ -55,7 +55,7 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         public int LearningProcess { get; set; } = 1;
 
         /// <summary>
-        /// 建造时间
+        /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
     }

@@ -1,33 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Awine.Teach.TeachingAffairService.Application.ViewModels
 {
     /// <summary>
-    /// 教室管理 -> 视图模型
+    /// 班级相册 -> 相片视图模型
     /// </summary>
-    public class ClassRoomViewModel
+    public class ClassPhotoalbumAttachmentViewModel
     {
         /// <summary>
-        /// 唯一标识
+        /// ID
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// 教室名称
+        /// 相册ID
         /// </summary>
-        public string Name { get; set; }
+        public string photoalbumId { get; set; }
 
         /// <summary>
-        /// 教室备注
+        /// 附件地址
         /// </summary>
-        public string NoteContent { get; set; }
+        public string AttachmentUri { get; set; }
 
         /// <summary>
-        /// 显示顺序
+        /// 描述
         /// </summary>
-        public string DisplayOrder { get; set; }
+        public string Describe { get; set; }
 
         /// <summary>
         /// 创建时间

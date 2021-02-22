@@ -1,33 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Awine.Teach.TeachingAffairService.Application.ViewModels
 {
     /// <summary>
-    /// 营销渠道 -> 视图模型
+    /// 班级相册 -> 视图模型
     /// </summary>
-    public class MarketingChannelViewModel
+    public class ClassPhotoalbumViewModel
     {
         /// <summary>
-        /// 唯一标识
+        /// ID
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// 名称
+        /// 班级ID
+        /// </summary>
+        public string ClassId { get; set; }
+
+        /// <summary>
+        /// 相册名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Describe
+        /// 封面图片
+        /// </summary>
+        public string CoverPhoto { get; set; }
+
+        /// <summary>
+        /// 相册描述
         /// </summary>
         public string Describe { get; set; }
 
         /// <summary>
-        /// 显示顺序
+        /// 可见范围 1-仅机构可见 2-机构及学生可见 3-完全公开
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public int VisibleRange { get; set; }
 
         /// <summary>
         /// 创建时间

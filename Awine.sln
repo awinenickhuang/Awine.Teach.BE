@@ -57,7 +57,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awine.OfficialSite", "Offic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awine.Framework.Swagger", "Framework\Awine.Framework.Swagger\Awine.Framework.Swagger.csproj", "{ACCE3BF2-AECC-456E-9E4A-225061F49D09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Awine.IdpCenter", "Micro service\IdentificationService\Awine.IdpCenter\Awine.IdpCenter.csproj", "{740310B8-563E-4FEA-91B7-D44224D4FE6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awine.IdpCenter", "Micro service\IdentificationService\Awine.IdpCenter\Awine.IdpCenter.csproj", "{740310B8-563E-4FEA-91B7-D44224D4FE6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

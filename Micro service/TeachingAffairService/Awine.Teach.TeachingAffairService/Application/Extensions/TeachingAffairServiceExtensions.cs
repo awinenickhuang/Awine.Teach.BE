@@ -81,6 +81,12 @@ namespace Awine.Teach.TeachingAffairService.Application.Extensions
             services.Add(ServiceDescriptor.Singleton<IClassesRepository, ClassesRepository>());
             services.Add(ServiceDescriptor.Singleton<IClassesService, ClassesService>());
 
+            services.Add(ServiceDescriptor.Singleton<IClassPhotoalbumRepository, ClassPhotoalbumRepository>());
+            services.Add(ServiceDescriptor.Singleton<IClassPhotoalbumService, ClassPhotoalbumService>());
+
+            services.Add(ServiceDescriptor.Singleton<IClassPhotoalbumAttachmentRepository, ClassPhotoalbumAttachmentRepository>());
+            services.Add(ServiceDescriptor.Singleton<IClassPhotoalbumAttachmentService, ClassPhotoalbumAttachmentService>());
+
             services.Add(ServiceDescriptor.Singleton<ICourseScheduleRepository, CourseScheduleRepository>());
             services.Add(ServiceDescriptor.Singleton<ICourseScheduleService, CourseScheduleService>());
 

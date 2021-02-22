@@ -93,6 +93,17 @@ namespace Awine.Teach.TeachingAffairService.Application.AutoMappr
             CreateMap<ClassesUpdateViewModel, Classes>();
             CreateMap<IPagedList<Classes>, IPagedList<ClassesViewModel>>().ConvertUsing<PagedListConverter<Classes, ClassesViewModel>>();
 
+            //班级相册管理
+            CreateMap<ClassPhotoalbum, ClassPhotoalbumViewModel>().ReverseMap();
+            CreateMap<ClassPhotoalbumAddViewModel, ClassPhotoalbum>();
+            CreateMap<ClassPhotoalbumUpdateViewModel, ClassPhotoalbum>();
+            CreateMap<IPagedList<ClassPhotoalbum>, IPagedList<ClassPhotoalbumViewModel>>().ConvertUsing<PagedListConverter<ClassPhotoalbum, ClassPhotoalbumViewModel>>();
+
+            //班级相册 -> 相片管理
+            CreateMap<ClassPhotoalbumAttachment, ClassPhotoalbumAttachmentViewModel>().ReverseMap();
+            CreateMap<ClassPhotoalbumAttachmentAddViewModel, ClassPhotoalbumAttachment>();
+            CreateMap<IPagedList<ClassPhotoalbumAttachment>, IPagedList<ClassPhotoalbumAttachmentViewModel>>().ConvertUsing<PagedListConverter<ClassPhotoalbumAttachment, ClassPhotoalbumAttachmentViewModel>>();
+
             //班级 -> 排课信息
             CreateMap<CourseSchedule, CourseScheduleViewModel>().ReverseMap();
             CreateMap<CourseScheduleUpdateViewModel, CourseSchedule>();

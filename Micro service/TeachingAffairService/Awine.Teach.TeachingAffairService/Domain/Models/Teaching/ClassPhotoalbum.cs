@@ -31,6 +31,11 @@ namespace Awine.Teach.TeachingAffairService.Domain
         public string Describe { get; set; }
 
         /// <summary>
+        /// 可见范围 1-仅机构可见 2-机构及学生可见 3-完全公开
+        /// </summary>
+        public int VisibleRange { get; set; }
+
+        /// <summary>
         /// 租户ID
         /// </summary>
         public string TenantId { get; set; }
