@@ -200,7 +200,7 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE t_ea_class_photoalbum SET `Name`=@Name,CoverPhoto=@CoverPhoto,Describe=@Describe,VisibleRange=@VisibleRange WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE t_ea_class_photoalbum SET `Name`=@Name,`CoverPhoto`=@CoverPhoto,`Describe`=@Describe,`VisibleRange`=@VisibleRange WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
