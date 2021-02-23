@@ -13,12 +13,17 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         /// <summary>
         /// 相册ID
         /// </summary>
-        public string photoalbumId { get; set; }
+        public string PhotoalbumId { get; set; }
 
         /// <summary>
-        /// 附件地址
+        /// 图片文件名称
         /// </summary>
-        public string AttachmentUri { get; set; }
+        public string AttachmentFileName { get; set; }
+
+        /// <summary>
+        /// 图片完整地址
+        /// </summary>
+        public string AttachmentFullUri { get; set; }
 
         /// <summary>
         /// 描述

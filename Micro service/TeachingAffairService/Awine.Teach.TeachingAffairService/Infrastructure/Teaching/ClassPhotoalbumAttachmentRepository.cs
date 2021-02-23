@@ -50,9 +50,9 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" INSERT INTO t_ea_class_photoalbum_attachment (Id,PhotoalbumId,`AttachmentUri`,`Describe`,TenantId,IsDeleted,CreateTime) ");
+                sqlStr.Append(" INSERT INTO t_ea_class_photoalbum_attachment (Id,PhotoalbumId,`AttachmentFileName`,`AttachmentFullUri`,`Describe`,TenantId,IsDeleted,CreateTime) ");
                 sqlStr.Append(" VALUES ");
-                sqlStr.Append(" (@Id,@PhotoalbumId,@AttachmentUri,@Describe,@TenantId,@IsDeleted,@CreateTime) ");
+                sqlStr.Append(" (@Id,@PhotoalbumId,@AttachmentFileName,@AttachmentFullUri,@Describe,@TenantId,@IsDeleted,@CreateTime) ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
