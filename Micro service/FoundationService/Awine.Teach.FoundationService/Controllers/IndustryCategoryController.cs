@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Awine.Framework.Core.Collections;
 using Awine.Teach.FoundationService.Application.Interfaces;
 using Awine.Teach.FoundationService.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -103,5 +104,21 @@ namespace Awine.Teach.FoundationService.Controllers
             }
             return Response(success: false, message: result.Message);
         }
+
+        #region 开放接口
+
+        /// <summary>
+        /// 所有数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("enterlist")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllAllowAnonymous()
+        {
+            return Response(success: true, data: await _industryCategoryService.GetAll());
+        }
+
+        #endregion
     }
 }

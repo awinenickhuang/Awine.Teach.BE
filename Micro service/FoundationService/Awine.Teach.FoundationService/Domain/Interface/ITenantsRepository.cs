@@ -36,6 +36,13 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         Task<Tenants> GetModel(string id);
 
         /// <summary>
+        /// 取某一类型租户
+        /// </summary>
+        /// <param name="classiFication"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Tenants>> GetClassiFication(int classiFication);
+
+        /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="model"></param>
@@ -76,5 +83,13 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <param name="model"></param>
         /// <returns></returns>
         Task<int> UpdateNumberOfBranches(Tenants model);
+
+        /// <summary>
+        /// 入驻 -> 注册
+        /// </summary>
+        /// <param name="tenantModel"></param>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        Task<bool> Enter(Tenants tenantModel, Users userModel);
     }
 }

@@ -46,25 +46,33 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IIndustryCategoryRepository _industryCategoryRepository;
 
         /// <summary>
+        /// 区域
+        /// </summary>
+        private readonly IAdministrativeDivisionsRepository _administrativeDivisionsRepository;
+
+        /// <summary>
         /// 构造
         /// </summary>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
         /// <param name="user"></param>
         /// <param name="tenantsRepository"></param>
-        /// <param name="industryRepository"></param>
+        /// <param name="industryCategoryRepository"></param>
+        /// <param name="administrativeDivisionsRepository"></param>
         public TenantsService(
             IMapper mapper,
             ILogger<TenantsService> logger,
             ICurrentUser user,
             ITenantsRepository tenantsRepository,
-            IIndustryCategoryRepository industryCategoryRepository)
+            IIndustryCategoryRepository industryCategoryRepository,
+            IAdministrativeDivisionsRepository administrativeDivisionsRepository)
         {
             _mapper = mapper;
             _logger = logger;
             _user = user;
             _tenantsRepository = tenantsRepository;
             _industryCategoryRepository = industryCategoryRepository;
+            _administrativeDivisionsRepository = administrativeDivisionsRepository;
         }
 
         /// <summary>
@@ -139,6 +147,90 @@ namespace Awine.Teach.FoundationService.Application.Services
             entity.ParentId = _user.TenantId;
 
             if (await _tenantsRepository.Add(entity) > 0)
+            {
+                return new Result { Success = true, Message = "操作成功！" };
+            }
+
+            return new Result { Success = false, Message = "操作失败！" };
+        }
+
+        /// <summary>
+        /// 入驻 -> 注册
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<Result> Enter(TenantsEnterViewModel model)
+        {
+            var industry = await _industryCategoryRepository.GetModel(model.IndustryId);
+
+            if (null == industry)
+            {
+                return new Result { Success = false, Message = "未找到所属行业信息！" };
+            }
+
+            var tenant = _mapper.Map<TenantsEnterViewModel, Tenants>(model);
+
+            if (null != await _tenantsRepository.GetModel(tenant))
+            {
+                return new Result { Success = false, Message = "数据已存在！" };
+            }
+
+            tenant.IndustryName = industry.Name;
+            tenant.ClassiFication = 1;
+            tenant.Status = 1;
+            tenant.VIPExpirationTime = DateTime.Now;
+            tenant.NumberOfBranches = 0;
+
+            //官网注册机构统归于平台
+            var topTenants = await _tenantsRepository.GetClassiFication(5);
+
+            tenant.ParentId = topTenants.FirstOrDefault().Id;
+
+            var province = await _administrativeDivisionsRepository.GetModel(tenant.ProvinceId);
+            if (null == province)
+            {
+                return new Result { Success = false, Message = "省信息不存在！" };
+            }
+            tenant.ProvinceName = province.Name;
+
+            var city = await _administrativeDivisionsRepository.GetModel(tenant.CityId);
+            if (null == city)
+            {
+                return new Result { Success = false, Message = "市信息不存在！" };
+            }
+            tenant.CityName = city.Name;
+
+            var district = await _administrativeDivisionsRepository.GetModel(tenant.DistrictId);
+            if (null == district)
+            {
+                return new Result { Success = false, Message = "区信息不存在！" };
+            }
+            tenant.DistrictName = district.Name;
+
+            //创建租户账号
+            Users user = new Users()
+            {
+                TenantId = tenant.Id,
+                AccessFailedCount = 0,
+                ConcurrencyStamp = Guid.NewGuid().ToString(),
+                Email = "",
+                EmailConfirmed = false,
+                LockoutEnabled = true,
+                LockoutEnd = DateTime.Now,
+                NormalizedEmail = "",
+                NormalizedUserName = tenant.Contacts,
+                UserName = tenant.Contacts,
+                Account = tenant.ContactsPhone,
+                PasswordHash = "",
+                PhoneNumber = tenant.ContactsPhone,
+                PhoneNumberConfirmed = false,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                TwoFactorEnabled = false,
+                Gender = 0,
+                IsActive = true
+            };
+
+            if (await _tenantsRepository.Enter(tenant, user))
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }

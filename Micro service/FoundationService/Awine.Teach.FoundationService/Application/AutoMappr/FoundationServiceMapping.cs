@@ -27,6 +27,7 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             //租户信息
             CreateMap<Tenants, TenantsViewModel>();
             CreateMap<TenantsAddViewModel, Tenants>();
+            CreateMap<TenantsEnterViewModel, Tenants>();
             CreateMap<TenantsUpdateViewModel, Tenants>();
             CreateMap<IPagedList<Tenants>, IPagedList<TenantsViewModel>>().ConvertUsing<PagedListConverter<Tenants, TenantsViewModel>>();
 

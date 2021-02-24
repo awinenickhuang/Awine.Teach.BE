@@ -6,6 +6,7 @@ using Awine.Framework.AspNetCore.Authorize;
 using Awine.Framework.Core.Collections;
 using Awine.Teach.FoundationService.Application.Interfaces;
 using Awine.Teach.FoundationService.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,7 +74,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpPost("add")]
         //[AuthorizeCode("TenantAdd")]
-        public async Task<IActionResult> Add([FromForm]TenantsAddViewModel model)
+        public async Task<IActionResult> Add([FromForm] TenantsAddViewModel model)
         {
             var result = await _tenantsService.Add(model);
 
@@ -91,7 +92,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpPost("update")]
         //[AuthorizeCode("TenantUpdate")]
-        public async Task<IActionResult> Put([FromForm]TenantsUpdateViewModel model)
+        public async Task<IActionResult> Put([FromForm] TenantsUpdateViewModel model)
         {
             var result = await _tenantsService.Update(model);
 
@@ -109,7 +110,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpPost("updateclassfication")]
         //[AuthorizeCode("TenantUpdateClassiFication")]
-        public async Task<IActionResult> UpdateClassiFication([FromForm]TenantsUpdateClassiFicationViewModel model)
+        public async Task<IActionResult> UpdateClassiFication([FromForm] TenantsUpdateClassiFicationViewModel model)
         {
             var result = await _tenantsService.UpdateClassiFication(model);
 
@@ -127,7 +128,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpPost("updatestatus")]
         //[AuthorizeCode("TenantUpdateStatus")]
-        public async Task<IActionResult> UpdateStatus([FromForm]TenantsUpdateStatusViewModel model)
+        public async Task<IActionResult> UpdateStatus([FromForm] TenantsUpdateStatusViewModel model)
         {
             var result = await _tenantsService.UpdateStatus(model);
 
@@ -145,7 +146,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpPost("updatenumberofbranches")]
         //[AuthorizeCode("UpdateNumberOfBranches")]
-        public async Task<IActionResult> UpdateNumberOfBranches([FromForm]TenantsUpdateNumberOfBranchesViewModel model)
+        public async Task<IActionResult> UpdateNumberOfBranches([FromForm] TenantsUpdateNumberOfBranchesViewModel model)
         {
             var result = await _tenantsService.UpdateNumberOfBranches(model);
 
@@ -155,5 +156,27 @@ namespace Awine.Teach.FoundationService.Controllers
             }
             return Response(success: false, message: result.Message);
         }
+
+        #region 开放接口
+
+        /// <summary>
+        /// 机构入驻 -> 注册
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("enter")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Enter([FromForm] TenantsEnterViewModel model)
+        {
+            var result = await _tenantsService.Enter(model);
+
+            if (result.Success)
+            {
+                return Response(success: true, message: result.Message);
+            }
+            return Response(success: false, message: result.Message);
+        }
+
+        #endregion
     }
 }

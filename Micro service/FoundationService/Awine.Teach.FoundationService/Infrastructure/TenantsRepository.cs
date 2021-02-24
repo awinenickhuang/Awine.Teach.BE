@@ -103,6 +103,23 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         }
 
         /// <summary>
+        /// 取某一类型租户
+        /// </summary>
+        /// <param name="classiFication"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Tenants>> GetClassiFication(int classiFication)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+
+                sqlStr.Append(" SELECT * FROM tenants WHERE ClassiFication=@ClassiFication ");
+
+                return await connection.QueryAsync<Tenants>(sqlStr.ToString(), new { ClassiFication = classiFication }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="model"></param>
@@ -209,6 +226,51 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 sqlStr.Append(" UPDATE tenants SET NumberOfBranches=@NumberOfBranches WHERE Id=@Id ");
 
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
+        /// 入驻 -> 注册
+        /// </summary>
+        /// <param name="tenantModel"></param>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        public async Task<bool> Enter(Tenants tenantModel, Users userModel)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        StringBuilder sqlStr = new StringBuilder();
+
+                        //写入租户
+                        sqlStr.Append(" INSERT INTO tenants ");
+                        sqlStr.Append(" (Id,ParentId,Name,Contacts,ContactsPhone,ClassiFication,Status,ProvinceId,ProvinceName,CityId,CityName,DistrictId,DistrictName,Address,VIPExpirationTime,IndustryId,IndustryName,NumberOfBranches,CreateTime) ");
+                        sqlStr.Append(" VALUES ");
+                        sqlStr.Append(" (@Id,@ParentId,@Name,@Contacts,@ContactsPhone,@ClassiFication,@Status,@ProvinceId,@ProvinceName,@CityId,@CityName,@DistrictId,@DistrictName,@Address,@VIPExpirationTime,@IndustryId,@IndustryName,@NumberOfBranches,@CreateTime) ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), tenantModel, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        //创建账号
+                        sqlStr.Clear();
+                        sqlStr.Append(" INSERT INTO users ");
+                        sqlStr.Append(" (Id,AccessFailedCount,ConcurrencyStamp,Email,EmailConfirmed,LockoutEnabled,LockoutEnd,NormalizedEmail,NormalizedUserName,UserName,Account,PhoneNumber,PasswordHash,PhoneNumberConfirmed,SecurityStamp,TwoFactorEnabled,RoleId,IsActive,TenantId,DepartmentId,Gender,IsDeleted,CreateTime) ");
+                        sqlStr.Append(" VALUES");
+                        sqlStr.Append(" (@Id,@AccessFailedCount,@ConcurrencyStamp,@Email,@EmailConfirmed,@LockoutEnabled,@LockoutEnd,@NormalizedEmail,@NormalizedUserName,@UserName,@Account,@PhoneNumber,@PasswordHash,@PhoneNumberConfirmed,@SecurityStamp,@TwoFactorEnabled,@RoleId,@IsActive,@TenantId,@DepartmentId,@Gender,@IsDeleted,@CreateTime)");
+                        await connection.ExecuteAsync(sqlStr.ToString(), userModel, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"入驻 -> 注册 时发生异常-{ex.Message}");
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
     }

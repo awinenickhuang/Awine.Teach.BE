@@ -42,6 +42,13 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         Task<Result> Add(TenantsAddViewModel model);
 
         /// <summary>
+        /// 入驻 -> 注册
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<Result> Enter(TenantsEnterViewModel model);
+
+        /// <summary>
         /// 更新 -> 基本信息
         /// </summary>
         /// <param name="model"></param>
