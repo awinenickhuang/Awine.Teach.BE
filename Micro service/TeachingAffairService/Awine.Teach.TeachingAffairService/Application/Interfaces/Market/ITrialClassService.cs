@@ -69,5 +69,12 @@ namespace Awine.Teach.TeachingAffairService.Application.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<Result> Delete(string id);
+
+        /// <summary>
+        /// 试听课程情况 -> 当月每天的试所有课程试听情况
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        Task<StackedAreaChartViewModel> TrialClassReportChart(string designatedMonth);
     }
 }

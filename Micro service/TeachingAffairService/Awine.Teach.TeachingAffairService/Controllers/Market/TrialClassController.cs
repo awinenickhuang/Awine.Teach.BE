@@ -67,7 +67,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("listenfollowclass")]
-        public async Task<IActionResult> ListenFollowClass([FromForm]TrialClassListenViewModel model)
+        public async Task<IActionResult> ListenFollowClass([FromForm] TrialClassListenViewModel model)
         {
             var result = await _trialClassService.ListenFollowClass(model);
             if (result.Success)
@@ -84,7 +84,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("onetoonelisten")]
-        public async Task<IActionResult> OneToOneListen([FromForm]TrialClassListenCourseViewModel model)
+        public async Task<IActionResult> OneToOneListen([FromForm] TrialClassListenCourseViewModel model)
         {
             var result = await _trialClassService.OneToOneListen(model);
             if (result.Success)
@@ -101,7 +101,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("updatelisteningstate")]
-        public async Task<IActionResult> UpdateListeningState([FromForm]TrialClassUpdateListeningStateViewModel model)
+        public async Task<IActionResult> UpdateListeningState([FromForm] TrialClassUpdateListeningStateViewModel model)
         {
             var result = await _trialClassService.UpdateListeningState(model);
             if (result.Success)
@@ -118,7 +118,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> Delete([FromForm]string id)
+        public async Task<IActionResult> Delete([FromForm] string id)
         {
             var result = await _trialClassService.Delete(id);
             if (result.Success)
@@ -127,5 +127,22 @@ namespace Awine.Teach.TeachingAffairService.Controllers
             }
             return Response(success: false, message: result.Message);
         }
+
+        #region 统计分析
+
+        /// <summary>
+        ///  试听课程情况 -> 当月每天的试所有课程试听情况
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("trialclassreportchart")]
+        public async Task<IActionResult> TrialClassReportChart(string designatedMonth)
+        {
+            var result = await _trialClassService.TrialClassReportChart(designatedMonth);
+            return Response(success: true, data: result);
+        }
+
+        #endregion
     }
 }

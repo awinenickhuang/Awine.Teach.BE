@@ -67,7 +67,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> Add([FromForm]ConsultRecordAddViewModel model)
+        public async Task<IActionResult> Add([FromForm] ConsultRecordAddViewModel model)
         {
             var result = await _consultRecordService.Add(model);
 
@@ -86,7 +86,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("update")]
-        public async Task<IActionResult> Put([FromForm]ConsultRecordUpdateViewModel model)
+        public async Task<IActionResult> Put([FromForm] ConsultRecordUpdateViewModel model)
         {
             var result = await _consultRecordService.Update(model);
 
@@ -104,7 +104,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("trackingassigned")]
-        public async Task<IActionResult> TrackingAssigned([FromForm]ConsultRecordTrackingAssignedViewModel model)
+        public async Task<IActionResult> TrackingAssigned([FromForm] ConsultRecordTrackingAssignedViewModel model)
         {
             var result = await _consultRecordService.TrackingAssigned(model);
 
@@ -123,9 +123,57 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("chartreport")]
-        public async Task<IActionResult> SearchShopSalesReport(int statisticalMmethod)
+        public async Task<IActionResult> ConsultRecordChartReport(int statisticalMmethod)
         {
             return Response(success: true, data: await _consultRecordService.ConsultRecordChartReport(statisticalMmethod));
+        }
+
+        /// <summary>
+        /// 生源情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("monthchartreport")]
+        public async Task<IActionResult> ConsultRecordMonthChartReport(string designatedMonth)
+        {
+            return Response(success: true, data: await _consultRecordService.ConsultRecordMonthChartReport(designatedMonth));
+        }
+
+        /// <summary>
+        /// 生源情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("coursemonthchartreport")]
+        public async Task<IActionResult> ConsultRecordCourseMonthChartReport(string designatedMonth)
+        {
+            return Response(success: true, data: await _consultRecordService.ConsultRecordCourseMonthChartReport(designatedMonth));
+        }
+
+        /// <summary>
+        /// 营销转化情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("studenttransformationtreport")]
+        public async Task<IActionResult> StudentTransformationtReport(string designatedMonth)
+        {
+            return Response(success: true, data: await _consultRecordService.StudentTransformationtReport(designatedMonth));
+        }
+
+        /// <summary>
+        /// 各营销渠道生源来源情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns>各招生渠道指定月份的新增生源数量</returns>
+        [HttpGet]
+        [Route("studentsourcechannelreport")]
+        public async Task<IActionResult> StudentSourceChannelReport(string designatedMonth)
+        {
+            return Response(success: true, data: await _consultRecordService.StudentSourceChannelReport(designatedMonth));
         }
     }
 }

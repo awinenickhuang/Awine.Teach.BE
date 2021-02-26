@@ -15,19 +15,9 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         public string Id { get; set; }
 
         /// <summary>
-        /// 学生成长记录标识
-        /// </summary>
-        public string StudentGrowthRecordId { get; set; }
-
-        /// <summary>
         /// 内容
         /// </summary>
         public string Contents { get; set; }
-
-        /// <summary>
-        /// 创建者标识
-        /// </summary>
-        public string CreatorId { get; set; }
 
         /// <summary>
         /// 创建者姓名

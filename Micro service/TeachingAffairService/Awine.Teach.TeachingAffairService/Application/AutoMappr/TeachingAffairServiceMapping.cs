@@ -64,7 +64,7 @@ namespace Awine.Teach.TeachingAffairService.Application.AutoMappr
             CreateMap<StudentGrowthRecordUpdateViewModel, StudentGrowthRecord>();
             CreateMap<IPagedList<StudentGrowthRecord>, IPagedList<StudentGrowthRecordViewModel>>().ConvertUsing<PagedListConverter<StudentGrowthRecord, StudentGrowthRecordViewModel>>();
 
-            //学生成长记录评论
+            //学生成长记录 -> 评论
             CreateMap<StudentGrowthRecordComment, StudentGrowthRecordCommentViewModel>().ReverseMap();
             CreateMap<StudentGrowthRecordAddViewModel, StudentGrowthRecordComment>();
             CreateMap<IPagedList<StudentGrowthRecordComment>, IPagedList<StudentGrowthRecordCommentViewModel>>().ConvertUsing<PagedListConverter<StudentGrowthRecordComment, StudentGrowthRecordCommentViewModel>>();

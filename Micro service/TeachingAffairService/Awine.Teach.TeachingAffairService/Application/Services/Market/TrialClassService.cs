@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;
 using Awine.Teach.TeachingAffairService.Application.Interfaces;
@@ -9,6 +10,7 @@ using Awine.Teach.TeachingAffairService.Domain.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -333,9 +335,10 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             var trialClass = new TrialClass()
             {
                 Id = model.Id,
-                ListeningState = model.ListeningState
+                ListeningState = model.ListeningState,
+                StudentId = exist.StudentId
             };
-            if (await _trialClassRepository.UpdateListeningState(trialClass) > 0)
+            if (await _trialClassRepository.UpdateListeningState(trialClass))
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }
@@ -369,5 +372,64 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             }
             return new Result { Success = false, Message = "操作失败！" };
         }
+
+        #region 统计分析图表
+
+        /// <summary>
+        /// 试听课程情况 -> 当月每天的试所有课程试听情况
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        public async Task<StackedAreaChartViewModel> TrialClassReportChart(string designatedMonth)
+        {
+            StackedAreaChartViewModel reportChartData = new StackedAreaChartViewModel();
+
+            //取所有状态为启用的课程
+            var courses = await _courseRepository.GetAll(tenantId: _user.TenantId, enabledStatus: 1);
+            foreach (var course in courses)
+            {
+                reportChartData.Legend.Add(new StackedAreaChartLegend()
+                {
+                    Name = course.Name
+                });
+
+                reportChartData.Series.Add(new StackedAreaChartSeries()
+                {
+                    Id = course.Id,
+                    Name = course.Name
+                });
+            }
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+
+            //查询试听记录并按时间进行过滤
+            var trialClasses = await _trialClassRepository.GetAll(tenantId: _user.TenantId);
+            trialClasses = trialClasses.Where(x => x.CreateTime >= dateFrom);
+            trialClasses = trialClasses.Where(x => x.CreateTime <= dateTo);
+
+            //生成 XAxis 坐标点
+            int days = TimeCalculate.DaysInMonth(time);
+            //初始X坐标点数据
+            List<string> xAxisData = new List<string>();
+            for (int day = 1; day <= days; day++)
+            {
+                xAxisData.Add($"{time.Year}-{time.Month}-{day}");
+                //每次生成 XAxis 时，都需要向 Series 的 每个 Data 写入当前坐标点（时间）的统计数据
+                foreach (var ser in reportChartData.Series)
+                {
+                    //填充 图表 数据
+                    ser.Data.Add(trialClasses.Where(x => x.CourseId.Equals(ser.Id) && x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day).Count());
+                }
+            }
+            reportChartData.XAxis.Add(new StackedAreaChartxAxis()
+            {
+                Data = xAxisData
+            });
+
+            return reportChartData;
+        }
+        #endregion
     }
 }

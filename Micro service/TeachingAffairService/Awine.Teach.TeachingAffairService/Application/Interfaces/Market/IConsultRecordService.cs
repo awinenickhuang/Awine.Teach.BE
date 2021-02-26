@@ -63,11 +63,52 @@ namespace Awine.Teach.TeachingAffairService.Application.Interfaces
         /// <returns></returns>
         Task<Result> TrackingAssigned(ConsultRecordTrackingAssignedViewModel model);
 
+        #region 数据统计
+
         /// <summary>
         /// 生源情况统计 -> 绘图
         /// </summary>
         /// <param name="statisticalMmethod"></param>
         /// <returns></returns>
         Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordChartReport(int statisticalMmethod);
+
+        /// <summary>
+        /// 生源情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordMonthChartReport(string designatedMonth);
+
+        /// <summary>
+        /// 课程咨询情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 各课程咨询数量
+        /// </remarks>
+        Task<PieChartViewModel> ConsultRecordCourseMonthChartReport(string designatedMonth);
+
+        /// <summary>
+        /// 营销转化情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 各课程咨询数量
+        /// </remarks>
+        Task<HorizontalBarChartViewModel> StudentTransformationtReport(string designatedMonth);
+
+        /// <summary>
+        /// 各营销渠道生源来源情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 各招生渠道指定月份的新增生源数量
+        /// </remarks>
+        Task<StackedLineChartViewModel> StudentSourceChannelReport(string designatedMonth);
+
+        #endregion
     }
 }

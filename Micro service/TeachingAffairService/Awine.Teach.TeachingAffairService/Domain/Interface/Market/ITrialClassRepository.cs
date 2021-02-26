@@ -69,7 +69,7 @@ namespace Awine.Teach.TeachingAffairService.Domain.Interface
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<int> UpdateListeningState(TrialClass model);
+        Task<bool> UpdateListeningState(TrialClass model);
 
         /// <summary>
         /// 删除

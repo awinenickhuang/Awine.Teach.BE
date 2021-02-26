@@ -31,6 +31,11 @@ namespace Awine.Teach.TeachingAffairService.Domain
         public string CreatorName { get; set; }
 
         /// <summary>
+        /// 租户标识
+        /// </summary>
+        public string TenantId { get; set; }
+
+        /// <summary>
         /// 删除标识
         /// </summary>
         public bool IsDeleted { get; set; } = false;

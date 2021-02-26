@@ -244,14 +244,41 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<int> UpdateListeningState(TrialClass model)
+        public async Task<bool> UpdateListeningState(TrialClass model)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE t_market_trial_class SET `ListeningState`=@ListeningState WHERE Id=@Id ");
-                return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        StringBuilder sqlStr = new StringBuilder();
+
+                        //更新到课状态
+                        sqlStr.Append(" UPDATE t_market_trial_class SET `ListeningState`=@ListeningState WHERE Id=@Id ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        //如果为到课状态 则更新咨询记录中对应学生的跟进状态为 -> 已试听
+                        if (model.ListeningState == 2)
+                        {
+                            sqlStr.Clear();
+                            sqlStr.Append(" UPDATE t_market_consult_record SET TrackingState=@TrackingState WHERE Id=@Id ");
+                            await connection.ExecuteAsync(sqlStr.ToString(), new { TrackingState = 4, Id = model.StudentId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                        }
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"更新 -> 到课状态时发生异常-{ex.Message}");
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
+
         }
 
         /// <summary>

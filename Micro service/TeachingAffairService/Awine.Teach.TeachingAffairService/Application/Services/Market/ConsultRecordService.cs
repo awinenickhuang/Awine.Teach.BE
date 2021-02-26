@@ -228,6 +228,8 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             return new Result { Success = false, Message = "操作失败！" };
         }
 
+        #region 数据统计
+
         /// <summary>
         /// 生源情况统计 -> 绘图 -> 只统计当前月
         /// </summary>
@@ -256,5 +258,204 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
 
             return consultRecordQuery;
         }
+
+        /// <summary>
+        /// 生源情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 指定月份的生源数量
+        /// </remarks>
+        public async Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordMonthChartReport(string designatedMonth)
+        {
+            CurveChartViewModel curveChartViewModel = new CurveChartViewModel();
+            var consultRecordEnumerable = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
+            var consultRecordQuery = _mapper.Map<IEnumerable<ConsultRecord>, IEnumerable<ConsultRecordChartViewModel>>(consultRecordEnumerable);
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            consultRecordQuery = consultRecordQuery.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            consultRecordQuery = consultRecordQuery.Where(x => x.CreateTime <= dateTo);
+
+            // 根据天进行分组统计
+            var groupBy = DynamicQueryable.GroupBy<ConsultRecordChartViewModel, dynamic>(consultRecordQuery.AsQueryable(), x => new { x.CreateTime.Day });
+
+            consultRecordQuery = groupBy.Select(x => new ConsultRecordChartViewModel
+            {
+                CreateTime = x.FirstOrDefault().CreateTime,
+                Quantity = x.Count(),
+            }).ToObservableCollection();
+
+            return consultRecordQuery;
+        }
+
+        /// <summary>
+        /// 课程咨询情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 各课程咨询数量
+        /// </remarks>
+        public async Task<PieChartViewModel> ConsultRecordCourseMonthChartReport(string designatedMonth)
+        {
+            PieChartViewModel pieChartResult = new PieChartViewModel();
+
+            //查询咨询记录并按时间进行过滤
+            var consultRecordEnumerable = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            consultRecordEnumerable = consultRecordEnumerable.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            consultRecordEnumerable = consultRecordEnumerable.Where(x => x.CreateTime <= dateTo);
+
+            //查询所有状态为启用的课程
+            var courses = await _courseRepository.GetAll(tenantId: _user.TenantId, enabledStatus: 1);
+            List<PieChartSeriesData> pieChartSeries = new List<PieChartSeriesData>();
+            List<LegendData> legendData = new List<LegendData>();
+            foreach (var course in courses)
+            {
+                LegendData Legend = new LegendData()
+                {
+                    Name = course.Name
+                };
+                legendData.Add(Legend);
+
+                PieChartSeriesData pieChartSeriesData = new PieChartSeriesData()
+                {
+                    Value = consultRecordEnumerable.Where(x => x.CounselingCourseId.Equals(course.Id)).Count(),
+                    Name = course.Name
+                };
+
+                pieChartSeries.Add(pieChartSeriesData);
+            }
+
+            pieChartResult.LegendData = legendData;
+            pieChartResult.SeriesData = pieChartSeries;
+
+            return pieChartResult;
+        }
+
+        /// <summary>
+        /// 营销转化情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 各课程咨询数量
+        /// </remarks>
+        public async Task<HorizontalBarChartViewModel> StudentTransformationtReport(string designatedMonth)
+        {
+            HorizontalBarChartViewModel horizontalBarChartResult = new HorizontalBarChartViewModel();
+
+            //查询咨询记录并按时间进行过滤
+            var consultRecordEnumerable = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            consultRecordEnumerable = consultRecordEnumerable.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            consultRecordEnumerable = consultRecordEnumerable.Where(x => x.CreateTime <= dateTo);
+
+            //跟进状态 1-待跟进 2-跟进中 3-已邀约 4-已试听 5-已到访 6-已成交
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 6, Name = "已成交" });
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 5, Name = "已到访" });
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 4, Name = "已试听" });
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 3, Name = "已邀约" });
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 2, Name = "跟进中" });
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 1, Name = "待跟进" });
+            horizontalBarChartResult.HorizontalBarChartYAxis.Add(new HorizontalBarChartYAxis { TrackingState = 0, Name = "总生源数" });
+
+            List<HorizontalBarChartSeries> series = new List<HorizontalBarChartSeries>();
+
+            foreach (var trackingState in horizontalBarChartResult.HorizontalBarChartYAxis)
+            {
+                if (trackingState.TrackingState > 0)
+                {
+                    HorizontalBarChartSeries seriesData = new HorizontalBarChartSeries()
+                    {
+                        Count = consultRecordEnumerable.Where(x => x.TrackingState == trackingState.TrackingState).Count()
+                    };
+                    series.Add(seriesData);
+                }
+                else
+                {
+                    HorizontalBarChartSeries seriesData = new HorizontalBarChartSeries()
+                    {
+                        Count = consultRecordEnumerable.Count()
+                    };
+                    series.Add(seriesData);
+                }
+            }
+
+            horizontalBarChartResult.HorizontalBarChartSeries = series;
+
+            return horizontalBarChartResult;
+        }
+
+        /// <summary>
+        /// 各营销渠道生源来源情况 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 各招生渠道指定月份的新增生源数量
+        /// </remarks>
+        public async Task<StackedLineChartViewModel> StudentSourceChannelReport(string designatedMonth)
+        {
+            StackedLineChartViewModel chartResult = new StackedLineChartViewModel();
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+
+            //查询生源渠道
+            var channels = await _marketingChannelRepository.GetAll(tenantId: _user.TenantId);
+            foreach (var channel in channels)
+            {
+                //生源渠道数据
+                chartResult.Legend.Data.Add(channel.Name);
+                //生成Series
+                chartResult.Series.Add(new StackedLineChartSeries()
+                {
+                    Id = channel.Id,
+                    Name = channel.Name
+                });
+            }
+
+            //查询咨询记录并按时间进行过滤
+            var consultRecords = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            consultRecords = consultRecords.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            consultRecords = consultRecords.Where(x => x.CreateTime <= dateTo);
+
+            //生成 XAxis 坐标点
+            int days = TimeCalculate.DaysInMonth(time);
+            //初始X坐标点数据
+            List<string> xAxisData = new List<string>();
+            for (int day = 1; day <= days; day++)
+            {
+                chartResult.XAxis.Data.Add($"{time.Year}-{time.Month}-{day}");
+                //每次生成 XAxis 时，都需要向 Series 的 每个 Data 写入当前坐标点（时间）的统计数据
+                foreach (var ser in chartResult.Series)
+                {
+                    //填充 图表 数据
+                    ser.Data.Add(consultRecords.Where(x => x.MarketingChannelId.Equals(ser.Id) && x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day).Count());
+                }
+            }
+            return chartResult;
+        }
+
+        #endregion
     }
 }
