@@ -13,7 +13,7 @@ namespace Awine.Teach.DocumentService.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ApiController : ControllerBase
     {
         /// <summary>

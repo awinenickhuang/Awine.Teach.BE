@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Awine.Teach.FoundationService.Application.Interfaces;
 using Awine.Teach.FoundationService.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("list")]
+        [AllowAnonymous]
         public async Task<IActionResult> LoadAll()
         {
             return Response(success: true, data: await _administrativeDivisionsService.GetAll());
@@ -46,6 +48,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("subordinate")]
+        [AllowAnonymous]
         public async Task<IActionResult> LoadSubordinateRegionalism(int parentCode)
         {
             return Response(success: true, data: await _administrativeDivisionsService.GetSubordinateRegionalism(parentCode));

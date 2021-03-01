@@ -57,12 +57,16 @@ namespace Awine.Teach.DocumentService
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
+            //AddCors
             services.AddCors(options =>
             {
-                options.AddPolicy("awinefileservice",
-                builder => builder.AllowAnyOrigin()
-                .WithMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
-                );
+                options.AddPolicy("fileservice_allow_origins", builder =>
+                {
+                    builder
+                    .WithOrigins(Configuration["FileServiceOrigins"].Split(','))
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+                });
             });
 
             //Add TencentCos
@@ -74,21 +78,13 @@ namespace Awine.Teach.DocumentService
                 options.SecretKey = Configuration["TencentCos:SecretKey"];
             });
 
-            /*
-            //关闭了JWT的Claim 类型映射, 以便允许well-known claims 保证它不会更新任何从Authorization Server返回的Claims
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //把验证服务注册到DI, 并配置了Bearer作为默认模式
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>//在DI注册了token验证的处理者
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
                 {
                     options.Authority = Configuration["AuthenticationCenter:Authority"];
                     options.RequireHttpsMetadata = false;
-                    options.ApiName = Configuration["AuthenticationCenter:ApiName"]; ;
-                    options.ApiSecret = Configuration["AuthenticationCenter:ApiSecret"]; ;
-                    //设置时间偏移，默认5S
-                    options.JwtValidationClockSkew = TimeSpan.FromSeconds(0);
+                    options.Audience = Configuration["AuthenticationCenter:ApiName"];
                 });
-             */
 
             //Add service discovery with Consul
             //services.AddAwineConsul(Configuration);
@@ -101,6 +97,8 @@ namespace Awine.Teach.DocumentService
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("fileservice_allow_origins");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -110,8 +108,6 @@ namespace Awine.Teach.DocumentService
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseCors("awinefileservice");
 
             app.UseEndpoints(endpoints =>
             {
