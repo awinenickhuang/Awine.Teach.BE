@@ -1,4 +1,5 @@
-﻿using Awine.Framework.Core.Collections;
+﻿using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core.Collections;
 using Awine.Teach.TeachingAffairService.Application.ServiceResult;
 using Awine.Teach.TeachingAffairService.Application.ViewModels;
 using System;

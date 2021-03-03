@@ -117,18 +117,6 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         }
 
         /// <summary>
-        /// 生源情况统计 -> 绘图
-        /// </summary>
-        /// <param name="statisticalMmethod"></param>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("chartreport")]
-        public async Task<IActionResult> ConsultRecordChartReport(int statisticalMmethod)
-        {
-            return Response(success: true, data: await _consultRecordService.ConsultRecordChartReport(statisticalMmethod));
-        }
-
-        /// <summary>
         /// 生源情况统计 -> 绘图 -> 统计指定月份
         /// </summary>
         /// <param name="designatedMonth"></param>

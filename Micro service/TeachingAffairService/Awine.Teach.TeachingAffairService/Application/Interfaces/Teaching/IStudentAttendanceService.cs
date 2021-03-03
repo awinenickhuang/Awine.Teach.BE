@@ -1,4 +1,5 @@
-﻿using Awine.Framework.Core.Collections;
+﻿using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core.Collections;
 using Awine.Teach.TeachingAffairService.Application.ServiceResult;
 using Awine.Teach.TeachingAffairService.Application.ViewModels;
 using System;
@@ -64,5 +65,19 @@ namespace Awine.Teach.TeachingAffairService.Application.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<Result> CancelAttendance(string id);
+
+        /// <summary>
+        /// 课消金额统计分析
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<BasicBarChartViewModel> AttendanceAmountReport(string date);
+
+        /// <summary>
+        /// 课消数量统计分析
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<BasicBarChartViewModel> AttendanceNumberReport(string date);
     }
 }

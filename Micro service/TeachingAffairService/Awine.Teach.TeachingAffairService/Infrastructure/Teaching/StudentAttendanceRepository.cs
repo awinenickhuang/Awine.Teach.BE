@@ -40,6 +40,95 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
         }
 
         /// <summary>
+        /// 所有数据
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="classId"></param>
+        /// <param name="courseId"></param>
+        /// <param name="studentId"></param>
+        /// <param name="studentName"></param>
+        /// <param name="attendanceStatus"></param>
+        /// <param name="scheduleIdentification"></param>
+        /// <param name="processingStatus"></param>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<StudentAttendance>> GetAll(string tenantId = "", string classId = "", string courseId = "", string studentId = "", string studentName = "", int attendanceStatus = 0, int scheduleIdentification = 0, int processingStatus = 0, string beginDate = "", string endDate = "")
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                DynamicParameters parameters = new DynamicParameters();
+
+                sqlStr.Append(" SELECT * FROM t_ea_students_attendance WHERE IsDeleted=0 ");
+
+                if (!string.IsNullOrEmpty(tenantId))
+                {
+                    sqlStr.Append(" AND TenantId=@TenantId ");
+                    parameters.Add("@TenantId", tenantId);
+                }
+
+                if (!string.IsNullOrEmpty(classId))
+                {
+                    sqlStr.Append(" AND ClassId=@ClassId ");
+                    parameters.Add("@ClassId", classId);
+                }
+
+                if (!string.IsNullOrEmpty(courseId))
+                {
+                    sqlStr.Append(" AND CourseId=@CourseId ");
+                    parameters.Add("@CourseId", courseId);
+                }
+
+                if (!string.IsNullOrEmpty(studentId))
+                {
+                    sqlStr.Append(" AND StudentId=@StudentId ");
+                    parameters.Add("@StudentId", studentId);
+                }
+
+                if (!string.IsNullOrEmpty(studentName))
+                {
+                    sqlStr.Append(" and StudentName Like @StudentName");
+                    parameters.Add("@StudentName", "%" + studentName + "%");
+                }
+
+                if (attendanceStatus > 0)
+                {
+                    sqlStr.Append(" AND AttendanceStatus=@AttendanceStatus ");
+                    parameters.Add("@AttendanceStatus", attendanceStatus);
+                }
+
+                if (scheduleIdentification > 0)
+                {
+                    sqlStr.Append(" AND ScheduleIdentification=@ScheduleIdentification ");
+                    parameters.Add("@ScheduleIdentification", scheduleIdentification);
+                }
+
+                if (processingStatus > 0)
+                {
+                    sqlStr.Append(" AND ProcessingStatus=@ProcessingStatus ");
+                    parameters.Add("@ProcessingStatus", processingStatus);
+                }
+
+                if (!string.IsNullOrEmpty(beginDate))
+                {
+                    sqlStr.Append(" AND CreateTime>=@BeginDate ");
+                    parameters.Add("@BeginDate", beginDate);
+                }
+
+                if (!string.IsNullOrEmpty(endDate))
+                {
+                    sqlStr.Append(" AND CreateTime<=@EndDate ");
+                    parameters.Add("@EndDate", endDate);
+                }
+
+                sqlStr.Append(" ORDER BY CreateTime DESC ");
+
+                return await connection.QueryAsync<StudentAttendance>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>

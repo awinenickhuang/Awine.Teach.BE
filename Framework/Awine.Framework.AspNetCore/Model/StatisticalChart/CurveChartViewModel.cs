@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Awine.Teach.TeachingAffairService.Application.ViewModels
+namespace Awine.Framework.AspNetCore.Model
 {
     /// <summary>
     /// 曲线图 -> 视图模型

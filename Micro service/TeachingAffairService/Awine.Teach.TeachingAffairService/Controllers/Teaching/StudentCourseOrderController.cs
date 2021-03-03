@@ -57,5 +57,37 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         {
             return Response(success: true, data: await _studentCourseOrderService.GetPageList(page, limit, studentId, courseId, salesStaffId, marketingChannelId, beginDate, finishDate));
         }
+
+        /// <summary>
+        /// 订单情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 指定月份的订单数量
+        /// </remarks>
+        [HttpGet]
+        [Route("ordermonthcahrtreport")]
+        public async Task<IActionResult> OrderMonthChartReport(string designatedMonth)
+        {
+            var chartData = await _studentCourseOrderService.OrderMonthChartReport(designatedMonth);
+            return Response(success: true, data: chartData);
+        }
+
+        /// <summary>
+        /// 课程订单情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 指定月份的课程订单数量
+        /// </remarks>
+        [HttpGet]
+        [Route("courseordermonthcahrtreport")]
+        public async Task<IActionResult> CourseOrderMonthChartReport(string designatedMonth)
+        {
+            var chartData = await _studentCourseOrderService.CourseOrderMonthChartReport(designatedMonth);
+            return Response(success: true, data: chartData);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;
 using Awine.Teach.TeachingAffairService.Application.Interfaces;
@@ -480,5 +482,83 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
 
             return new Result { Success = false, Message = "操作失败！" };
         }
+
+        #region 统计分析
+
+        /// <summary>
+        /// 课消金额统计分析
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<BasicBarChartViewModel> AttendanceAmountReport(string date)
+        {
+            BasicBarChartViewModel chartData = new BasicBarChartViewModel();
+            var attendances = await _studentAttendanceRepository.GetAll(tenantId: _user.TenantId);
+
+            DateTime time = Convert.ToDateTime(date);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            attendances = attendances.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            attendances = attendances.Where(x => x.CreateTime <= dateTo);
+
+            //当前月天数
+            int days = TimeCalculate.DaysInMonth(time);
+
+            for (int day = 1; day <= days; day++)
+            {
+                chartData.XAxis.Add($"{time.Year}-{time.Month}-{day}");
+                var dayAttendances = attendances.Where(x => x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day);
+                var amount = 0M;
+                foreach (var da in dayAttendances)
+                {
+                    amount += da.ConsumedQuantity;
+                }
+                //填充 图表 数据
+                chartData.SeriesDecimalData.Add(attendances.Where(x => x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day).Count());
+            }
+
+            return chartData;
+        }
+
+        /// <summary>
+        /// 课消数量统计分析
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<BasicBarChartViewModel> AttendanceNumberReport(string date)
+        {
+            BasicBarChartViewModel chartData = new BasicBarChartViewModel();
+            var attendances = await _studentAttendanceRepository.GetAll(tenantId: _user.TenantId);
+
+            DateTime time = Convert.ToDateTime(date);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            attendances = attendances.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            attendances = attendances.Where(x => x.CreateTime <= dateTo);
+
+            //当前月天数
+            int days = TimeCalculate.DaysInMonth(time);
+
+            for (int day = 1; day <= days; day++)
+            {
+                chartData.XAxis.Add($"{time.Year}-{time.Month}-{day}");
+                var dayAttendances = attendances.Where(x => x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day);
+                var amount = 0L;
+                foreach (var da in dayAttendances)
+                {
+                    amount += da.ConsumedQuantity;
+                }
+                //填充 图表 数据
+                chartData.SeriesLongData.Add(amount);
+            }
+
+            return chartData;
+        }
+
+        #endregion
     }
 }

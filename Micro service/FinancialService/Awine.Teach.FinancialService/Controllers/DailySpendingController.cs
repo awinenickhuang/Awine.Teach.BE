@@ -63,7 +63,7 @@ namespace Awine.Teach.FinancialService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> Add([FromForm]DailySpendingAddViewModel model)
+        public async Task<IActionResult> Add([FromForm] DailySpendingAddViewModel model)
         {
             var result = await _dailySpendingService.Add(model);
             if (result.Success)
@@ -80,7 +80,7 @@ namespace Awine.Teach.FinancialService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("update")]
-        public async Task<IActionResult> Update([FromForm]DailySpendingUpdateViewModel model)
+        public async Task<IActionResult> Update([FromForm] DailySpendingUpdateViewModel model)
         {
             var result = await _dailySpendingService.Update(model);
             if (result.Success)
@@ -97,7 +97,7 @@ namespace Awine.Teach.FinancialService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> Delete([FromForm]string id)
+        public async Task<IActionResult> Delete([FromForm] string id)
         {
             var result = await _dailySpendingService.Delete(id);
             if (result > 0)
@@ -105,6 +105,18 @@ namespace Awine.Teach.FinancialService.Controllers
                 return Response(success: true);
             }
             return Response(success: false);
+        }
+
+        /// <summary>
+        /// 各项目常开销统计
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("spendingreport")]
+        public async Task<IActionResult> SpendingReport(string date)
+        {
+            return Response(success: true, data: await _dailySpendingService.SpendingReport(date));
         }
     }
 }

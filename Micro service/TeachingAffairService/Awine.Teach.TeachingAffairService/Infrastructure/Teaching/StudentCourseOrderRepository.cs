@@ -45,12 +45,29 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
         /// <param name="tenantId"></param>
         /// <param name="studentId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<StudentCourseOrder>> GetAll(string tenantId, string studentId)
+        public async Task<IEnumerable<StudentCourseOrder>> GetAll(string tenantId = "", string studentId = "")
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM t_ea_student_course_order WHERE IsDeleted=0 AND TenantId=@TenantId AND StudentId=@StudentId ORDER BY CreateTime DESC ");
+                DynamicParameters parameters = new DynamicParameters();
+
+                sqlStr.Append(" SELECT * FROM t_ea_student_course_order WHERE IsDeleted=0 ");
+
+                if (!string.IsNullOrEmpty(tenantId))
+                {
+                    sqlStr.Append(" AND TenantId=@TenantId ");
+                    parameters.Add("TenantId", tenantId);
+                }
+
+                if (!string.IsNullOrEmpty(studentId))
+                {
+                    sqlStr.Append(" AND StudentId=@StudentId ");
+                    parameters.Add("StudentId", studentId);
+                }
+
+                sqlStr.Append(" ORDER BY CreateTime DESC ");
+
                 return await connection.QueryAsync<StudentCourseOrder>(sqlStr.ToString(), new { TenantId = tenantId, StudentId = studentId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

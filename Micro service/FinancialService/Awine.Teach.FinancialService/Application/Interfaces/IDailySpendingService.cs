@@ -1,4 +1,5 @@
-﻿using Awine.Framework.Core.Collections;
+﻿using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core.Collections;
 using Awine.Teach.FinancialService.Application.ServiceResult;
 using Awine.Teach.FinancialService.Application.ViewModels;
 using System;
@@ -51,5 +52,12 @@ namespace Awine.Teach.FinancialService.Application.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<int> Delete(string id);
+
+        /// <summary>
+        /// 各项目常开销统计
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        Task<PieChartViewModel> SpendingReport(string date);
     }
 }

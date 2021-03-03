@@ -17,7 +17,7 @@ namespace Awine.Teach.TeachingAffairService.Domain.Interface
         /// <param name="tenantId"></param>
         /// <param name="studentId"></param>
         /// <returns></returns>
-        Task<IEnumerable<StudentCourseOrder>> GetAll(string tenantId, string studentId);
+        Task<IEnumerable<StudentCourseOrder>> GetAll(string tenantId = "", string studentId = "");
 
         /// <summary>
         /// 分页列表

@@ -1,4 +1,5 @@
-﻿using Awine.Framework.Core.Collections;
+﻿using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core.Collections;
 using Awine.Teach.TeachingAffairService.Application.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,5 +33,25 @@ namespace Awine.Teach.TeachingAffairService.Application.Interfaces
         /// <param name="finishDate"></param>
         /// <returns></returns>
         Task<IPagedList<StudentCourseOrderViewModel>> GetPageList(int page = 1, int limit = 15, string studentId = "", string courseId = "", string salesStaffId = "", string marketingChannelId = "", string beginDate = "", string finishDate = "");
+
+        /// <summary>
+        /// 订单情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 指定月份的订单数量
+        /// </remarks>
+        Task<BasicLineChartViewModel> OrderMonthChartReport(string designatedMonth);
+
+        /// <summary>
+        /// 课程订单情况统计 -> 绘图 -> 统计指定月份
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// 指定月份的课程订单数量
+        /// </remarks>
+        Task<StackedLineChartViewModel> CourseOrderMonthChartReport(string designatedMonth);
     }
 }

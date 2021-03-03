@@ -12,6 +12,22 @@ namespace Awine.Teach.TeachingAffairService.Domain.Interface
     public interface IStudentAttendanceRepository
     {
         /// <summary>
+        /// 所有数据
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="classId"></param>
+        /// <param name="courseId"></param>
+        /// <param name="studentId"></param>
+        /// <param name="studentName"></param>
+        /// <param name="attendanceStatus"></param>
+        /// <param name="scheduleIdentification"></param>
+        /// <param name="processingStatus"></param>
+        /// <param name="beginDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        Task<IEnumerable<StudentAttendance>> GetAll(string tenantId = "", string classId = "", string courseId = "", string studentId = "", string studentName = "", int attendanceStatus = 0, int scheduleIdentification = 0, int processingStatus = 0, string beginDate = "", string endDate = "");
+
+        /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>

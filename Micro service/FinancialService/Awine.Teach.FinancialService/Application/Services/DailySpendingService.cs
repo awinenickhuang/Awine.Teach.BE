@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;
 using Awine.Teach.FinancialService.Application.Interfaces;
@@ -9,6 +11,7 @@ using Awine.Teach.FinancialService.Domain.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -156,5 +159,49 @@ namespace Awine.Teach.FinancialService.Application.Services
         {
             return await _dailySpendingRepository.Delete(id);
         }
+
+        #region 数据统计
+
+        /// <summary>
+        /// 各项目常开销统计
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public async Task<PieChartViewModel> SpendingReport(string date)
+        {
+            PieChartViewModel chartData = new PieChartViewModel();
+
+            var items = await _financialItemRepository.GetAll(tenantId: _currentUser.TenantId, status: 1);
+
+            var spending = await _dailySpendingRepository.GetAll(tenantId: _currentUser.TenantId);
+
+            DateTime time = Convert.ToDateTime(date);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            spending = spending.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            spending = spending.Where(x => x.CreateTime <= dateTo);
+
+            foreach (var item in items)
+            {
+                var itemspend = spending.Where(x => x.FinancialItemId.Equals(item.Id));
+                var sum = 0M;
+                foreach (var s in itemspend)
+                {
+                    sum += s.Amount;
+                }
+                chartData.LegendData.Add(item.Name);
+                chartData.SeriesDecimalData.Add(new PieChartSeriesDecimalData()
+                {
+                    Value = sum,
+                    Name = item.Name
+                });
+            }
+
+            return chartData;
+        }
+
+        #endregion
     }
 }

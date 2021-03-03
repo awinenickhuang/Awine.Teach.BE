@@ -3,33 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Awine.Teach.TeachingAffairService.Application.ViewModels
+namespace Awine.Framework.AspNetCore.Model
 {
     /// <summary>
-    /// 饼状图 -> 视图模型
+    /// 横向条形柱状图
     /// </summary>
-    public class PieChartViewModel
+    public class HorizontalBarChartViewModel
     {
         /// <summary>
         /// 
         /// </summary>
-        public List<LegendData> LegendData { get; set; } = new List<LegendData>();
+        public List<HorizontalBarChartYAxis> HorizontalBarChartYAxis { get; set; } = new List<HorizontalBarChartYAxis>();
 
         /// <summary>
         /// 
         /// </summary>
-        public List<PieChartSeriesData> SeriesData { get; set; } = new List<PieChartSeriesData>();
+        public List<HorizontalBarChartSeries> HorizontalBarChartSeries { get; set; } = new List<HorizontalBarChartSeries>();
     }
 
     /// <summary>
-    /// 
+    /// Y轴数据
     /// </summary>
-    public class PieChartSeriesData
+    public class HorizontalBarChartYAxis
     {
         /// <summary>
         /// 
         /// </summary>
-        public int Value { get; set; }
+        public int TrackingState { get; set; }
 
         /// <summary>
         /// 
@@ -40,11 +40,11 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
     /// <summary>
     /// 
     /// </summary>
-    public class LegendData
+    public class HorizontalBarChartSeries
     {
         /// <summary>
         /// 
         /// </summary>
-        public string Name { get; set; }
+        public int Count { get; set; }
     }
 }

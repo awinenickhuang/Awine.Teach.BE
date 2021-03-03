@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Awine.Framework.AspNetCore.Model;
 using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;
@@ -231,35 +232,6 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
         #region 数据统计
 
         /// <summary>
-        /// 生源情况统计 -> 绘图 -> 只统计当前月
-        /// </summary>
-        /// <param name="statisticalMmethod"></param>
-        /// <returns></returns>
-        public async Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordChartReport(int statisticalMmethod)
-        {
-            CurveChartViewModel curveChartViewModel = new CurveChartViewModel();
-            var consultRecordEnumerable = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
-            var consultRecordQuery = _mapper.Map<IEnumerable<ConsultRecord>, IEnumerable<ConsultRecordChartViewModel>>(consultRecordEnumerable);
-
-            var dateFrom = TimeCalculate.GetTheFirstDayoftheCurrentMonth();
-            consultRecordQuery = consultRecordQuery.Where(x => x.CreateTime >= dateFrom);
-
-            var dateTo = TimeCalculate.GetTheLastDayoftheCurrentMonth();
-            consultRecordQuery = consultRecordQuery.Where(x => x.CreateTime <= dateTo);
-
-            // 根据天进行分组统计
-            var groupBy = DynamicQueryable.GroupBy<ConsultRecordChartViewModel, dynamic>(consultRecordQuery.AsQueryable(), x => new { x.CreateTime.Day });
-
-            consultRecordQuery = groupBy.Select(x => new ConsultRecordChartViewModel
-            {
-                CreateTime = x.FirstOrDefault().CreateTime,
-                Quantity = x.Count(),
-            }).ToObservableCollection();
-
-            return consultRecordQuery;
-        }
-
-        /// <summary>
         /// 生源情况统计 -> 绘图 -> 统计指定月份
         /// </summary>
         /// <param name="designatedMonth"></param>
@@ -267,30 +239,31 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
         /// <remarks>
         /// 指定月份的生源数量
         /// </remarks>
-        public async Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordMonthChartReport(string designatedMonth)
+        public async Task<BasicLineChartViewModel> ConsultRecordMonthChartReport(string designatedMonth)
         {
-            CurveChartViewModel curveChartViewModel = new CurveChartViewModel();
-            var consultRecordEnumerable = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
-            var consultRecordQuery = _mapper.Map<IEnumerable<ConsultRecord>, IEnumerable<ConsultRecordChartViewModel>>(consultRecordEnumerable);
+            var consultRecords = await _consultRecordRepository.GetAll(tenantId: _user.TenantId);
 
             DateTime time = Convert.ToDateTime(designatedMonth);
 
             var dateFrom = TimeCalculate.FirstDayOfMonth(time);
-            consultRecordQuery = consultRecordQuery.Where(x => x.CreateTime >= dateFrom);
+            consultRecords = consultRecords.Where(x => x.CreateTime >= dateFrom);
 
             var dateTo = TimeCalculate.LastDayOfMonth(time);
-            consultRecordQuery = consultRecordQuery.Where(x => x.CreateTime <= dateTo);
+            consultRecords = consultRecords.Where(x => x.CreateTime <= dateTo);
 
-            // 根据天进行分组统计
-            var groupBy = DynamicQueryable.GroupBy<ConsultRecordChartViewModel, dynamic>(consultRecordQuery.AsQueryable(), x => new { x.CreateTime.Day });
+            //当前月天数
+            int days = TimeCalculate.DaysInMonth(time);
 
-            consultRecordQuery = groupBy.Select(x => new ConsultRecordChartViewModel
+            BasicLineChartViewModel basicLineChartViewModel = new BasicLineChartViewModel();
+
+            for (int day = 1; day <= days; day++)
             {
-                CreateTime = x.FirstOrDefault().CreateTime,
-                Quantity = x.Count(),
-            }).ToObservableCollection();
+                basicLineChartViewModel.XAxisData.Add($"{time.Year}-{time.Month}-{day}");
+                basicLineChartViewModel.SeriesData.Add(consultRecords.Where(x => x.CreateTime.Year == time.Year
+                && x.CreateTime.Month == time.Month && x.CreateTime.Day == day).Count());
+            }
 
-            return consultRecordQuery;
+            return basicLineChartViewModel;
         }
 
         /// <summary>
@@ -319,14 +292,10 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             //查询所有状态为启用的课程
             var courses = await _courseRepository.GetAll(tenantId: _user.TenantId, enabledStatus: 1);
             List<PieChartSeriesData> pieChartSeries = new List<PieChartSeriesData>();
-            List<LegendData> legendData = new List<LegendData>();
+
             foreach (var course in courses)
             {
-                LegendData Legend = new LegendData()
-                {
-                    Name = course.Name
-                };
-                legendData.Add(Legend);
+                pieChartResult.LegendData.Add(course.Name);
 
                 PieChartSeriesData pieChartSeriesData = new PieChartSeriesData()
                 {
@@ -337,7 +306,6 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 pieChartSeries.Add(pieChartSeriesData);
             }
 
-            pieChartResult.LegendData = legendData;
             pieChartResult.SeriesData = pieChartSeries;
 
             return pieChartResult;

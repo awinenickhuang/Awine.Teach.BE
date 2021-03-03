@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Awine.Framework.AspNetCore.Model;
 using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;

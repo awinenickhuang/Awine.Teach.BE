@@ -25,7 +25,6 @@ namespace Awine.Teach.TeachingAffairService.Application.AutoMappr
             CreateMap<IPagedList<MarketingChannel>, IPagedList<MarketingChannelViewModel>>().ConvertUsing<PagedListConverter<MarketingChannel, MarketingChannelViewModel>>();
 
             //咨询记录
-            CreateMap<ConsultRecord, ConsultRecordChartViewModel>();
             CreateMap<ConsultRecord, ConsultRecordViewModel>().ReverseMap();
             CreateMap<ConsultRecordAddViewModel, ConsultRecord>();
             CreateMap<ConsultRecordUpdateViewModel, ConsultRecord>();

@@ -1,4 +1,5 @@
-﻿using Awine.Framework.Core.Collections;
+﻿using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core.Collections;
 using Awine.Teach.TeachingAffairService.Application.ServiceResult;
 using Awine.Teach.TeachingAffairService.Application.ViewModels;
 using System;
@@ -66,18 +67,11 @@ namespace Awine.Teach.TeachingAffairService.Application.Interfaces
         #region 数据统计
 
         /// <summary>
-        /// 生源情况统计 -> 绘图
-        /// </summary>
-        /// <param name="statisticalMmethod"></param>
-        /// <returns></returns>
-        Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordChartReport(int statisticalMmethod);
-
-        /// <summary>
         /// 生源情况统计 -> 绘图 -> 统计指定月份
         /// </summary>
         /// <param name="designatedMonth"></param>
         /// <returns></returns>
-        Task<IEnumerable<ConsultRecordChartViewModel>> ConsultRecordMonthChartReport(string designatedMonth);
+        Task<BasicLineChartViewModel> ConsultRecordMonthChartReport(string designatedMonth);
 
         /// <summary>
         /// 课程咨询情况 -> 绘图 -> 统计指定月份

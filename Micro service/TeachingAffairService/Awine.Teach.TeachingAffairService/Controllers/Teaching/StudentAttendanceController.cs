@@ -57,7 +57,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("attendance")]
-        public async Task<IActionResult> Attendance([FromForm]SignInViewModel model)
+        public async Task<IActionResult> Attendance([FromForm] SignInViewModel model)
         {
             var result = await _studentAttendanceService.Attendance(model);
 
@@ -76,7 +76,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("trialclassattendance")]
-        public async Task<IActionResult> TrialClassSigninAttendance([FromForm]SignInViewModel model)
+        public async Task<IActionResult> TrialClassSigninAttendance([FromForm] SignInViewModel model)
         {
             var result = await _studentAttendanceService.TrialClassSigninAttendance(model);
 
@@ -95,7 +95,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("makeupmissedlessonattendance")]
-        public async Task<IActionResult> MakeupMissedLessonAttendance([FromForm]MakeupMissedLessonAttendanceViewModel model)
+        public async Task<IActionResult> MakeupMissedLessonAttendance([FromForm] MakeupMissedLessonAttendanceViewModel model)
         {
             var result = await _studentAttendanceService.MakeupMissedLessonAttendance(model);
 
@@ -114,7 +114,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("cancel")]
-        public async Task<IActionResult> CancelAttendance([FromForm]string id)
+        public async Task<IActionResult> CancelAttendance([FromForm] string id)
         {
             var result = await _studentAttendanceService.CancelAttendance(id);
 
@@ -124,6 +124,34 @@ namespace Awine.Teach.TeachingAffairService.Controllers
             }
 
             return Response(success: false, message: result.Message);
+        }
+
+        /// <summary>
+        /// 课消金额统计分析
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("attendanceamountreport")]
+        public async Task<IActionResult> AttendanceAmountReport(string date)
+        {
+            var result = await _studentAttendanceService.AttendanceAmountReport(date);
+
+            return Response(success: true, data: result);
+        }
+
+        /// <summary>
+        /// 课消数量统计分析
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("attendancenumberreport")]
+        public async Task<IActionResult> AttendanceNumberReport(string date)
+        {
+            var result = await _studentAttendanceService.AttendanceNumberReport(date);
+
+            return Response(success: true, data: result);
         }
     }
 }

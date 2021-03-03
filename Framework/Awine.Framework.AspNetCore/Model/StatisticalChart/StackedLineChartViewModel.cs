@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Awine.Teach.TeachingAffairService.Application.ViewModels
+namespace Awine.Framework.AspNetCore.Model
 {
     /// <summary>
     /// 折线图堆叠图

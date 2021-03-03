@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Awine.Teach.TeachingAffairService.Application.ViewModels
+namespace Awine.Framework.AspNetCore.Model
 {
     /// <summary>
     /// 堆叠面积图
