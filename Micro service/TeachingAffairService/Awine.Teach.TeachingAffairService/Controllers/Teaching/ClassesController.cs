@@ -70,7 +70,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> Add([FromForm]ClassesAddViewModel model)
+        public async Task<IActionResult> Add([FromForm] ClassesAddViewModel model)
         {
             var result = await _classesService.Add(model);
             if (result.Success)
@@ -87,7 +87,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("update")]
-        public async Task<IActionResult> Put([FromForm]ClassesUpdateViewModel model)
+        public async Task<IActionResult> Put([FromForm] ClassesUpdateViewModel model)
         {
             var result = await _classesService.Update(model);
             if (result.Success)
@@ -104,7 +104,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("updaterecruitstatus")]
-        public async Task<IActionResult> UpdateRecruitStatus([FromForm]ClassesUpdateRecruitStatusViewModel model)
+        public async Task<IActionResult> UpdateRecruitStatus([FromForm] ClassesUpdateRecruitStatusViewModel model)
         {
             var result = await _classesService.UpdateRecruitStatus(model);
             if (result.Success)
@@ -121,7 +121,7 @@ namespace Awine.Teach.TeachingAffairService.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("delete")]
-        public async Task<IActionResult> Delete([FromForm]string id)
+        public async Task<IActionResult> Delete([FromForm] string id)
         {
             var result = await _classesService.Delete(id);
             if (result.Success)
@@ -129,6 +129,19 @@ namespace Awine.Teach.TeachingAffairService.Controllers
                 return Response(success: true, message: result.Message);
             }
             return Response(success: false, message: result.Message);
+        }
+
+        /// <summary>
+        /// 开班数量统计
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("classnumberchartreport")]
+        public async Task<IActionResult> ClassNumberChartReport(string designatedMonth)
+        {
+            var result = await _classesService.ClassNumberChartReport(designatedMonth);
+            return Response(success: true, data: result);
         }
     }
 }

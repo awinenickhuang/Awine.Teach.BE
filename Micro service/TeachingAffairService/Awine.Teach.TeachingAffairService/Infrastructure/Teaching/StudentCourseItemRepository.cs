@@ -48,8 +48,9 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
         /// <param name="classesId"></param>
         /// <param name="studentOrderId"></param>
         /// <param name="learningProcess"></param>
+        /// <param name="chargeManner"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<StudentCourseItem>> GetAll(string tenantId = "", string studentId = "", string courseId = "", string classesId = "", string studentOrderId = "", int learningProcess = 0)
+        public async Task<IEnumerable<StudentCourseItem>> GetAll(string tenantId = "", string studentId = "", string courseId = "", string classesId = "", string studentOrderId = "", int learningProcess = 0, int chargeManner = 0)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -90,6 +91,12 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
                 {
                     sqlStr.Append(" AND LearningProcess=@LearningProcess ");
                     parameters.Add("LearningProcess", learningProcess);
+                }
+
+                if (chargeManner > 0)
+                {
+                    sqlStr.Append(" AND ChargeManner=@ChargeManner ");
+                    parameters.Add("ChargeManner", chargeManner);
                 }
 
                 sqlStr.Append(" ORDER BY CreateTime DESC ");
@@ -216,24 +223,24 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
             }
         }
 
-        /// <summary>
-        /// 取一条数据
-        /// </summary>
-        /// <param name="tenantId"></param>
-        /// <param name="studentId"></param>
-        /// <param name="courseId"></param>
-        /// <param name="chargeManner"></param>
-        /// <param name="learningProcess"></param>
-        /// <returns></returns>
-        public async Task<StudentCourseItem> GetModel(string tenantId, string studentId, string courseId, int chargeManner, int learningProcess)
-        {
-            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
-            {
-                StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM t_ea_student_course_item WHERE TenantId=@TenantId AND StudentId=@StudentId AND CourseId=@CourseId AND ChargeManner=@ChargeManner AND LearningProcess=@LearningProcess AND IsDeleted=0");
-                return await connection.QueryFirstOrDefaultAsync<StudentCourseItem>(sqlStr.ToString(), new { TenantId = tenantId, StudentId = studentId, CourseId = courseId, ChargeManner = chargeManner, LearningProcess = learningProcess }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
-            }
-        }
+        ///// <summary>
+        ///// 取一条数据
+        ///// </summary>
+        ///// <param name="tenantId"></param>
+        ///// <param name="studentId"></param>
+        ///// <param name="courseId"></param>
+        ///// <param name="chargeManner"></param>
+        ///// <param name="learningProcess"></param>
+        ///// <returns></returns>
+        //public async Task<StudentCourseItem> GetModel(string tenantId, string studentId, string courseId, int chargeManner, int learningProcess)
+        //{
+        //    using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+        //    {
+        //        StringBuilder sqlStr = new StringBuilder();
+        //        sqlStr.Append(" SELECT * FROM t_ea_student_course_item WHERE TenantId=@TenantId AND StudentId=@StudentId AND CourseId=@CourseId AND ChargeManner=@ChargeManner AND LearningProcess=@LearningProcess AND IsDeleted=0");
+        //        return await connection.QueryFirstOrDefaultAsync<StudentCourseItem>(sqlStr.ToString(), new { TenantId = tenantId, StudentId = studentId, CourseId = courseId, ChargeManner = chargeManner, LearningProcess = learningProcess }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+        //    }
+        //}
 
         /// <summary>
         /// 更新报读课程的学习进度 -> 学习进度 1-已报名（未分班） 2-已报名（已分班）3-停课 4-退费 5-毕业

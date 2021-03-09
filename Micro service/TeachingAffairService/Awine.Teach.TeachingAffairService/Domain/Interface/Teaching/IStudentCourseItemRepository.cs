@@ -20,8 +20,9 @@ namespace Awine.Teach.TeachingAffairService.Domain.Interface
         /// <param name="classesId"></param>
         /// <param name="studentOrderId"></param>
         /// <param name="learningProcess"></param>
+        /// <param name="chargeManner"></param>
         /// <returns></returns>
-        Task<IEnumerable<StudentCourseItem>> GetAll(string tenantId = "", string studentId = "", string courseId = "", string classesId = "", string studentOrderId = "", int learningProcess = 0);
+        Task<IEnumerable<StudentCourseItem>> GetAll(string tenantId = "", string studentId = "", string courseId = "", string classesId = "", string studentOrderId = "", int learningProcess = 0, int chargeManner = 0);
 
         /// <summary>
         /// 所有数据 -> 分页列表
@@ -52,16 +53,16 @@ namespace Awine.Teach.TeachingAffairService.Domain.Interface
         /// <returns></returns>
         Task<StudentCourseItem> GetModel(string id);
 
-        /// <summary>
-        /// 取一条数据
-        /// </summary>
-        /// <param name="tenantId"></param>
-        /// <param name="studentId"></param>
-        /// <param name="courseId"></param>
-        /// <param name="chargeManner"></param>
-        /// <param name="learningProcess"></param>
-        /// <returns></returns>
-        Task<StudentCourseItem> GetModel(string tenantId, string studentId, string courseId, int chargeManner, int learningProcess);
+        ///// <summary>
+        ///// 取一条数据
+        ///// </summary>
+        ///// <param name="tenantId"></param>
+        ///// <param name="studentId"></param>
+        ///// <param name="courseId"></param>
+        ///// <param name="chargeManner"></param>
+        ///// <param name="learningProcess"></param>
+        ///// <returns></returns>
+        //Task<StudentCourseItem> GetModel(string tenantId, string studentId, string courseId, int chargeManner, int learningProcess);
 
         /// <summary>
         /// 更新报读课程的学习进度

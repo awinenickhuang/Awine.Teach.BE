@@ -104,5 +104,18 @@ namespace Awine.Teach.TeachingAffairService.Controllers.Teaching
             }
             return Response(success: false, message: result.Message);
         }
+
+        /// <summary>
+        /// 成长记录数量统计
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("studentgrowrecordnumberchartreport")]
+        public async Task<IActionResult> StudentGrowRecordNumberChartReport(string designatedMonth)
+        {
+            var result = await _studentGrowthRecordService.StudentGrowRecordNumberChartReport(designatedMonth);
+            return Response(success: true, data: result);
+        }
     }
 }

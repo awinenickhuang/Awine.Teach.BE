@@ -68,7 +68,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                         //写入
                         sqlStr.Clear();
                         sqlStr.Append(" INSERT INTO rolesownedmodules ");
-                        sqlStr.Append(" (Id,RoleId,ModuleId) VALUES (@Id,@RoleId,@ModuleId)");
+                        sqlStr.Append(" (Id,RoleId,ModuleId,TenantId) VALUES (@Id,@RoleId,@ModuleId,@TenantId)");
                         await connection.ExecuteAsync(sqlStr.ToString(), aspnetrolesOwnedModules, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         sqlStr.Clear();

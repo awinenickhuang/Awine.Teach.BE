@@ -18,7 +18,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string Id { get; set; }
 
         /// <summary>
-        /// 租户类型 1-免费 2-试用 3-付费（VIP）
+        /// 租户类型 1-免费 2-试用 3-付费（VIP）4-代理商 5-运营商
         /// </summary>
         [Required(ErrorMessage = "租户类型必填")]
         [RegularExpression(@"^\+?[1-9][0-9]*$", ErrorMessage = "租户类型只能输入正整数")]

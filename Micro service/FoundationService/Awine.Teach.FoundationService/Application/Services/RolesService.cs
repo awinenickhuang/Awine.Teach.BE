@@ -232,7 +232,8 @@ namespace Awine.Teach.FoundationService.Application.Services
                 var module = new Domain.Models.RolesOwnedModules()
                 {
                     RoleId = model.RoleId,
-                    ModuleId = item.ModuleId
+                    ModuleId = item.ModuleId,
+                    TenantId = existRole.TenantId
                 };
                 rolesOwnedModules.Add(module);
             }

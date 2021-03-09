@@ -9,6 +9,7 @@ using Awine.Teach.TeachingAffairService.Domain.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -275,9 +276,9 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 chargeMannerDesc = "按月收费";
             }
 
-            var existingStudentOrderItem = await _studentCourseItemRepository.GetModel(_user.TenantId, model.StudentId, model.CourseId, selectedChargemanner.ChargeManner, 1);
+            var orderItem = await _studentCourseItemRepository.GetAll(tenantId: _user.TenantId, studentId: model.StudentId, courseId: model.CourseId, chargeManner: selectedChargemanner.ChargeManner);
 
-            if (null != existingStudentOrderItem)
+            if (orderItem.Where(x => x.LearningProcess == 1 || x.LearningProcess == 2 || x.LearningProcess == 3).Count() > 0)
             {
                 return new Result { Success = false, Message = $"学生已报读定价方式为[{chargeMannerDesc}]的[{selectedCourse.Name}]课程，请进行缴费续费操作！" };
             }
@@ -410,9 +411,9 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 chargeMannerDesc = "按月收费";
             }
 
-            var existingStudentOrderItem = await _studentCourseItemRepository.GetModel(_user.TenantId, model.StudentId, model.CourseId, selectedChargemanner.ChargeManner, 1);
+            var orderItem = await _studentCourseItemRepository.GetAll(tenantId: _user.TenantId, studentId: model.StudentId, courseId: model.CourseId, chargeManner: selectedChargemanner.ChargeManner);
 
-            if (null != existingStudentOrderItem)
+            if (orderItem.Where(x => x.LearningProcess == 1 || x.LearningProcess == 2 || x.LearningProcess == 3).Count() > 0)
             {
                 return new Result { Success = false, Message = $"学生已报读定价方式为[{chargeMannerDesc}]的[{selectedCourse.Name}]课程，请进行缴费续费操作！" };
             }

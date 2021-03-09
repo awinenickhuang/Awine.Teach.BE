@@ -1,4 +1,5 @@
-﻿using Awine.Framework.Core.Collections;
+﻿using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core.Collections;
 using Awine.Teach.TeachingAffairService.Application.ServiceResult;
 using Awine.Teach.TeachingAffairService.Application.ViewModels;
 using System;
@@ -49,5 +50,12 @@ namespace Awine.Teach.TeachingAffairService.Application.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<Result> Delete(string id);
+
+        /// <summary>
+        /// 成长记录数量统计
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        Task<BasicLineChartViewModel> StudentGrowRecordNumberChartReport(string designatedMonth);
     }
 }

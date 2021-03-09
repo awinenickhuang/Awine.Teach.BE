@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;
 using Awine.Teach.TeachingAffairService.Application.Interfaces;
@@ -328,5 +330,41 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             }
             return new Result { Success = false, Message = "操作失败！" };
         }
+
+        #region 数据统计
+
+        /// <summary>
+        /// 开班数量统计
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        public async Task<BasicLineChartViewModel> ClassNumberChartReport(string designatedMonth)
+        {
+            var classes = await _classesRepository.GetAll(tenantId: _user.TenantId);
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            classes = classes.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            classes = classes.Where(x => x.CreateTime <= dateTo);
+
+            //当前月天数
+            int days = TimeCalculate.DaysInMonth(time);
+
+            BasicLineChartViewModel basicLineChartViewModel = new BasicLineChartViewModel();
+
+            for (int day = 1; day <= days; day++)
+            {
+                basicLineChartViewModel.XAxisData.Add($"{time.Year}-{time.Month}-{day}");
+
+                basicLineChartViewModel.SeriesData.Add(classes.Where(x => x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day).Count());
+            }
+
+            return basicLineChartViewModel;
+        }
+
+        #endregion
     }
 }

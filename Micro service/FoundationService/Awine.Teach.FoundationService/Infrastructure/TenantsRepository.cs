@@ -181,7 +181,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         }
 
         /// <summary>
-        /// 更新 -> 租户类型 1-免费 2-试用 3-付费（VIP）
+        /// 更新 -> 租户类型 1-免费 2-试用 3-付费（VIP）4-代理商 5-运营商
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>

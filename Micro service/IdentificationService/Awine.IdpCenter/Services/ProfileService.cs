@@ -78,6 +78,7 @@ namespace Awine.IdpCenter.Services
                     {
                         claims.Add(new Claim("tenantid", user.Tenant.Id));
                         claims.Add(new Claim("tenantname", user.Tenant.Name));
+                        claims.Add(new Claim("tenantclassification", user.Tenant.ClassiFication.ToString()));
                     }
 
                     // context.IssuedClaims = User.Claims，那么所有Claim都将被返回，而不会根据请求的Claim来进行筛选

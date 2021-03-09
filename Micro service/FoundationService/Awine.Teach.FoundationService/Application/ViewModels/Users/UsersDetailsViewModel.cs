@@ -35,7 +35,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string TenantName { get; set; }
 
         /// <summary>
-        /// 租户类型 1-免费 2-试用 3-付费（VIP）
+        /// 租户类型 1-免费 2-试用 3-付费（VIP）4-代理商 5-运营商
         /// </summary>
         public int ClassiFication { get; set; }
 

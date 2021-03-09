@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Awine.Framework.AspNetCore.Model;
+using Awine.Framework.Core;
 using Awine.Framework.Core.Collections;
 using Awine.Framework.Identity;
 using Awine.Teach.TeachingAffairService.Application.Interfaces;
@@ -9,6 +11,7 @@ using Awine.Teach.TeachingAffairService.Domain.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
@@ -169,5 +172,41 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
 
             return new Result { Success = false, Message = "操作失败！" };
         }
+
+        #region 数据统计
+
+        /// <summary>
+        /// 成长记录数量统计
+        /// </summary>
+        /// <param name="designatedMonth"></param>
+        /// <returns></returns>
+        public async Task<BasicLineChartViewModel> StudentGrowRecordNumberChartReport(string designatedMonth)
+        {
+            var records = await _studentGrowthRecordRepository.GetAll(tenantId: _user.TenantId);
+
+            DateTime time = Convert.ToDateTime(designatedMonth);
+
+            var dateFrom = TimeCalculate.FirstDayOfMonth(time);
+            records = records.Where(x => x.CreateTime >= dateFrom);
+
+            var dateTo = TimeCalculate.LastDayOfMonth(time);
+            records = records.Where(x => x.CreateTime <= dateTo);
+
+            //当前月天数
+            int days = TimeCalculate.DaysInMonth(time);
+
+            BasicLineChartViewModel basicLineChartViewModel = new BasicLineChartViewModel();
+
+            for (int day = 1; day <= days; day++)
+            {
+                basicLineChartViewModel.XAxisData.Add($"{time.Year}-{time.Month}-{day}");
+
+                basicLineChartViewModel.SeriesData.Add(records.Where(x => x.CreateTime.Year == time.Year && x.CreateTime.Month == time.Month && x.CreateTime.Day == day).Count());
+            }
+
+            return basicLineChartViewModel;
+        }
+
+        #endregion
     }
 }
