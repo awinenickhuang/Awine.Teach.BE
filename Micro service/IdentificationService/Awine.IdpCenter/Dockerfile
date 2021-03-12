@@ -1,5 +1,5 @@
 #引入镜像
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/sdk:5.0.102-ca-patch-buster-slim AS build
 #设定工作目录
 WORKDIR /app/idp
 #在容器中程序使用的端口，一定要和程序启动使用的端口对应上

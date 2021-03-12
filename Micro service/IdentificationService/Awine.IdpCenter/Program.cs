@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Awine.IdpCenter
@@ -29,10 +30,25 @@ namespace Awine.IdpCenter
         /// <param name="args"></param>
         /// <returns></returns>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+           Host.CreateDefaultBuilder(args)
+           .ConfigureAppConfiguration((hostingContext, configurationBuilder) =>
+           {
+               configurationBuilder
+                   .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                   .AddJsonFile("appsettings.json", true, true)
+                   .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                   .AddEnvironmentVariables();
+           })
+           .ConfigureWebHostDefaults(webBuilder =>
+           {
+               //webBuilder.ConfigureKestrel(options =>
+               //{
+               //    options.Listen(IPAddress.IPv6Any, 443, listenOptions =>
+               //    {
+               //        listenOptions.UseHttps("www.cdzssy.cn.pfx", "cdzSsy@2020$%^");
+               //    });
+               //});
+               webBuilder.UseStartup<Startup>();
+           });
     }
 }
