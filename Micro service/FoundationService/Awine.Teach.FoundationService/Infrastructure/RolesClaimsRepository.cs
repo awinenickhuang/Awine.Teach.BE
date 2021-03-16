@@ -48,7 +48,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM rolesclaims WHERE RoleId=@RoleId ");
+                sqlStr.Append(" SELECT * FROM RolesClaims WHERE RoleId=@RoleId ");
                 return await connection.QueryAsync<RolesClaims>(sqlStr.ToString(), new { RoleId = roleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

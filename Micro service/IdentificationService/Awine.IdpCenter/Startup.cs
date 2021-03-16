@@ -43,6 +43,12 @@ namespace Awine.IdpCenter
         {
             services.AddMvc();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+            });
+
             if (Environment.IsDevelopment())
             {
                 //开发环境下不使用HTTPS
@@ -68,6 +74,7 @@ namespace Awine.IdpCenter
 
             services.AddIdentityServer(options =>
             {
+                options.IssuerUri = "https://uiac.cdzssy.cn";
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
@@ -173,6 +180,14 @@ namespace Awine.IdpCenter
         /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // 调用其他中间件之前，请先在 Startup.Configure 的基础上调用 UseForwardedHeaders 方法。 配置中间件以转接 X-Forwarded - For 和 X-Forwarded - Proto 标头
+            //app.UseForwardedHeaders(new ForwardedHeadersOptions
+            //{
+            //    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            //});
+
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -180,14 +195,7 @@ namespace Awine.IdpCenter
             else
             {
                 app.UseExceptionHandler("/Error");
-                //app.UseHsts();
-                //app.UseHttpsRedirection();
             }
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
 
             app.UseRouting();
 

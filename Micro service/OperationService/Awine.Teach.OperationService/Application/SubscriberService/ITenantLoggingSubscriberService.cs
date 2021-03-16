@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Awine.Teach.OperationService.Application.SubscriberService
 {
@@ -14,6 +15,6 @@ namespace Awine.Teach.OperationService.Application.SubscriberService
         /// 记录登录日志
         /// </summary>
         /// <param name="log"></param>
-        void ReceivedLogOnMessage(LogOnLog log);
+        Task<int> ReceivedLogOnMessage(LogOnLog log);
     }
 }

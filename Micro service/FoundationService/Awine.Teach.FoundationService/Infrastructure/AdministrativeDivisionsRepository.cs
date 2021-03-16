@@ -47,7 +47,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM administrativedivision ORDER BY Code ASC ");
+                sqlStr.Append(" SELECT * FROM AdministrativeDivisions ORDER BY Code ASC ");
                 return await connection.QueryAsync<AdministrativeDivisions>(sqlStr.ToString(), commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -62,7 +62,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM administrativedivision WHERE Id=@Id");
+                sqlStr.Append(" SELECT * FROM AdministrativeDivisions WHERE Id=@Id");
                 return await connection.QueryFirstOrDefaultAsync<AdministrativeDivisions>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -77,7 +77,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM administrativedivision WHERE ParentCode=@ParentCode ORDER BY Code ASC ");
+                sqlStr.Append(" SELECT * FROM AdministrativeDivisions WHERE ParentCode=@ParentCode ORDER BY Code ASC ");
                 return await connection.QueryAsync<AdministrativeDivisions>(sqlStr.ToString(), new { ParentCode = parentCode }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

@@ -38,6 +38,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
         private readonly ICapPublisher _capBus;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountController(
             IUserRepository userRepository,
@@ -45,7 +46,8 @@ namespace IdentityServerHost.Quickstart.UI
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
-            ICapPublisher capBus)
+            ICapPublisher capBus,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _interaction = interaction;
@@ -53,6 +55,7 @@ namespace IdentityServerHost.Quickstart.UI
             _schemeProvider = schemeProvider;
             _events = events;
             _capBus = capBus;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -219,7 +222,8 @@ namespace IdentityServerHost.Quickstart.UI
                     UserName = aspnetUser.UserName,
                     Account = aspnetUser.Account,
                     TenantId = aspnetUser.Tenant.Id,
-                    TenantName = aspnetUser.Tenant.Name
+                    TenantName = aspnetUser.Tenant.Name,
+                    LogonIPAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
                 };
 
                 _capBus.Publish("acc.cdzssy.userlogon", log);

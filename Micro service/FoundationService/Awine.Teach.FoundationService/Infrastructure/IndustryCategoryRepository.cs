@@ -52,7 +52,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
 
-                sqlStr.Append(" SELECT * FROM industrycategory ORDER BY DisplayOrder ");
+                sqlStr.Append(" SELECT * FROM IndustryCategory ORDER BY DisplayOrder ");
 
                 var list = await connection.QueryAsync<IndustryCategory>(sqlStr.ToString(), commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
@@ -71,7 +71,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM industrycategory ORDER BY DisplayOrder ");
+                sqlStr.Append(" SELECT * FROM IndustryCategory ORDER BY DisplayOrder ");
 
                 return await connection.QueryAsync<IndustryCategory>(sqlStr.ToString(), commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -88,7 +88,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
-                sqlStr.Append(" SELECT * FROM industrycategory WHERE Id=@Id ");
+                sqlStr.Append(" SELECT * FROM IndustryCategory WHERE Id=@Id ");
                 parameters.Add("Id", id);
                 return await connection.QueryFirstOrDefaultAsync<IndustryCategory>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut,
                     commandType: CommandType.Text);
@@ -105,7 +105,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM industrycategory WHERE Name=@Name ");
+                sqlStr.Append(" SELECT * FROM IndustryCategory WHERE Name=@Name ");
                 if (!string.IsNullOrEmpty(model.Id))
                 {
                     sqlStr.Append(" AND Id!=@Id ");
@@ -125,7 +125,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("INSERT INTO industrycategory (Id,`Name`,`DescText`,DisplayOrder,CreateTime) VALUES (@Id,@Name,@DescText,@DisplayOrder,@CreateTime) ");
+                sqlStr.Append("INSERT INTO IndustryCategory (Id,`Name`,`DescText`,DisplayOrder,CreateTime) VALUES (@Id,@Name,@DescText,@DisplayOrder,@CreateTime) ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut,
                     commandType: CommandType.Text);
             }
@@ -141,7 +141,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE industrycategory SET `Name`=@Name,`DescText`=@DescText,DisplayOrder=@DisplayOrder WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE IndustryCategory SET `Name`=@Name,`DescText`=@DescText,DisplayOrder=@DisplayOrder WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

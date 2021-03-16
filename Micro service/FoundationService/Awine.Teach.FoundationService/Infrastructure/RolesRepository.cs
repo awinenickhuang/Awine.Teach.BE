@@ -53,7 +53,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT a.*,b.* FROM roles AS a INNER JOIN `tenants` AS b ON a.TenantId = b.`Id` WHERE a.IsDeleted=0 ");
+                sqlStr.Append(" SELECT a.*,b.* FROM Roles AS a INNER JOIN `Tenants` AS b ON a.TenantId = b.`Id` WHERE a.IsDeleted=0 ");
                 if (!string.IsNullOrEmpty(tenantId))
                 {
                     sqlStr.Append(" AND a.TenantId = @TenantId ");
@@ -87,7 +87,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT Id,TenantId,Name,CreateTime FROM roles WHERE IsDeleted=0 ");
+                sqlStr.Append(" SELECT Id,TenantId,Name,CreateTime FROM Roles WHERE IsDeleted=0 ");
 
                 if (!string.IsNullOrEmpty(tenantId))
                 {
@@ -109,7 +109,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM roles WHERE Id=@Id ");
+                sqlStr.Append(" SELECT * FROM Roles WHERE Id=@Id ");
                 return await connection.QueryFirstOrDefaultAsync<Roles>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -125,7 +125,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM roles WHERE Name=@Name AND TenantId=@TenantId ");
+                sqlStr.Append(" SELECT * FROM Roles WHERE Name=@Name AND TenantId=@TenantId ");
                 if (!string.IsNullOrEmpty(model.Id))
                 {
                     sqlStr.Append(" AND Id!=@Id ");
@@ -146,7 +146,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" INSERT INTO roles ");
+                sqlStr.Append(" INSERT INTO Roles ");
                 sqlStr.Append(" (Id,ConcurrencyStamp,Name,NormalizedName,TenantId,IsSuperRole,IsDeleted,CreateTime) ");
                 sqlStr.Append(" VALUES ");
                 sqlStr.Append(" (@Id,@ConcurrencyStamp,@Name,@NormalizedName,@TenantId,@IsSuperRole,@IsDeleted,@CreateTime) ");
@@ -166,7 +166,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" UPDATE roles SET Name=@Name WHERE Id=@Id");
+                sqlStr.Append(" UPDATE Roles SET Name=@Name WHERE Id=@Id");
 
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -181,7 +181,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = "UPDATE roles SET IsDeleted=@IsDeleted WHERE Id=@Id";
+                string sqlStr = "UPDATE Roles SET IsDeleted=@IsDeleted WHERE Id=@Id";
 
                 return await connection.ExecuteAsync(sqlStr, new { IsDeleted = true, Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }

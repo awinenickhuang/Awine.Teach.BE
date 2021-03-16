@@ -54,7 +54,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
 
-                sqlStr.Append(" SELECT * FROM users WHERE IsDeleted=0 AND TenantId=@TenantId ");
+                sqlStr.Append(" SELECT * FROM Users WHERE IsDeleted=0 AND TenantId=@TenantId ");
                 parameters.Add("TenantId", tenantId);
 
                 sqlStr.Append(" AND IsActive=@IsActive ");
@@ -87,7 +87,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM users WHERE IsDeleted=0 ");
+                sqlStr.Append(" SELECT * FROM Users WHERE IsDeleted=0 ");
 
                 if (!string.IsNullOrEmpty(userName))
                 {
@@ -124,19 +124,19 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 {
                     foreach (var item in users)
                     {
-                        var tenant = await connection.QueryFirstOrDefaultAsync<Tenants>("select * from tenants where Id = @Id", new { Id = item.TenantId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                        var tenant = await connection.QueryFirstOrDefaultAsync<Tenants>("select * from Tenants where Id = @Id", new { Id = item.TenantId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
                         if (tenant != null)
                         {
                             item.PlatformTenant = tenant;
                         }
 
-                        var aspnetrole = await connection.QueryFirstOrDefaultAsync<Roles>("select * from roles where Id = @Id", new { Id = item.RoleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                        var aspnetrole = await connection.QueryFirstOrDefaultAsync<Roles>("select * from Roles where Id = @Id", new { Id = item.RoleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
                         if (aspnetrole != null)
                         {
                             item.AspnetRole = aspnetrole;
                         }
 
-                        var departments = await connection.QueryFirstOrDefaultAsync<Departments>("select * from departments where Id = @Id", new { Id = item.DepartmentId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                        var departments = await connection.QueryFirstOrDefaultAsync<Departments>("select * from Departments where Id = @Id", new { Id = item.DepartmentId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
                         if (aspnetrole != null)
                         {
                             item.Department = departments;
@@ -157,7 +157,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" INSERT INTO users ");
+                sqlStr.Append(" INSERT INTO Users ");
                 sqlStr.Append(" (Id,AccessFailedCount,ConcurrencyStamp,Email,EmailConfirmed,LockoutEnabled,LockoutEnd,NormalizedEmail,NormalizedUserName,UserName,Account,PhoneNumber,PasswordHash,PhoneNumberConfirmed,SecurityStamp,TwoFactorEnabled,RoleId,IsActive,TenantId,DepartmentId,Gender,IsDeleted,CreateTime) ");
                 sqlStr.Append(" VALUES");
                 sqlStr.Append(" (@Id,@AccessFailedCount,@ConcurrencyStamp,@Email,@EmailConfirmed,@LockoutEnabled,@LockoutEnd,@NormalizedEmail,@NormalizedUserName,@UserName,@Account,@PhoneNumber,@PasswordHash,@PhoneNumberConfirmed,@SecurityStamp,@TwoFactorEnabled,@RoleId,@IsActive,@TenantId,@DepartmentId,@Gender,@IsDeleted,@CreateTime)");
@@ -175,7 +175,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM users WHERE Id=@Id ");
+                sqlStr.Append(" SELECT * FROM Users WHERE Id=@Id ");
                 return await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -192,9 +192,9 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
                 sqlStr.Append(" SELECT user.Id,user.UserName,user.Account,user.PhoneNumber,user.Gender,tenant.Id,tenant.Name,tenant.ClassiFication,tenant.VIPExpirationTime,tenant.IndustryName,role.Id,role.Name,departments.Id,departments.Name");
-                sqlStr.Append(" FROM users as user INNER JOIN tenants as tenant ON user.TenantId=tenant.Id ");
-                sqlStr.Append(" INNER JOIN roles as role on user.RoleId=role.Id ");
-                sqlStr.Append(" INNER JOIN departments as departments on user.DepartmentId=departments.Id ");
+                sqlStr.Append(" FROM Users as user INNER JOIN tenants as tenant ON user.TenantId=tenant.Id ");
+                sqlStr.Append(" INNER JOIN Roles as role on user.RoleId=role.Id ");
+                sqlStr.Append(" INNER JOIN Departments as departments on user.DepartmentId=departments.Id ");
                 sqlStr.Append(" WHERE user.Id=@Id");
                 parameters.Add("Id", id);
                 var result = await connection.QueryAsync<Users, Tenants, Roles, Departments, Users>(sqlStr.ToString(), (user, tenant, role, departments) =>
@@ -224,11 +224,11 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    sqlStr.Append(" SELECT * FROM users WHERE Id !=@Id AND (Account=@Account or PhoneNumber=@PhoneNumber)");
+                    sqlStr.Append(" SELECT * FROM Users WHERE Id !=@Id AND (Account=@Account or PhoneNumber=@PhoneNumber)");
                 }
                 else
                 {
-                    sqlStr.Append(" SELECT * FROM users WHERE (Account=@Account OR PhoneNumber=@PhoneNumber)");
+                    sqlStr.Append(" SELECT * FROM Users WHERE (Account=@Account OR PhoneNumber=@PhoneNumber)");
                 }
                 return await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -246,11 +246,11 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    sqlStr.Append(" SELECT * FROM users WHERE Id !=@Id AND UserName=@UserName AND TenantId=@TenantId");
+                    sqlStr.Append(" SELECT * FROM Users WHERE Id !=@Id AND UserName=@UserName AND TenantId=@TenantId");
                 }
                 else
                 {
-                    sqlStr.Append(" SELECT * FROM users WHERE UserName=@UserName AND TenantId=@TenantId");
+                    sqlStr.Append(" SELECT * FROM Users WHERE UserName=@UserName AND TenantId=@TenantId");
                 }
                 return await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -266,7 +266,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE users SET UserName=@UserName,PhoneNumber=@PhoneNumber,Email=@Email,RoleId=@RoleId,Gender=@Gender,DepartmentId=@DepartmentId WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE Users SET UserName=@UserName,PhoneNumber=@PhoneNumber,Email=@Email,RoleId=@RoleId,Gender=@Gender,DepartmentId=@DepartmentId WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -282,7 +282,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE users SET PasswordHash=@PasswordHash WHERE Id=@Id");
+                sqlStr.Append(" UPDATE Users SET PasswordHash=@PasswordHash WHERE Id=@Id");
                 return await connection.ExecuteAsync(sqlStr.ToString(), new { PasswordHash = password, Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -299,7 +299,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 var lockoutEndTime = DateTime.Now.AddDays(-1);
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" UPDATE users SET IsActive=@IsActive WHERE Id=@Id");
+                sqlStr.Append(" UPDATE Users SET IsActive=@IsActive WHERE Id=@Id");
 
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -319,7 +319,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
 
-                sqlStr.Append(" SELECT * FROM users WHERE IsDeleted=0 AND DepartmentId=@DepartmentId ");
+                sqlStr.Append(" SELECT * FROM Users WHERE IsDeleted=0 AND DepartmentId=@DepartmentId ");
                 parameters.Add("DepartmentId", departmentId);
 
                 sqlStr.Append(" AND IsActive=@IsActive ");

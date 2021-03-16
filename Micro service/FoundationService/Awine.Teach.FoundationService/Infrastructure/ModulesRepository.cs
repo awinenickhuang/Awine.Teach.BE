@@ -48,7 +48,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("SELECT * FROM modules order by DisplayOrder ");
+                sqlStr.Append("SELECT * FROM Modules order by DisplayOrder ");
                 return await connection.QueryAsync<Modules>(sqlStr.ToString(), commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -66,7 +66,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM modules ORDER BY DisplayOrder");
+                sqlStr.Append(" SELECT * FROM Modules ORDER BY DisplayOrder");
 
                 var list = await connection.QueryAsync<Modules>(sqlStr.ToString(), commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
                 return list.ToPagedList(page, limit);
@@ -83,7 +83,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("SELECT * FROM modules where ParentId=@ParentId order by DisplayOrder ");
+                sqlStr.Append("SELECT * FROM Modules where ParentId=@ParentId order by DisplayOrder ");
                 return await connection.QueryAsync<Modules>(sqlStr.ToString(), new { ParentId = parentId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -98,7 +98,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" INSERT INTO modules (Id,Name,ParentId,DescText,IsEnable,RedirectUri,ModuleIcon,DisplayOrder,CreateTime) VALUES (@Id,@Name,@ParentId,@DescText,@IsEnable,@RedirectUri,@ModuleIcon,@DisplayOrder,@CreateTime)");
+                sqlStr.Append(" INSERT INTO Modules (Id,Name,ParentId,DescText,IsEnable,RedirectUri,ModuleIcon,DisplayOrder,CreateTime) VALUES (@Id,@Name,@ParentId,@DescText,@IsEnable,@RedirectUri,@ModuleIcon,@DisplayOrder,@CreateTime)");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -113,7 +113,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" DELETE FROM modules WHERE Id=@Id");
+                sqlStr.Append(" DELETE FROM Modules WHERE Id=@Id");
                 return await connection.ExecuteAsync(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -128,7 +128,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE modules SET ");
+                sqlStr.Append(" UPDATE Modules SET ");
                 sqlStr.Append(" Name=@Name,ParentId=@ParentId,DescText=@DescText,IsEnable=@IsEnable,RedirectUri=@RedirectUri,ModuleIcon=@ModuleIcon,DisplayOrder=@DisplayOrder");
                 sqlStr.Append(" WHERE Id=@Id");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
@@ -144,7 +144,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = " SELECT * FROM modules WHERE Id=@Id";
+                string sqlStr = " SELECT * FROM Modules WHERE Id=@Id";
                 return await connection.QueryFirstOrDefaultAsync<Modules>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -161,11 +161,11 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    sqlStr.Append(" SELECT * FROM modules WHERE Id !=@Id and Name=@Name ");
+                    sqlStr.Append(" SELECT * FROM Modules WHERE Id !=@Id and Name=@Name ");
                 }
                 else
                 {
-                    sqlStr.Append(" SELECT * FROM modules WHERE Name=@Name ");
+                    sqlStr.Append(" SELECT * FROM Modules WHERE Name=@Name ");
                 }
                 return await connection.QueryFirstOrDefaultAsync<Modules>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }

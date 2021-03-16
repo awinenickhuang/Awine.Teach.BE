@@ -46,9 +46,6 @@ namespace Awine.Teach.OperationService.Application.Extensions
             }
             services.AddOptions();
 
-            //用户登录日志 -> 消费并记录
-            services.AddTransient<ITenantLoggingSubscriberService, TenantLoggingSubscriberService>();
-
             //平台公告
             services.Add(ServiceDescriptor.Singleton<IAnnouncementRepository, AnnouncementRepository>());
             services.Add(ServiceDescriptor.Singleton<IAnnouncementService, AnnouncementService>());
@@ -67,6 +64,7 @@ namespace Awine.Teach.OperationService.Application.Extensions
             //租户登录信息
             services.Add(ServiceDescriptor.Singleton<ITenantLoggingRepository, TenantLoggingRepository>());
             services.Add(ServiceDescriptor.Singleton<ITenantLoggingService, TenantLoggingService>());
+            services.Add(ServiceDescriptor.Singleton<ITenantLoggingSubscriberService, TenantLoggingSubscriberService>());
 
             return services;
         }

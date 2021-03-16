@@ -53,8 +53,8 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
                 sqlStr.Append(" SELECT departments.*,tenant.Id,tenant.Name");
-                sqlStr.Append(" FROM departments as departments");
-                sqlStr.Append(" LEFT JOIN tenants as tenant on departments.TenantId=tenant.Id WHERE departments.IsDeleted=0 ");
+                sqlStr.Append(" FROM Departments as departments");
+                sqlStr.Append(" LEFT JOIN Tenants as tenant on departments.TenantId=tenant.Id WHERE Departments.IsDeleted=0 ");
 
                 if (!string.IsNullOrEmpty(tenantId))
                 {
@@ -86,7 +86,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM departments WHERE IsDeleted=0 ");
+                sqlStr.Append(" SELECT * FROM Departments WHERE IsDeleted=0 ");
                 if (!string.IsNullOrEmpty(tenantId))
                 {
                     sqlStr.Append(" AND TenantId=@TenantId ");
@@ -109,7 +109,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
-                sqlStr.Append(" SELECT * FROM departments WHERE Id=@Id ");
+                sqlStr.Append(" SELECT * FROM Departments WHERE Id=@Id ");
                 parameters.Add("Id", id);
                 return await connection.QueryFirstOrDefaultAsync<Departments>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut,                    commandType: CommandType.Text);
             }
@@ -125,7 +125,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM departments WHERE Name=@Name AND TenantId=@TenantId ");
+                sqlStr.Append(" SELECT * FROM Departments WHERE Name=@Name AND TenantId=@TenantId ");
                 if (!string.IsNullOrEmpty(model.Id))
                 {
                     sqlStr.Append(" AND Id!=@Id ");
@@ -145,7 +145,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("INSERT INTO departments (Id,TenantId,`Name`,`Describe`,DisplayOrder,IsDeleted,CreateTime) VALUES (@Id,@TenantId,@Name,@Describe,@DisplayOrder,@IsDeleted,@CreateTime) ");
+                sqlStr.Append("INSERT INTO Departments (Id,TenantId,`Name`,`Describe`,DisplayOrder,IsDeleted,CreateTime) VALUES (@Id,@TenantId,@Name,@Describe,@DisplayOrder,@IsDeleted,@CreateTime) ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -159,7 +159,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = "UPDATE departments SET IsDeleted=@IsDeleted WHERE Id=@Id";
+                string sqlStr = "UPDATE Departments SET IsDeleted=@IsDeleted WHERE Id=@Id";
                 return await connection.ExecuteAsync(sqlStr, new { IsDeleted = true, Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -174,7 +174,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE departments SET TenantId=@TenantId,`Name`=@Name,`Describe`=@Describe,DisplayOrder=@DisplayOrder WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE Departments SET TenantId=@TenantId,`Name`=@Name,`Describe`=@Describe,DisplayOrder=@DisplayOrder WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

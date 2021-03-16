@@ -51,7 +51,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM `tenants` WHERE `ParentId`=@ParentId OR `Id`=@Id ");
+                sqlStr.Append(" SELECT * FROM `Tenants` WHERE `ParentId`=@ParentId OR `Id`=@Id ");
 
                 parameters.Add("ParentId", tenantId);
                 parameters.Add("Id", tenantId);
@@ -74,7 +74,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM `tenants` WHERE `ParentId`=@ParentId OR `Id`=@Id ");
+                sqlStr.Append(" SELECT * FROM `Tenants` WHERE `ParentId`=@ParentId OR `Id`=@Id ");
 
                 parameters.Add("ParentId", tenantId);
                 parameters.Add("Id", tenantId);
@@ -96,7 +96,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM tenants WHERE Id=@Id ");
+                sqlStr.Append(" SELECT * FROM Tenants WHERE Id=@Id ");
 
                 return await connection.QueryFirstOrDefaultAsync<Tenants>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -113,7 +113,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM tenants WHERE ClassiFication=@ClassiFication ");
+                sqlStr.Append(" SELECT * FROM Tenants WHERE ClassiFication=@ClassiFication ");
 
                 return await connection.QueryAsync<Tenants>(sqlStr.ToString(), new { ClassiFication = classiFication }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -130,7 +130,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM tenants WHERE Name=@Name ");
+                sqlStr.Append(" SELECT * FROM Tenants WHERE Name=@Name ");
 
                 if (!string.IsNullOrEmpty(model.Id))
                 {
@@ -152,7 +152,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" INSERT INTO tenants ");
+                sqlStr.Append(" INSERT INTO Tenants ");
                 sqlStr.Append(" (Id,ParentId,Name,Contacts,ContactsPhone,ClassiFication,Status,ProvinceId,ProvinceName,CityId,CityName,DistrictId,DistrictName,Address,VIPExpirationTime,IndustryId,IndustryName,NumberOfBranches,CreateTime) ");
                 sqlStr.Append(" VALUES ");
                 sqlStr.Append(" (@Id,@ParentId,@Name,@Contacts,@ContactsPhone,@ClassiFication,@Status,@ProvinceId,@ProvinceName,@CityId,@CityName,@DistrictId,@DistrictName,@Address,@VIPExpirationTime,@IndustryId,@IndustryName,@NumberOfBranches,@CreateTime) ");
@@ -172,7 +172,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" UPDATE tenants SET Contacts=@Contacts,ContactsPhone=@ContactsPhone, ");
+                sqlStr.Append(" UPDATE Tenants SET Contacts=@Contacts,ContactsPhone=@ContactsPhone, ");
                 sqlStr.Append(" ProvinceId=@ProvinceId,ProvinceName=@ProvinceName,CityId=@CityId,CityName=@CityName,DistrictId=@DistrictId,DistrictName=@DistrictName, ");
                 sqlStr.Append(" Address=@Address WHERE Id=@Id ");
 
@@ -190,7 +190,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE tenants SET ClassiFication=@ClassiFication WHERE Id=@Id");
+                sqlStr.Append(" UPDATE Tenants SET ClassiFication=@ClassiFication WHERE Id=@Id");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -206,7 +206,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" UPDATE tenants SET Status=@Status WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE Tenants SET Status=@Status WHERE Id=@Id ");
 
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -223,7 +223,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" UPDATE tenants SET NumberOfBranches=@NumberOfBranches WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE Tenants SET NumberOfBranches=@NumberOfBranches WHERE Id=@Id ");
 
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -247,7 +247,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                         StringBuilder sqlStr = new StringBuilder();
 
                         //写入租户
-                        sqlStr.Append(" INSERT INTO tenants ");
+                        sqlStr.Append(" INSERT INTO Tenants ");
                         sqlStr.Append(" (Id,ParentId,Name,Contacts,ContactsPhone,ClassiFication,Status,ProvinceId,ProvinceName,CityId,CityName,DistrictId,DistrictName,Address,VIPExpirationTime,IndustryId,IndustryName,NumberOfBranches,CreateTime) ");
                         sqlStr.Append(" VALUES ");
                         sqlStr.Append(" (@Id,@ParentId,@Name,@Contacts,@ContactsPhone,@ClassiFication,@Status,@ProvinceId,@ProvinceName,@CityId,@CityName,@DistrictId,@DistrictName,@Address,@VIPExpirationTime,@IndustryId,@IndustryName,@NumberOfBranches,@CreateTime) ");
@@ -255,7 +255,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                         //创建账号
                         sqlStr.Clear();
-                        sqlStr.Append(" INSERT INTO users ");
+                        sqlStr.Append(" INSERT INTO Users ");
                         sqlStr.Append(" (Id,AccessFailedCount,ConcurrencyStamp,Email,EmailConfirmed,LockoutEnabled,LockoutEnd,NormalizedEmail,NormalizedUserName,UserName,Account,PhoneNumber,PasswordHash,PhoneNumberConfirmed,SecurityStamp,TwoFactorEnabled,RoleId,IsActive,TenantId,DepartmentId,Gender,IsDeleted,CreateTime) ");
                         sqlStr.Append(" VALUES");
                         sqlStr.Append(" (@Id,@AccessFailedCount,@ConcurrencyStamp,@Email,@EmailConfirmed,@LockoutEnabled,@LockoutEnd,@NormalizedEmail,@NormalizedUserName,@UserName,@Account,@PhoneNumber,@PasswordHash,@PhoneNumberConfirmed,@SecurityStamp,@TwoFactorEnabled,@RoleId,@IsActive,@TenantId,@DepartmentId,@Gender,@IsDeleted,@CreateTime)");

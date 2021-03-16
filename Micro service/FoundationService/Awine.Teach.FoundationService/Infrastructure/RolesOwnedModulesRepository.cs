@@ -58,21 +58,21 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                         //删除
                         sqlStr.Clear();
-                        sqlStr.Append(" DELETE FROM rolesownedmodules WHERE RoleId=@RoleId ");
+                        sqlStr.Append(" DELETE FROM RolesOwnedModules WHERE RoleId=@RoleId ");
                         await connection.ExecuteAsync(sqlStr.ToString(), new { RoleId = roleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         sqlStr.Clear();
-                        sqlStr.Append(" DELETE FROM rolesclaims WHERE RoleId=@RoleId ");
+                        sqlStr.Append(" DELETE FROM RolesClaims WHERE RoleId=@RoleId ");
                         await connection.ExecuteAsync(sqlStr.ToString(), new { RoleId = roleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         //写入
                         sqlStr.Clear();
-                        sqlStr.Append(" INSERT INTO rolesownedmodules ");
+                        sqlStr.Append(" INSERT INTO RolesOwnedModules ");
                         sqlStr.Append(" (Id,RoleId,ModuleId,TenantId) VALUES (@Id,@RoleId,@ModuleId,@TenantId)");
                         await connection.ExecuteAsync(sqlStr.ToString(), aspnetrolesOwnedModules, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         sqlStr.Clear();
-                        sqlStr.Append(" INSERT INTO rolesclaims ");
+                        sqlStr.Append(" INSERT INTO RolesClaims ");
                         sqlStr.Append(" (Id,RoleId,ClaimType,ClaimValue) VALUES (@Id,@RoleId,@ClaimType,@ClaimValue)");
                         await connection.ExecuteAsync(sqlStr.ToString(), aspnetroleClaims, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
@@ -99,7 +99,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("SELECT * FROM rolesownedmodules WHERE RoleId=@RoleId");
+                sqlStr.Append("SELECT * FROM RolesOwnedModules WHERE RoleId=@RoleId");
                 return await connection.QueryAsync<RolesOwnedModules>(sqlStr.ToString(), new { RoleId = roleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -113,7 +113,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = " SELECT * FROM rolesownedmodules WHERE ModuleId=@ModuleId";
+                string sqlStr = " SELECT * FROM RolesOwnedModules WHERE ModuleId=@ModuleId";
                 return await connection.QueryAsync<RolesOwnedModules>(sqlStr.ToString(), new { ModuleId = moduleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
