@@ -25,6 +25,13 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         Task<AdministrativeDivisions> GetModel(string id);
 
         /// <summary>
+        /// 查询一个对象
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        Task<AdministrativeDivisions> GetModelByCode(string code);
+
+        /// <summary>
         /// 获取下级区域数据
         /// </summary>
         /// <param name="parentCode"></param>

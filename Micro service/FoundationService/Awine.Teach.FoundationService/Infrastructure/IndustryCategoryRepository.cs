@@ -155,7 +155,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = "DELETE FROM industrycategory WHERE Id=@Id";
+                string sqlStr = "DELETE FROM IndustryCategory WHERE Id=@Id";
                 return await connection.ExecuteAsync(sqlStr, new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Awine.Teach.FoundationService.Application.ServiceResult;
 using Awine.Teach.FoundationService.Domain.Models;
 using System.Linq;
+using Awine.Framework.Core.Cryptography;
 
 namespace Awine.Teach.FoundationService.Application.Services
 {
@@ -186,21 +187,21 @@ namespace Awine.Teach.FoundationService.Application.Services
 
             tenant.ParentId = topTenants.FirstOrDefault().Id;
 
-            var province = await _administrativeDivisionsRepository.GetModel(tenant.ProvinceId);
+            var province = await _administrativeDivisionsRepository.GetModelByCode(tenant.ProvinceId);
             if (null == province)
             {
                 return new Result { Success = false, Message = "省信息不存在！" };
             }
             tenant.ProvinceName = province.Name;
 
-            var city = await _administrativeDivisionsRepository.GetModel(tenant.CityId);
+            var city = await _administrativeDivisionsRepository.GetModelByCode(tenant.CityId);
             if (null == city)
             {
                 return new Result { Success = false, Message = "市信息不存在！" };
             }
             tenant.CityName = city.Name;
 
-            var district = await _administrativeDivisionsRepository.GetModel(tenant.DistrictId);
+            var district = await _administrativeDivisionsRepository.GetModelByCode(tenant.DistrictId);
             if (null == district)
             {
                 return new Result { Success = false, Message = "区信息不存在！" };
@@ -221,7 +222,7 @@ namespace Awine.Teach.FoundationService.Application.Services
                 NormalizedUserName = tenant.Contacts,
                 UserName = tenant.Contacts,
                 Account = tenant.ContactsPhone,
-                PasswordHash = "",
+                PasswordHash = PasswordManager.HashPassword(model.PasswordHash),
                 PhoneNumber = tenant.ContactsPhone,
                 PhoneNumberConfirmed = false,
                 SecurityStamp = Guid.NewGuid().ToString(),

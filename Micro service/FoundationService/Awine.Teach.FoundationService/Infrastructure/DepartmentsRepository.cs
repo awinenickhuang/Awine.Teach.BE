@@ -54,7 +54,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 sqlStr.Append(" SELECT departments.*,tenant.Id,tenant.Name");
                 sqlStr.Append(" FROM Departments as departments");
-                sqlStr.Append(" LEFT JOIN Tenants as tenant on departments.TenantId=tenant.Id WHERE Departments.IsDeleted=0 ");
+                sqlStr.Append(" LEFT JOIN Tenants as tenant on departments.TenantId=tenant.Id WHERE departments.IsDeleted=0 ");
 
                 if (!string.IsNullOrEmpty(tenantId))
                 {

@@ -28,7 +28,15 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// <summary>
         /// 联系电话
         /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "联系电话必填")]
         public string ContactsPhone { get; set; }
+
+        /// <summary>
+        /// 登录密码
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "登录密码必填")]
+        [StringLength(12, ErrorMessage = "登录密码长度为2-12个字符", MinimumLength = 2)]
+        public string PasswordHash { get; set; }
 
         /// <summary>
         /// 省标识

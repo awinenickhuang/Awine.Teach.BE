@@ -68,6 +68,21 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         }
 
         /// <summary>
+        /// 查询一个对象
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public async Task<AdministrativeDivisions> GetModelByCode(string code)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                sqlStr.Append(" SELECT * FROM AdministrativeDivisions WHERE Code=@Code");
+                return await connection.QueryFirstOrDefaultAsync<AdministrativeDivisions>(sqlStr.ToString(), new { Code = code }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
         /// 获取下级区域数据
         /// </summary>
         /// <param name="parentCode"></param>

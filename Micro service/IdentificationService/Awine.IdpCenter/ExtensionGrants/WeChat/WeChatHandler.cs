@@ -18,8 +18,14 @@ using System.Web;
 
 namespace Microsoft.AspNetCore.Authentication.WeChat
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal class WeChatHandler : OAuthHandler<WeChatOptions>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly ISecureDataFormat<AuthenticationProperties> _secureDataFormat;
 
         /// <summary>
@@ -120,7 +126,7 @@ namespace Microsoft.AspNetCore.Authentication.WeChat
                 return HandleRequestResult.Fail("Code was not found.");
             }
 
-            //第二步，通过Code获取Access Token
+            //第二步，通过 Code 获取 Access Token
             var redirectUrl = !string.IsNullOrEmpty(Options.CallbackUrl) ?
                 Options.CallbackUrl :
                 BuildRedirectUri(Options.CallbackPath);

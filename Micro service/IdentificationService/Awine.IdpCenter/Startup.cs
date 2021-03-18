@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Logging;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,13 @@ namespace Awine.IdpCenter
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+                             ForwardedHeaders.XForwardedFor |
+                             ForwardedHeaders.XForwardedHost |
+                             ForwardedHeaders.XForwardedProto;
+
+                options.ForwardLimit = 2;  //Limit number of proxy hops trusted
+                options.KnownNetworks.Clear();
+                options.KnownProxies.Clear();
             });
 
             if (Environment.IsDevelopment())
@@ -56,20 +63,8 @@ namespace Awine.IdpCenter
             }
             else
             {
-                //services.AddHsts(options =>
-                //{
-                //    options.Preload = true;
-                //    options.IncludeSubDomains = true;
-                //    options.MaxAge = TimeSpan.FromDays(60);
-                //    options.ExcludedHosts.Add("example.com");
-                //    options.ExcludedHosts.Add("www.example.com");
-                //});
-
-                //services.AddHttpsRedirection(options =>
-                //{
-                //    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                //    options.HttpsPort = 5001;
-                //});
+                // 生产环境下禁用日志的控制台输出，防止由于线程同步造成的性能损失
+                services.AddLogging(configure => configure.ClearProviders());
             }
 
             services.AddIdentityServer(options =>

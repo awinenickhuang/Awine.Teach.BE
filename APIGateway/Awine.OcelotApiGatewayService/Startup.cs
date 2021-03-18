@@ -21,9 +21,11 @@ namespace Awine.OcelotApiGatewayService
         /// Startup
         /// </summary>
         /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
+        /// <param name="environment"></param>
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         /// <summary>
@@ -32,13 +34,25 @@ namespace Awine.OcelotApiGatewayService
         public IConfiguration Configuration { get; }
 
         /// <summary>
+        /// IWebHostEnvironment
+        /// </summary>
+        public IWebHostEnvironment Environment;
+
+        /// <summary>
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-            // 禁用日志的控制台输出，防止由于线程同步造成的性能损失
-            services.AddLogging(configure => configure.ClearProviders());
+            if (Environment.IsDevelopment())
+            {
+                //
+            }
+            else
+            {
+                // 生产环境下禁用日志的控制台输出，防止由于线程同步造成的性能损失
+                services.AddLogging(configure => configure.ClearProviders());
+            }
 
             services.AddControllers();
             services.AddOcelot(Configuration).AddConsul().AddPolly();
