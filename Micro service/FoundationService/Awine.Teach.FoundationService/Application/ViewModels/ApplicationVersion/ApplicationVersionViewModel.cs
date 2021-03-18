@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Awine.Teach.FoundationService.Domain.Models
+namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 应用版本
+    /// 应用版本 -> 视图
     /// </summary>
-    public class ApplicationVersion
+    public class ApplicationVersionViewModel
     {
         /// <summary>
         /// 唯一标识

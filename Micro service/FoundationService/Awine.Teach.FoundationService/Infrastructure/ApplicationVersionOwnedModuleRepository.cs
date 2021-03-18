@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Awine.Teach.FoundationService.Infrastructure
+namespace Awine.Teach.FoundationService.Infrastructure.Repository
 {
     /// <summary>
     /// 不同应用版本对应的系统模块

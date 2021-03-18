@@ -70,6 +70,11 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
                 .ForMember(dest => dest.DepartmentName, options => options.MapFrom(src => src.Department.Name))
                 .ForMember(dest => dest.AspnetRoleName, options => options.MapFrom(src => src.AspnetRole.Name));
             CreateMap<IPagedList<Users>, IPagedList<UsersViewModel>>().ConvertUsing<PagedListConverter<Users, UsersViewModel>>();
+
+            //应用版本
+            CreateMap<ApplicationVersionAddViewModel, ApplicationVersion>();
+            CreateMap<ApplicationVersionUpdateViewModel, ApplicationVersion>();
+            CreateMap<IPagedList<ApplicationVersion>, IPagedList<ApplicationVersionViewModel>>().ConvertUsing<PagedListConverter<ApplicationVersion, ApplicationVersionViewModel>>();
         }
     }
 }

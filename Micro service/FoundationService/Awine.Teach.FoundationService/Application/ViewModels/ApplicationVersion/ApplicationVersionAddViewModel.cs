@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Awine.Teach.FoundationService.Domain.Models
+namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 应用版本
+    /// 应用版本 -> 添加视图
     /// </summary>
-    public class ApplicationVersion
+    public class ApplicationVersionAddViewModel
     {
-        /// <summary>
-        /// 唯一标识
-        /// </summary>
-        public string Id { get; set; }
-
         /// <summary>
         /// 版本名称
         /// </summary>
@@ -29,15 +24,5 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// 显示顺序
         /// </summary>
         public int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// 删除标识
-        /// </summary>
-        public bool IsDeleted { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateTime { get; set; }
     }
 }

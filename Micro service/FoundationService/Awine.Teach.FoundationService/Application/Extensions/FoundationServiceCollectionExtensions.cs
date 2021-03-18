@@ -72,6 +72,10 @@ namespace Awine.Teach.FoundationService.Application.Extensions
             services.Add(ServiceDescriptor.Singleton<IUsersRepository, UsersRepository>());
             services.Add(ServiceDescriptor.Singleton<IUsersService, UsersService>());
 
+            services.Add(ServiceDescriptor.Singleton<IApplicationVersionRepository, ApplicationVersionRepository>());
+            services.Add(ServiceDescriptor.Singleton<IApplicationVersionService, ApplicationVersionService>());
+
+
             // Identity
             services.Add(ServiceDescriptor.Singleton<ICurrentUser, CurrentUser>());
 
