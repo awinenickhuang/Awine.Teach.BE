@@ -89,7 +89,9 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// </summary>
         /// <param name="tenantModel"></param>
         /// <param name="userModel"></param>
+        /// <param name="rolesModel"></param>
+        /// <param name="rolesOwnedModules"></param>
         /// <returns></returns>
-        Task<bool> Enter(Tenants tenantModel, Users userModel);
+        Task<bool> Enter(Tenants tenantModel, Users userModel, Roles rolesModel, IList<RolesOwnedModules> rolesOwnedModules);
     }
 }

@@ -182,7 +182,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    sqlStr.Append(" SELECT * FROM ApplicationVersions WHERE Id!=@Id AND Name=@Name OR Identifying=@Identifying ");
+                    sqlStr.Append(" SELECT * FROM ApplicationVersions WHERE Id!=@Id AND (Name=@Name OR Identifying=@Identifying) ");
                 }
                 else
                 {

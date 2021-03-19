@@ -147,9 +147,9 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
 
                 sqlStr.Append(" INSERT INTO Roles ");
-                sqlStr.Append(" (Id,ConcurrencyStamp,Name,NormalizedName,TenantId,IsSuperRole,IsDeleted,CreateTime) ");
+                sqlStr.Append(" (Id,ConcurrencyStamp,Name,NormalizedName,TenantId,Identifying,IsDeleted,CreateTime) ");
                 sqlStr.Append(" VALUES ");
-                sqlStr.Append(" (@Id,@ConcurrencyStamp,@Name,@NormalizedName,@TenantId,@IsSuperRole,@IsDeleted,@CreateTime) ");
+                sqlStr.Append(" (@Id,@ConcurrencyStamp,@Name,@NormalizedName,@TenantId,@Identifying,@IsDeleted,@CreateTime) ");
 
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }

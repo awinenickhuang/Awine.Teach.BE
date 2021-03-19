@@ -36,6 +36,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IRolesClaimsRepository _rolesClaimsRepository;
 
         /// <summary>
+        /// 用户信息
+        /// </summary>
+        private readonly IUsersRepository _usersRepository;
+
+        /// <summary>
         /// AutoMapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -56,17 +61,20 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="rolesRepository"></param>
         /// <param name="rolesOwnedModulesRepository"></param>
         /// <param name="rolesClaimsRepository"></param>
+        /// <param name="usersRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
         /// <param name="user"></param>
         public RolesService(IRolesRepository rolesRepository,
             IRolesOwnedModulesRepository rolesOwnedModulesRepository,
             IRolesClaimsRepository rolesClaimsRepository,
+            IUsersRepository usersRepository,
             IMapper mapper, ILogger<RolesService> logger, ICurrentUser user)
         {
             _rolesRepository = rolesRepository;
             _rolesOwnedModulesRepository = rolesOwnedModulesRepository;
             _rolesClaimsRepository = rolesClaimsRepository;
+            _usersRepository = usersRepository;
             _mapper = mapper;
             _logger = logger;
             _user = user;
@@ -145,9 +153,23 @@ namespace Awine.Teach.FoundationService.Application.Services
             {
                 return new Result { Success = true, Message = "找不到角色信息！" };
             }
-            if (existing_role.IsSuperRole)
+            if (existing_role.Identifying == 1)
             {
-                return new Result { Success = true, Message = "超级管理员角色不允许删除！" };
+                return new Result { Success = true, Message = "平台管理员角色不允许删除！" };
+            }
+
+            //对于管理员类型的角色，只有平台超管可以删除
+            if (existing_role.Identifying == 2 || existing_role.Identifying == 3)
+            {
+                var currentRole = await _rolesRepository.GetModel(_user.RoleId);
+                if (null == currentRole)
+                {
+                    return new Result { Success = true, Message = "无法识你的身份，操作失败！" };
+                }
+                if (currentRole.Identifying != 1)
+                {
+                    return new Result { Success = true, Message = "你无权删除管理员角色，操作失败！" };
+                }
             }
 
             var roleOwnedModules = await _rolesOwnedModulesRepository.GetRoleOwnedModules(id);
@@ -160,6 +182,12 @@ namespace Awine.Teach.FoundationService.Application.Services
             if (roleClaims.Count() > 0)
             {
                 return new Result { Success = true, Message = "角色设置了权限，不允许删除！" };
+            }
+
+            var users = await _usersRepository.GetAllInRole(id);
+            if (users.Count() > 0)
+            {
+                return new Result { Success = true, Message = "角色被用户使用，不允许删除！" };
             }
 
             var result = await _rolesRepository.Delete(id);

@@ -77,6 +77,14 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         Task<Users> GetModel(Users model);
 
         /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        Task<Users> GetModel(string account = "", string phoneNumber = "");
+
+        /// <summary>
         /// 更新密码
         /// </summary>
         /// <param name="id"></param>
@@ -99,5 +107,12 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <param name="gender"></param>
         /// <returns></returns>
         Task<IEnumerable<Users>> GetAllInDepartment(string departmentId, bool isActive = true, int gender = 0);
+
+        /// <summary>
+        /// 查询某一角色的所有用户
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Users>> GetAllInRole(string roleId);
     }
 }

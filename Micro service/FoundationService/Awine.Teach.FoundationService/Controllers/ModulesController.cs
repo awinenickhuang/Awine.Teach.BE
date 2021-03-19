@@ -50,6 +50,17 @@ namespace Awine.Teach.FoundationService.Controllers
         }
 
         /// <summary>
+        /// 带选中状态的列表 -> 设置角色权限
+        /// </summary>
+        /// <param name="appVersionId">待设置角色</param>
+        /// <returns></returns>
+        [HttpGet("listwithchedkedstatusforappversion")]
+        public async Task<IActionResult> GetAllWithChedkedStatusForAppVersion(string appVersionId)
+        {
+            return Response(success: true, data: await _modulesService.GetAllWithChedkedStatusForAppVersion(appVersionId));
+        }
+
+        /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>

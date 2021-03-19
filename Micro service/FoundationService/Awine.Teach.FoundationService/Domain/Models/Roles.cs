@@ -26,9 +26,9 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public string NormalizedName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否超级管理员角色
+        /// 角色类型 1-平台超管 2-代理超管 3-租户超管 9-普通角色
         /// </summary>
-        public bool IsSuperRole { get; set; } = false;
+        public int Identifying { get; set; } = 9;
 
         /// <summary>
         /// 租户标识

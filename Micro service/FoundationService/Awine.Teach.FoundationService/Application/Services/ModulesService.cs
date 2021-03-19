@@ -36,6 +36,16 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IRolesOwnedModulesRepository _rolesOwnedModulesRepository;
 
         /// <summary>
+        /// 应用版本信息
+        /// </summary>
+        private readonly IApplicationVersionRepository _applicationVersionRepository;
+
+        /// <summary>
+        /// 应用版本包括的模块信息
+        /// </summary>
+        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+
+        /// <summary>
         /// 角色信息
         /// </summary>
         private readonly IRolesRepository _rolesRepository;
@@ -61,6 +71,8 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="modulesRepository"></param>
         /// <param name="buttonsRepository"></param>
         /// <param name="rolesOwnedModulesRepository"></param>
+        /// <param name="applicationVersionRepository"></param>
+        /// <param name="applicationVersionOwnedModuleRepository"></param>
         /// <param name="rolesRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
@@ -68,12 +80,16 @@ namespace Awine.Teach.FoundationService.Application.Services
         public ModulesService(IModulesRepository modulesRepository,
             IButtonsRepository buttonsRepository,
             IRolesOwnedModulesRepository rolesOwnedModulesRepository,
+            IApplicationVersionRepository applicationVersionRepository,
+            IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
             IRolesRepository rolesRepository,
             IMapper mapper, ILogger<ModulesService> logger, ICurrentUser user)
         {
             _modulesRepository = modulesRepository;
             _buttonsRepository = buttonsRepository;
             _rolesOwnedModulesRepository = rolesOwnedModulesRepository;
+            _applicationVersionRepository = applicationVersionRepository;
+            _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
             _rolesRepository = rolesRepository;
             _mapper = mapper;
             _logger = logger;
@@ -107,7 +123,7 @@ namespace Awine.Teach.FoundationService.Application.Services
             //系统中所有模块信息
             var entities = await _modulesRepository.GetAll();
 
-            if (!currentRole.IsSuperRole)//一般角色
+            if (currentRole.Identifying != 1)
             {
                 //当前登录用户角色拥有的模块信息
                 var currentRoleOwnedModules = await _rolesOwnedModulesRepository.GetRoleOwnedModules(_user.RoleId);
@@ -135,7 +151,7 @@ namespace Awine.Teach.FoundationService.Application.Services
 
                 return modulesWithCheckedStatusViewModels;
             }
-            else//超管角色
+            else//平台超管角色
             {
                 //对象转换
                 var modulesWithCheckedStatusViewModels = _mapper.Map<IEnumerable<Modules>, IEnumerable<ModulesWithCheckedStatusViewModel>>(entities);
@@ -153,6 +169,39 @@ namespace Awine.Teach.FoundationService.Application.Services
                 }
                 return modulesWithCheckedStatusViewModels;
             }
+        }
+
+        /// <summary>
+        /// 带选中状态的列表 -> 设置应用版本包括的模块
+        /// </summary>
+        /// <param name="appVersionId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ModulesWithCheckedStatusViewModel>> GetAllWithChedkedStatusForAppVersion(string appVersionId)
+        {
+            //如果找不到应用版本信息，什么都不返回
+            var appversion = await _applicationVersionRepository.GetModel(appVersionId);
+            if (null == appversion)
+            {
+                return new List<ModulesWithCheckedStatusViewModel>();
+            }
+
+            //系统中所有模块信息
+            var entities = await _modulesRepository.GetAll();
+
+            //对象转换
+            var modulesWithCheckedStatusViewModels = _mapper.Map<IEnumerable<Modules>, IEnumerable<ModulesWithCheckedStatusViewModel>>(entities);
+
+            //当前应用版本包括的模块信息
+            var appVersionOwnedModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(appVersionId);
+            foreach (var item in modulesWithCheckedStatusViewModels)
+            {
+                if (appVersionOwnedModules.Where(x => x.ModuleId.Equals(item.Id)).Count() > 0)
+                {
+                    item.Checked = true;
+                }
+            }
+
+            return modulesWithCheckedStatusViewModels;
         }
 
         /// <summary>

@@ -19,10 +19,19 @@ namespace Awine.Teach.DocumentService.Controllers
     [ApiController]
     public class TencentCosController : ApiController
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly FileUploadOptions _fileUploadOptions;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly CosUploadOptions _cosUploadOptions;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly ITencentCosHandler _cosHandler;
 
         /// <summary>

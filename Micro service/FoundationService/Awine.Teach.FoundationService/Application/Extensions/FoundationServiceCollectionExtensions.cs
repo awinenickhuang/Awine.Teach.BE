@@ -42,6 +42,7 @@ namespace Awine.Teach.FoundationService.Application.Extensions
             {
                 throw new ArgumentNullException(nameof(services));
             }
+
             services.AddOptions();
 
             services.Add(ServiceDescriptor.Singleton<IAdministrativeDivisionsRepository, AdministrativeDivisionsRepository>());
@@ -75,6 +76,8 @@ namespace Awine.Teach.FoundationService.Application.Extensions
             services.Add(ServiceDescriptor.Singleton<IApplicationVersionRepository, ApplicationVersionRepository>());
             services.Add(ServiceDescriptor.Singleton<IApplicationVersionService, ApplicationVersionService>());
 
+            services.Add(ServiceDescriptor.Singleton<IApplicationVersionOwnedModuleRepository, ApplicationVersionOwnedModuleRepository>());
+            services.Add(ServiceDescriptor.Singleton<IApplicationVersionOwnedModuleService, ApplicationVersionOwnedModuleService>());
 
             // Identity
             services.Add(ServiceDescriptor.Singleton<ICurrentUser, CurrentUser>());

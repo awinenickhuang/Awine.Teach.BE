@@ -52,6 +52,21 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IAdministrativeDivisionsRepository _administrativeDivisionsRepository;
 
         /// <summary>
+        /// 应用版本
+        /// </summary>
+        private readonly IApplicationVersionRepository _applicationVersionRepository;
+
+        /// <summary>
+        /// 应用版本对应的系统模块
+        /// </summary>
+        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+
+        /// <summary>
+        /// 用户信息
+        /// </summary>
+        private readonly IUsersRepository _usersRepository;
+
+        /// <summary>
         /// 构造
         /// </summary>
         /// <param name="mapper"></param>
@@ -60,13 +75,19 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="tenantsRepository"></param>
         /// <param name="industryCategoryRepository"></param>
         /// <param name="administrativeDivisionsRepository"></param>
+        /// <param name="applicationVersionRepository"></param>
+        /// <param name="applicationVersionOwnedModuleRepository"></param>
+        /// <param name="usersRepository"></param>
         public TenantsService(
             IMapper mapper,
             ILogger<TenantsService> logger,
             ICurrentUser user,
             ITenantsRepository tenantsRepository,
             IIndustryCategoryRepository industryCategoryRepository,
-            IAdministrativeDivisionsRepository administrativeDivisionsRepository)
+            IAdministrativeDivisionsRepository administrativeDivisionsRepository,
+            IApplicationVersionRepository applicationVersionRepository,
+            IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
+            IUsersRepository usersRepository)
         {
             _mapper = mapper;
             _logger = logger;
@@ -74,6 +95,9 @@ namespace Awine.Teach.FoundationService.Application.Services
             _tenantsRepository = tenantsRepository;
             _industryCategoryRepository = industryCategoryRepository;
             _administrativeDivisionsRepository = administrativeDivisionsRepository;
+            _applicationVersionRepository = applicationVersionRepository;
+            _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
+            _usersRepository = usersRepository;
         }
 
         /// <summary>
@@ -160,8 +184,23 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// TODO:这个注册是可以消息解耦呢？
+        /// </remarks>
         public async Task<Result> Enter(TenantsEnterViewModel model)
         {
+            var existUser = await _usersRepository.GetModel(account: model.ContactsPhone, phoneNumber: model.ContactsPhone);
+            if (null != existUser)
+            {
+                return new Result { Success = false, Message = "手机号码已被注册！" };
+            }
+
+            var existTenant = await _tenantsRepository.GetModel(new Tenants() { Name = model.Name });
+            if (null != existTenant)
+            {
+                return new Result { Success = false, Message = "机构名称已被注册！" };
+            }
+
             var industry = await _industryCategoryRepository.GetModel(model.IndustryId);
 
             if (null == industry)
@@ -169,6 +208,7 @@ namespace Awine.Teach.FoundationService.Application.Services
                 return new Result { Success = false, Message = "未找到所属行业信息！" };
             }
 
+            //注册的租户信息
             var tenant = _mapper.Map<TenantsEnterViewModel, Tenants>(model);
 
             if (null != await _tenantsRepository.GetModel(tenant))
@@ -208,6 +248,42 @@ namespace Awine.Teach.FoundationService.Application.Services
             }
             tenant.DistrictName = district.Name;
 
+            //创建租户超管角色
+            var role = new Roles()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "管理员",
+                NormalizedName = "Admin",
+                ConcurrencyStamp = Guid.NewGuid().ToString(),
+                Identifying = 3,
+                TenantId = tenant.Id,
+                IsDeleted = false,
+                CreateTime = DateTime.Now
+            };
+
+            //赋予角色操作权限（模块权限）
+            IList<Domain.Models.RolesOwnedModules> rolesOwnedModules = new List<Domain.Models.RolesOwnedModules>();
+            var versions = await _applicationVersionRepository.GetAll();
+            var versionsId = versions.Where(x => x.Identifying == 1).FirstOrDefault()?.Id;
+            if (string.IsNullOrEmpty(versionsId))
+            {
+                return new Result { Success = false, Message = "注册失败，平台未开放免费版本，请联系客服！" };
+            }
+            var versionModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(versionsId);
+            if (versionModules.Count() <= 0)
+            {
+                return new Result { Success = false, Message = "注册失败，平台未设置初始权限，请联系客服！" };
+            }
+            foreach (var m in versionModules)
+            {
+                rolesOwnedModules.Add(new Domain.Models.RolesOwnedModules()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    TenantId = tenant.Id,
+                    ModuleId = m.ModuleId,
+                    RoleId = role.Id
+                });
+            }
             //创建租户账号
             Users user = new Users()
             {
@@ -228,10 +304,11 @@ namespace Awine.Teach.FoundationService.Application.Services
                 SecurityStamp = Guid.NewGuid().ToString(),
                 TwoFactorEnabled = false,
                 Gender = 0,
-                IsActive = true
+                IsActive = true,
+                RoleId = role.Id
             };
 
-            if (await _tenantsRepository.Enter(tenant, user))
+            if (await _tenantsRepository.Enter(tenant, user, role, rolesOwnedModules))
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }

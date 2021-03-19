@@ -234,8 +234,10 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="tenantModel"></param>
         /// <param name="userModel"></param>
+        /// <param name="rolesModel"></param>
+        /// <param name="rolesOwnedModules"></param>
         /// <returns></returns>
-        public async Task<bool> Enter(Tenants tenantModel, Users userModel)
+        public async Task<bool> Enter(Tenants tenantModel, Users userModel, Roles rolesModel, IList<RolesOwnedModules> rolesOwnedModules)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -252,6 +254,22 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                         sqlStr.Append(" VALUES ");
                         sqlStr.Append(" (@Id,@ParentId,@Name,@Contacts,@ContactsPhone,@ClassiFication,@Status,@ProvinceId,@ProvinceName,@CityId,@CityName,@DistrictId,@DistrictName,@Address,@VIPExpirationTime,@IndustryId,@IndustryName,@NumberOfBranches,@CreateTime) ");
                         await connection.ExecuteAsync(sqlStr.ToString(), tenantModel, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        //创建角色
+                        sqlStr.Clear();
+                        sqlStr.Append(" INSERT INTO Roles ");
+                        sqlStr.Append(" (Id,Name,NormalizedName,ConcurrencyStamp,Identifying,TenantId,IsDeleted,CreateTime) ");
+                        sqlStr.Append(" VALUES ");
+                        sqlStr.Append(" (@Id,@Name,@NormalizedName,@ConcurrencyStamp,@Identifying,@TenantId,@IsDeleted,@CreateTime) ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), rolesModel, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        //赋予角色权限
+                        sqlStr.Clear();
+                        sqlStr.Append(" INSERT INTO RolesOwnedModules ");
+                        sqlStr.Append(" (Id,RoleId,ModuleId,TenantId) ");
+                        sqlStr.Append(" VALUES ");
+                        sqlStr.Append(" (@Id,@RoleId,@ModuleId,@TenantId) ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), rolesOwnedModules, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         //创建账号
                         sqlStr.Clear();

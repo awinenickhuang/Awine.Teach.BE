@@ -192,9 +192,9 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
                 sqlStr.Append(" SELECT user.Id,user.UserName,user.Account,user.PhoneNumber,user.Gender,tenant.Id,tenant.Name,tenant.ClassiFication,tenant.VIPExpirationTime,tenant.IndustryName,role.Id,role.Name,departments.Id,departments.Name");
-                sqlStr.Append(" FROM Users as user INNER JOIN tenants as tenant ON user.TenantId=tenant.Id ");
+                sqlStr.Append(" FROM Users as user INNER JOIN Tenants as tenant ON user.TenantId=tenant.Id ");
                 sqlStr.Append(" INNER JOIN Roles as role on user.RoleId=role.Id ");
-                sqlStr.Append(" INNER JOIN Departments as departments on user.DepartmentId=departments.Id ");
+                sqlStr.Append(" LEFT JOIN Departments as departments on user.DepartmentId=departments.Id ");
                 sqlStr.Append(" WHERE user.Id=@Id");
                 parameters.Add("Id", id);
                 var result = await connection.QueryAsync<Users, Tenants, Roles, Departments, Users>(sqlStr.ToString(), (user, tenant, role, departments) =>
@@ -253,6 +253,28 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     sqlStr.Append(" SELECT * FROM Users WHERE UserName=@UserName AND TenantId=@TenantId");
                 }
                 return await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="phoneNumber"></param>
+        /// <returns></returns>
+        public async Task<Users> GetModel(string account = "", string phoneNumber = "")
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                DynamicParameters parameters = new DynamicParameters();
+
+                sqlStr.Append(" SELECT UserName FROM Users WHERE Account=@Account OR PhoneNumber=@PhoneNumber");
+
+                parameters.Add("Account", account);
+                parameters.Add("PhoneNumber", phoneNumber);
+
+                return await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
 
@@ -331,6 +353,23 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     parameters.Add("Gender", gender);
                 }
 
+                return await connection.QueryAsync<Users>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
+        /// 查询某一角色的所有用户
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Users>> GetAllInRole(string roleId)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                DynamicParameters parameters = new DynamicParameters();
+                sqlStr.Append(" SELECT * FROM Users WHERE IsDeleted=0 AND RoleId=@RoleId ");
+                parameters.Add("RoleId", roleId);
                 return await connection.QueryAsync<Users>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

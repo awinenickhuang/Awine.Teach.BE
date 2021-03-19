@@ -9,7 +9,7 @@ Awine education platform back-end research and development source
 + 系统运行监控HttpReport
   + 端口：4000
 + 文件服务
-  + 端口：3000
+  + 端口：8005
   + SAAS文档、图片
   + 2C客户端图片、视频
 

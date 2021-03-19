@@ -24,6 +24,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IApplicationVersionRepository _applicationVersionRepository;
 
         /// <summary>
+        /// 应用版本对应的系统模块
+        /// </summary>
+        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+
+        /// <summary>
         /// AutoMapper
         /// </summary>
         private readonly IMapper _mapper;
@@ -37,11 +42,15 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// 构造
         /// </summary>
         /// <param name="applicationVersionRepository"></param>
+        /// <param name="applicationVersionOwnedModuleRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
-        public ApplicationVersionService(IApplicationVersionRepository applicationVersionRepository, IMapper mapper, ILogger<ApplicationVersionService> logger)
+        public ApplicationVersionService(IApplicationVersionRepository applicationVersionRepository,
+            IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
+            IMapper mapper, ILogger<ApplicationVersionService> logger)
         {
             _applicationVersionRepository = applicationVersionRepository;
+            _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
             _mapper = mapper;
             _logger = logger;
         }
@@ -133,8 +142,13 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Delete(string id)
         {
-            var result = await _applicationVersionRepository.Delete(id);
+            var modules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(id);
+            if (modules.Count() > 0)
+            {
+                return new Result { Success = false, Message = "应用版本设置了模块信息，不允许删除操作！" };
+            }
 
+            var result = await _applicationVersionRepository.Delete(id);
             if (result > 0)
             {
                 return new Result { Success = true, Message = "操作成功！" };

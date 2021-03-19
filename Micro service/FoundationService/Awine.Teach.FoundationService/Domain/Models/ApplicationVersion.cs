@@ -13,7 +13,7 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// <summary>
         /// 唯一标识
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
         /// 版本名称
@@ -23,21 +23,21 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// <summary>
         /// 版本标识
         /// </summary>
-        public string Identifying { get; set; }
+        public int Identifying { get; set; }
 
         /// <summary>
         /// 显示顺序
         /// </summary>
-        public int DisplayOrder { get; set; }
+        public int DisplayOrder { get; set; } = 0;
 
         /// <summary>
         /// 删除标识
         /// </summary>
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime CreateTime { get; set; }
+        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }

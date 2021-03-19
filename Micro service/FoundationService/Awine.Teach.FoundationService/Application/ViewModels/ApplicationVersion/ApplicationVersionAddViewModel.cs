@@ -18,7 +18,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// <summary>
         /// 版本标识
         /// </summary>
-        public string Identifying { get; set; }
+        public int Identifying { get; set; }
 
         /// <summary>
         /// 显示顺序

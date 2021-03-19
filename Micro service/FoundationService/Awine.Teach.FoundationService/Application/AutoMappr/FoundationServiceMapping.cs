@@ -72,9 +72,13 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             CreateMap<IPagedList<Users>, IPagedList<UsersViewModel>>().ConvertUsing<PagedListConverter<Users, UsersViewModel>>();
 
             //应用版本
+            CreateMap<ApplicationVersion, ApplicationVersionViewModel>().ReverseMap();
             CreateMap<ApplicationVersionAddViewModel, ApplicationVersion>();
             CreateMap<ApplicationVersionUpdateViewModel, ApplicationVersion>();
             CreateMap<IPagedList<ApplicationVersion>, IPagedList<ApplicationVersionViewModel>>().ConvertUsing<PagedListConverter<ApplicationVersion, ApplicationVersionViewModel>>();
+
+            //应用版本包括的模块信息
+            CreateMap<ApplicationVersionOwnedModule, ApplicationVersionOwnedModuleViewModel>();
         }
     }
 }

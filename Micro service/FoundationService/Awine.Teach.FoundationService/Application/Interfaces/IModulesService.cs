@@ -27,6 +27,13 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         Task<IEnumerable<ModulesWithCheckedStatusViewModel>> GetAllWithChedkedStatus(string roleId);
 
         /// <summary>
+        /// 带选中状态的列表 -> 设置应用版本包括的模块
+        /// </summary>
+        /// <param name="appVersionId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<ModulesWithCheckedStatusViewModel>> GetAllWithChedkedStatusForAppVersion(string appVersionId);
+
+        /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>

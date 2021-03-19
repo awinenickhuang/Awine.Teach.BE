@@ -20,7 +20,7 @@ namespace Awine.Teach.FoundationService.Controllers
         private readonly IButtonsService _buttonsService;
 
         /// <summary>
-        /// SysButtonsController
+        /// ButtonsController
         /// </summary>
         /// <param name="buttonsService"></param>
         public ButtonsController(IButtonsService buttonsService)

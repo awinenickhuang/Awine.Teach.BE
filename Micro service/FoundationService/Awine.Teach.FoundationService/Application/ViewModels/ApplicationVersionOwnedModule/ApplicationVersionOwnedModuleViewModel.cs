@@ -6,29 +6,24 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 应用版本 -> 视图
+    /// 应用版本对应的系统模块
     /// </summary>
-    public class ApplicationVersionViewModel
+    public class ApplicationVersionOwnedModuleViewModel
     {
         /// <summary>
-        /// 唯一标识
+        /// 主键标识
         /// </summary>
         public string Id { get; set; }
 
         /// <summary>
-        /// 版本名称
+        /// 应用版本ID
         /// </summary>
-        public string Name { get; set; }
+        public string AppVersionId { get; set; }
 
         /// <summary>
-        /// 版本标识
+        /// 模块|菜单标识
         /// </summary>
-        public int Identifying { get; set; }
-
-        /// <summary>
-        /// 显示顺序
-        /// </summary>
-        public int DisplayOrder { get; set; }
+        public string ModuleId { get; set; }
 
         /// <summary>
         /// 删除标识
