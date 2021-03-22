@@ -49,12 +49,12 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <returns></returns>
-        public async Task<IPagedList<IndustryCategoryViewModel>> GetPageList(int pageIndex = 1, int pageSize = 15)
+        public async Task<IPagedList<IndustryCategoryViewModel>> GetPageList(int page = 1, int limit = 15)
         {
-            var entities = await _industryCategoryRepository.GetPageList(pageIndex, pageSize);
+            var entities = await _industryCategoryRepository.GetPageList(page, limit);
             return _mapper.Map<IPagedList<IndustryCategory>, IPagedList<IndustryCategoryViewModel>>(entities);
         }
 

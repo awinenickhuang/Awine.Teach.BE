@@ -54,6 +54,12 @@ namespace Awine.Teach.FoundationService.Application.Extensions
             services.Add(ServiceDescriptor.Singleton<ITenantsRepository, TenantsRepository>());
             services.Add(ServiceDescriptor.Singleton<ITenantsService, TenantsService>());
 
+            services.Add(ServiceDescriptor.Singleton<ITenantDefaultSettingsRepository, TenantDefaultSettingsRepository>());
+            services.Add(ServiceDescriptor.Singleton<ITenantDefaultSettingsService, TenantDefaultSettingsService>());
+
+            services.Add(ServiceDescriptor.Singleton<ITenantSettingsRepository, TenantSettingsRepository>());
+            services.Add(ServiceDescriptor.Singleton<ITenantSettingsService, TenantSettingsService>());
+
             services.Add(ServiceDescriptor.Singleton<IDepartmentsRepository, DepartmentsRepository>());
             services.Add(ServiceDescriptor.Singleton<IDepartmentsService, DepartmentsService>());
 

@@ -58,14 +58,14 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        public async Task<IPagedList<ApplicationVersionViewModel>> GetPageList(int pageIndex = 1, int pageSize = 15, string name = "", string identifying = "")
+        public async Task<IPagedList<ApplicationVersionViewModel>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
         {
-            var entities = await _applicationVersionRepository.GetPageList(pageIndex, pageSize, name, identifying);
+            var entities = await _applicationVersionRepository.GetPageList(page, limit, name, identifying);
 
             return _mapper.Map<IPagedList<ApplicationVersion>, IPagedList<ApplicationVersionViewModel>>(entities);
         }

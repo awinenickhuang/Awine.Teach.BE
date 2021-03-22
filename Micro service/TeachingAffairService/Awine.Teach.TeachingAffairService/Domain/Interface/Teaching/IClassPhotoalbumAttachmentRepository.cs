@@ -12,6 +12,14 @@ namespace Awine.Teach.TeachingAffairService.Domain.Interface
     public interface IClassPhotoalbumAttachmentRepository
     {
         /// <summary>
+        /// 查询全部
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="photoalbumId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<ClassPhotoalbumAttachment>> GetAll(string tenantId = "", string photoalbumId = "");
+
+        /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>

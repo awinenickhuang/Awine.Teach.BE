@@ -98,6 +98,15 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
         /// <returns></returns>
         public async Task<Result> Add(ClassPhotoalbumAddViewModel model)
         {
+            var existPhotoalbums = await _classPhotoalbumRepository.GetAll(tenantId: _user.TenantId, classId: model.ClassId);
+            if (existPhotoalbums != null)
+            {
+                if (existPhotoalbums.Count() > 2)
+                {
+                    return new Result { Success = false, Message = "每个班级最多只能创建 2 个班级相册！" };
+                }
+            }
+
             var entity = _mapper.Map<ClassPhotoalbumAddViewModel, ClassPhotoalbum>(model);
             entity.TenantId = _user.TenantId;
 

@@ -64,8 +64,22 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// TODO：记录图片大小
+        /// </remarks>
         public async Task<Result> Add(ClassPhotoalbumAttachmentAddViewModel model)
         {
+            var existPhotos = await _classPhotoalbumAttachmentRepository.GetAll(tenantId: _user.TenantId, photoalbumId: model.PhotoalbumId);
+            if (existPhotos != null)
+            {
+                if (existPhotos.Count() > 100)
+                {
+                    return new Result { Success = false, Message = "每个相册的相片张数最大为 100 张！" };
+                }
+            }
+
+            //return new Result { Success = false, Message = "单个相册的最大可使用空间为 1G ！" };
+
             var entity = _mapper.Map<ClassPhotoalbumAttachmentAddViewModel, ClassPhotoalbumAttachment>(model);
             entity.TenantId = _user.TenantId;
 

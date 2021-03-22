@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Awine.Teach.FoundationService.Domain.Models
+namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 机构设置
+    /// 机构信息设置 -> 不同的应用版本对应不同的配置
     /// </summary>
-    public class TenantSettings
+    public class TenantDefaultSettingsViewModel
     {
         /// <summary>
         /// ID
@@ -45,9 +46,9 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public int MaxStorageSpace { get; set; }
 
         /// <summary>
-        /// 租户标识
+        /// 应用版本标识
         /// </summary>
-        public string TenantId { get; set; }
+        public string AppVersionId { get; set; }
 
         /// <summary>
         /// 删除标识

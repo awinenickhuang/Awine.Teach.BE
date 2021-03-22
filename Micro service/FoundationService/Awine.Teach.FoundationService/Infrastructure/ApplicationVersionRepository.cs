@@ -43,12 +43,12 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        public async Task<IPagedList<ApplicationVersion>> GetPageList(int pageIndex = 1, int pageSize = 15, string name = "", string identifying = "")
+        public async Task<IPagedList<ApplicationVersion>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -71,7 +71,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                 var list = await connection.QueryAsync<ApplicationVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
-                return list.ToPagedList(pageIndex, pageSize);
+                return list.ToPagedList(page, limit);
             }
         }
 

@@ -17,12 +17,12 @@ namespace Awine.Framework.Core.Collections
         /// <summary>
         /// Gets the page index (current).
         /// </summary>
-        int PageIndex { get; }
+        int Page { get; }
 
         /// <summary>
         /// Gets the page size.
         /// </summary>
-        int PageSize { get; }
+        int Limit { get; }
 
         /// <summary>
         /// Gets the total count of the list of type <typeparamref name="T"/>

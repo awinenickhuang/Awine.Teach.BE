@@ -2,59 +2,58 @@
 using Awine.Teach.FoundationService.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Awine.Teach.FoundationService.Domain.Interface
 {
     /// <summary>
-    /// 部门
+    /// 机构信息设置 不同的应用版本对应不同的配置
     /// </summary>
-    public interface IDepartmentsRepository
+    public interface ITenantDefaultSettingsRepository
     {
         /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
-        /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task<IPagedList<Departments>> GetPageList(int page = 1, int limit = 15, string tenantId = "");
+        Task<IPagedList<TenantDefaultSettings>> GetPageList(int page = 1, int limit = 15);
 
         /// <summary>
         /// 查询全部
         /// </summary>
-        /// <param name="tenantId"></param>
+        /// <param name="appVersionId"></param>
         /// <returns></returns>
-        Task<IEnumerable<Departments>> GetAll(string tenantId = "");
+        Task<IEnumerable<TenantDefaultSettings>> GetAll(string appVersionId = "");
 
         /// <summary>
-        /// 获取一条数据
+        /// 取一条数据
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Departments> GetModel(string id);
+        Task<TenantDefaultSettings> GetModel(string id);
 
         /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<Departments> GetModel(Departments model);
+        Task<TenantDefaultSettings> GetModel(TenantDefaultSettings model);
 
         /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<int> Add(Departments model);
+        Task<int> Add(TenantDefaultSettings model);
 
         /// <summary>
         /// 更新
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<int> Update(Departments model);
+        Task<int> Update(TenantDefaultSettings model);
 
         /// <summary>
         /// 删除

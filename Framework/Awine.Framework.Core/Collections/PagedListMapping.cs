@@ -16,14 +16,14 @@ namespace Awine.Framework.Core.Collections
         public int IndexFrom { get; set; }
 
         /// <summary>
-        /// PageIndex
+        /// Page
         /// </summary>
-        public int PageIndex { get; set; }
+        public int Page { get; set; }
 
         /// <summary>
-        /// PageSize
+        /// Limit
         /// </summary>
-        public int PageSize { get; set; }
+        public int Limit { get; set; }
 
         /// <summary>
         /// 

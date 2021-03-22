@@ -40,8 +40,8 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             var result = source.Items.Select(_mapper.Map<T1, T2>);
             return new PagedListMapping<T2>
             {
-                PageSize = source.PageSize,
-                PageIndex = source.PageIndex,
+                Limit = source.Limit,
+                Page = source.Page,
                 TotalCount = source.TotalCount,
                 HasPreviousPage = source.HasPreviousPage,
                 HasNextPage = source.HasNextPage,

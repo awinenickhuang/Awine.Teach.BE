@@ -1,17 +1,16 @@
-﻿using Awine.Teach.FoundationService.Application.ViewModels;
+﻿using Awine.Framework.Core.Collections;
+using Awine.Teach.FoundationService.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
-using Awine.Framework.Core.Collections;
-using Awine.Teach.FoundationService.Application.ServiceResult;
 
-namespace Awine.Teach.FoundationService.Application.Interfaces
+namespace Awine.Teach.FoundationService.Domain.Interface
 {
     /// <summary>
-    /// 部门
+    /// 租户信息设置
     /// </summary>
-    public interface IDepartmentsService
+    public interface ITenantSettingsRepository
     {
         /// <summary>
         /// 分页列表
@@ -20,41 +19,48 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// <param name="limit"></param>
         /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task<IPagedList<DepartmentsViewModel>> GetPageList(int page = 1, int limit = 15, string tenantId = "");
+        Task<IPagedList<TenantSettings>> GetPageList(int page = 1, int limit = 15, string tenantId = "");
 
         /// <summary>
         /// 查询全部
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task<IEnumerable<DepartmentsViewModel>> GetAll(string tenantId = "");
+        Task<IEnumerable<TenantSettings>> GetAll(string tenantId = "");
 
         /// <summary>
-        /// 获取一条数据
+        /// 取一条数据
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<DepartmentsViewModel> GetModel(string id);
+        Task<TenantSettings> GetModel(string id);
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<TenantSettings> GetModel(TenantSettings model);
 
         /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<Result> Add(DepartmentsAddViewModel model);
+        Task<int> Add(TenantSettings model);
 
         /// <summary>
         /// 更新
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<Result> Update(DepartmentsUpdateViewModel model);
+        Task<int> Update(TenantSettings model);
 
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<Result> Delete(string id);
+        Task<int> Delete(string id);
     }
 }

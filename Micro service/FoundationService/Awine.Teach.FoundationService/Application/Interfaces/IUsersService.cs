@@ -24,15 +24,15 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="userName"></param>
         /// <param name="phoneNumber"></param>
         /// <param name="tenantId"></param>
         /// <param name="departmentId"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        Task<IPagedList<UsersViewModel>> GetPageList(int pageIndex = 1, int pageSize = 15, string userName = "", string phoneNumber = "", string tenantId = "", string departmentId = "", string roleId = "");
+        Task<IPagedList<UsersViewModel>> GetPageList(int page = 1, int limit = 15, string userName = "", string phoneNumber = "", string tenantId = "", string departmentId = "", string roleId = "");
 
         /// <summary>
         /// 查询某一部门的所有用户

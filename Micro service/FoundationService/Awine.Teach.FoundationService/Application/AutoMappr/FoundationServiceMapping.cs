@@ -31,6 +31,18 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             CreateMap<TenantsUpdateViewModel, Tenants>();
             CreateMap<IPagedList<Tenants>, IPagedList<TenantsViewModel>>().ConvertUsing<PagedListConverter<Tenants, TenantsViewModel>>();
 
+            //租户设置 - 系统默认
+            CreateMap<TenantDefaultSettings, TenantDefaultSettingsViewModel>().ReverseMap();
+            CreateMap<TenantDefaultSettingsAddViewModel, TenantDefaultSettings>();
+            CreateMap<TenantDefaultSettingsUpdateViewModel, TenantDefaultSettings>();
+            CreateMap<IPagedList<TenantDefaultSettings>, IPagedList<TenantDefaultSettingsViewModel>>().ConvertUsing<PagedListConverter<TenantDefaultSettings, TenantDefaultSettingsViewModel>>();
+
+            //租户设置 - 单个租户
+            CreateMap<TenantSettings, TenantSettingsViewModel>();
+            CreateMap<TenantSettingsAddViewModel, TenantSettings>();
+            CreateMap<TenantSettingsUpdateViewModel, TenantSettings>();
+            CreateMap<IPagedList<TenantSettings>, IPagedList<TenantSettingsViewModel>>().ConvertUsing<PagedListConverter<TenantSettings, TenantSettingsViewModel>>();
+
             //部门信息
             CreateMap<DepartmentsAddViewModel, Departments>();
             CreateMap<DepartmentsUpdateViewModel, Departments>();

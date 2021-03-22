@@ -19,5 +19,10 @@ namespace Awine.Teach.DocumentService.Models
         /// 文件名称
         /// </summary>
         public string FileName { get; set; }
+
+        /// <summary>
+        /// 文件大小 单位:MB
+        /// </summary>
+        public int FileSize { get; set; }
     }
 }

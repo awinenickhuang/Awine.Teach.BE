@@ -79,21 +79,21 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="userName"></param>
         /// <param name="phoneNumber"></param>
         /// <param name="tenantId"></param>
         /// <param name="departmentId"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<IPagedList<UsersViewModel>> GetPageList(int pageIndex = 1, int pageSize = 15, string userName = "", string phoneNumber = "", string tenantId = "", string departmentId = "", string roleId = "")
+        public async Task<IPagedList<UsersViewModel>> GetPageList(int page = 1, int limit = 15, string userName = "", string phoneNumber = "", string tenantId = "", string departmentId = "", string roleId = "")
         {
             if (string.IsNullOrEmpty(tenantId))
             {
                 tenantId = _user.TenantId;
             }
-            var entities = await _usersRepository.GetPageList(pageIndex, pageSize, userName, phoneNumber, tenantId, departmentId, roleId);
+            var entities = await _usersRepository.GetPageList(page, limit, userName, phoneNumber, tenantId, departmentId, roleId);
             return _mapper.Map<IPagedList<Users>, IPagedList<UsersViewModel>>(entities);
         }
 

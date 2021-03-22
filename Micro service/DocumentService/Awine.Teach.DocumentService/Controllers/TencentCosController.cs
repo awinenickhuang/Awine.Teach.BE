@@ -61,6 +61,9 @@ namespace Awine.Teach.DocumentService.Controllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
+        /// <remarks>
+        /// TODO:每次完成上传后返回文件大小，以限制每个租户的存储空间
+        /// </remarks>
         [HttpPost("tencentcosupload")]
         public async Task<IActionResult> UploadCloudObject(IFormFile file)
         {

@@ -123,5 +123,38 @@ namespace Awine.Teach.TeachingAffairService.Infrastructure.Repository
                 return list.ToPagedList(page, limit);
             }
         }
+
+        /// <summary>
+        /// 查询全部
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="photoalbumId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ClassPhotoalbumAttachment>> GetAll(string tenantId = "", string photoalbumId = "")
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                DynamicParameters parameters = new DynamicParameters();
+
+                sqlStr.Append(" SELECT * FROM t_ea_class_photoalbum_attachment WHERE IsDeleted=0 ");
+
+                if (!string.IsNullOrEmpty(tenantId))
+                {
+                    sqlStr.Append(" AND TenantId=@TenantId ");
+                    parameters.Add("TenantId", tenantId);
+                }
+
+                if (!string.IsNullOrEmpty(photoalbumId))
+                {
+                    sqlStr.Append(" AND PhotoalbumId=@PhotoalbumId ");
+                    parameters.Add("PhotoalbumId", photoalbumId);
+                }
+
+                sqlStr.Append(" ORDER BY CreateTime DESC ");
+
+                return await connection.QueryAsync<ClassPhotoalbumAttachment>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
     }
 }

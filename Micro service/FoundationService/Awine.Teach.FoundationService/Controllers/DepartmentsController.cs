@@ -32,15 +32,15 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageSize">每页记录条数</param>
+        /// <param name="page">页码</param>
+        /// <param name="limit">每页记录条数</param>
         /// <param name="tenantId">每页记录条数</param>
         /// <returns></returns>
         [HttpGet]
         [Route("pagelist")]
-        public async Task<IActionResult> GetPageList(int pageIndex = 1, int pageSize = 15, string tenantId = "")
+        public async Task<IActionResult> GetPageList(int page = 1, int limit = 15, string tenantId = "")
         {
-            var result = await _departmentsService.GetPageList(pageIndex, pageSize, tenantId);
+            var result = await _departmentsService.GetPageList(page, limit, tenantId);
             return Response(success: true, data: result);
         }
 

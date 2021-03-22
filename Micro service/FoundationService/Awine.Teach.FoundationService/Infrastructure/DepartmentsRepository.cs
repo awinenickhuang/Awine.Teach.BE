@@ -42,11 +42,11 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="tenantId"></param>
         /// <returns></returns>
-        public async Task<IPagedList<Departments>> GetPageList(int pageIndex = 1, int pageSize = 15, string tenantId = "")
+        public async Task<IPagedList<Departments>> GetPageList(int page = 1, int limit = 15, string tenantId = "")
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -70,7 +70,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     return departments;
                 }, parameters, splitOn: "Id", commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
                 
-                return result.ToPagedList(pageIndex, pageSize);
+                return result.ToPagedList(page, limit);
             }
         }
 

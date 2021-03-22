@@ -16,13 +16,13 @@ namespace Awine.Framework.Core.Collections
         /// Gets or sets the index of the page.
         /// </summary>
         /// <value>The index of the page.</value>
-        public int PageIndex { get; set; }
+        public int Page { get; set; }
 
         /// <summary>
         /// Gets or sets the size of the page.
         /// </summary>
         /// <value>The size of the page.</value>
-        public int PageSize { get; set; }
+        public int Limit { get; set; }
 
         /// <summary>
         /// Gets or sets the total count.
@@ -52,47 +52,47 @@ namespace Awine.Framework.Core.Collections
         /// Gets the has previous page.
         /// </summary>
         /// <value>The has previous page.</value>
-        public bool HasPreviousPage => PageIndex - IndexFrom > 0;
+        public bool HasPreviousPage => Page - IndexFrom > 0;
 
         /// <summary>
         /// Gets the has next page.
         /// </summary>
         /// <value>The has next page.</value>
-        public bool HasNextPage => PageIndex - IndexFrom + 1 < TotalPages;
+        public bool HasNextPage => Page - IndexFrom + 1 < TotalPages;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{T}" /> class.
         /// </summary>
         /// <param name="source">The source.</param>
-        /// <param name="pageIndex">The index of the page.</param>
-        /// <param name="pageSize">The size of the page.</param>
+        /// <param name="page">The index of the page.</param>
+        /// <param name="limit">The size of the page.</param>
         /// <param name="indexFrom">The index from.</param>
-        internal PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int indexFrom)
+        internal PagedList(IEnumerable<T> source, int page, int limit, int indexFrom)
         {
-            if (indexFrom > pageIndex)
+            if (indexFrom > page)
             {
-                throw new ArgumentException($"indexFrom: {indexFrom} > pageIndex: {pageIndex}, must indexFrom <= pageIndex");
+                throw new ArgumentException($"indexFrom: {indexFrom} > page: {page}, must indexFrom <= page");
             }
 
             if (source is IQueryable<T> querable)
             {
-                PageIndex = pageIndex;
-                PageSize = pageSize;
+                Page = page;
+                Limit = limit;
                 IndexFrom = indexFrom;
                 TotalCount = querable.Count();
-                TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
+                TotalPages = (int)Math.Ceiling(TotalCount / (double)Limit);
 
-                Items = querable.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToList();
+                Items = querable.Skip((Page - IndexFrom) * Limit).Take(Limit).ToList();
             }
             else
             {
-                PageIndex = pageIndex;
-                PageSize = pageSize;
+                Page = page;
+                Limit = limit;
                 IndexFrom = indexFrom;
                 TotalCount = source.Count();
-                TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
+                TotalPages = (int)Math.Ceiling(TotalCount / (double)Limit);
 
-                Items = source.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToList();
+                Items = source.Skip((Page - IndexFrom) * Limit).Take(Limit).ToList();
             }
         }
 
@@ -114,13 +114,13 @@ namespace Awine.Framework.Core.Collections
         /// Gets the index of the page.
         /// </summary>
         /// <value>The index of the page.</value>
-        public int PageIndex { get; }
+        public int Page { get; }
 
         /// <summary>
         /// Gets the size of the page.
         /// </summary>
         /// <value>The size of the page.</value>
-        public int PageSize { get; }
+        public int Limit { get; }
 
         /// <summary>
         /// Gets the total count.
@@ -150,50 +150,50 @@ namespace Awine.Framework.Core.Collections
         /// Gets the has previous page.
         /// </summary>
         /// <value>The has previous page.</value>
-        public bool HasPreviousPage => PageIndex - IndexFrom > 0;
+        public bool HasPreviousPage => Page - IndexFrom > 0;
 
         /// <summary>
         /// Gets the has next page.
         /// </summary>
         /// <value>The has next page.</value>
-        public bool HasNextPage => PageIndex - IndexFrom + 1 < TotalPages;
+        public bool HasNextPage => Page - IndexFrom + 1 < TotalPages;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedList{TSource, TResult}" /> class.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="converter">The converter.</param>
-        /// <param name="pageIndex">The index of the page.</param>
-        /// <param name="pageSize">The size of the page.</param>
+        /// <param name="page">The index of the page.</param>
+        /// <param name="limit">The size of the page.</param>
         /// <param name="indexFrom">The index from.</param>
-        public PagedList(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int pageIndex, int pageSize, int indexFrom)
+        public PagedList(IEnumerable<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter, int page, int limit, int indexFrom)
         {
-            if (indexFrom > pageIndex)
+            if (indexFrom > page)
             {
-                throw new ArgumentException($"indexFrom: {indexFrom} > pageIndex: {pageIndex}, must indexFrom <= pageIndex");
+                throw new ArgumentException($"indexFrom: {indexFrom} > page: {page}, must indexFrom <= page");
             }
 
             if (source is IQueryable<TSource> querable)
             {
-                PageIndex = pageIndex;
-                PageSize = pageSize;
+                Page = page;
+                Limit = limit;
                 IndexFrom = indexFrom;
                 TotalCount = querable.Count();
-                TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
+                TotalPages = (int)Math.Ceiling(TotalCount / (double)Limit);
 
-                var items = querable.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToArray();
+                var items = querable.Skip((Page - IndexFrom) * Limit).Take(Limit).ToArray();
 
                 Items = new List<TResult>(converter(items));
             }
             else
             {
-                PageIndex = pageIndex;
-                PageSize = pageSize;
+                Page = page;
+                Limit = limit;
                 IndexFrom = indexFrom;
                 TotalCount = source.Count();
-                TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
+                TotalPages = (int)Math.Ceiling(TotalCount / (double)Limit);
 
-                var items = source.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToArray();
+                var items = source.Skip((Page - IndexFrom) * Limit).Take(Limit).ToArray();
 
                 Items = new List<TResult>(converter(items));
             }
@@ -206,8 +206,8 @@ namespace Awine.Framework.Core.Collections
         /// <param name="converter">The converter.</param>
         public PagedList(IPagedList<TSource> source, Func<IEnumerable<TSource>, IEnumerable<TResult>> converter)
         {
-            PageIndex = source.PageIndex;
-            PageSize = source.PageSize;
+            Page = source.Page;
+            Limit = source.Limit;
             IndexFrom = source.IndexFrom;
             TotalCount = source.TotalCount;
             TotalPages = source.TotalPages;

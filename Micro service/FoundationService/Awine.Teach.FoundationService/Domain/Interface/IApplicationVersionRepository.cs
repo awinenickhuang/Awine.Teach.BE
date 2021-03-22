@@ -15,12 +15,12 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        Task<IPagedList<ApplicationVersion>> GetPageList(int pageIndex = 1, int pageSize = 15, string name = "", string identifying = "");
+        Task<IPagedList<ApplicationVersion>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "");
 
         /// <summary>
         /// 查询全部

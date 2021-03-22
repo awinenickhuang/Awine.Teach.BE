@@ -46,8 +46,8 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="pageSize">每页记录条数</param>
+        /// <param name="page">页码</param>
+        /// <param name="limit">每页记录条数</param>
         /// <param name="userName">姓名</param>
         /// <param name="phoneNumber">电话号码</param>
         /// <param name="tenantId">租户ID</param>
@@ -56,9 +56,9 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("pagelist")]
-        public async Task<IActionResult> GetPageList(int pageIndex = 1, int pageSize = 15, string userName = "", string phoneNumber = "", string tenantId = "", string departmentId = "", string roleId = "")
+        public async Task<IActionResult> GetPageList(int page = 1, int limit = 15, string userName = "", string phoneNumber = "", string tenantId = "", string departmentId = "", string roleId = "")
         {
-            var result = await _usersService.GetPageList(pageIndex, pageSize, userName, phoneNumber, tenantId, departmentId, roleId);
+            var result = await _usersService.GetPageList(page, limit, userName, phoneNumber, tenantId, departmentId, roleId);
             return Response(success: true, data: result);
         }
 

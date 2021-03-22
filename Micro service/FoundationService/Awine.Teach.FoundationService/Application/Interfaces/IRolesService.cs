@@ -16,11 +16,11 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// <summary>
         /// 分页列表
         /// </summary>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
         /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task<IPagedList<RolesViewModel>> GetPageList(int pageIndex = 1, int pageSize = 15, string tenantId = "");
+        Task<IPagedList<RolesViewModel>> GetPageList(int page = 1, int limit = 15, string tenantId = "");
 
         /// <summary>
         /// 查询全部

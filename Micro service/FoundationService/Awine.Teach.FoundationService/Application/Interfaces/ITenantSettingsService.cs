@@ -9,41 +9,44 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Interfaces
 {
     /// <summary>
-    /// 应用版本
+    /// 机构设置
     /// </summary>
-    public interface IApplicationVersionService
+    public interface ITenantSettingsService
     {
         /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
-        /// <param name="name"></param>
-        /// <param name="identifying"></param>
         /// <returns></returns>
-        Task<IPagedList<ApplicationVersionViewModel>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "");
+        Task<IPagedList<TenantSettingsViewModel>> GetPageList(int page = 1, int limit = 15);
 
         /// <summary>
         /// 查询全部
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="identifying"></param>
         /// <returns></returns>
-        Task<IEnumerable<ApplicationVersionViewModel>> GetAll(string name = "", string identifying = "");
+        Task<IEnumerable<TenantSettingsViewModel>> GetAll();
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<TenantSettingsViewModel> GetModel(string id);
 
         /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<Result> Add(ApplicationVersionAddViewModel model);
+        Task<Result> Add(TenantSettingsAddViewModel model);
 
         /// <summary>
         /// 更新
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<Result> Update(ApplicationVersionUpdateViewModel model);
+        Task<Result> Update(TenantSettingsUpdateViewModel model);
 
         /// <summary>
         /// 删除
@@ -51,12 +54,5 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<Result> Delete(string id);
-
-        /// <summary>
-        /// 获取一条数据
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<ApplicationVersionViewModel> GetModel(string id);
     }
 }

@@ -287,7 +287,6 @@ namespace Awine.Teach.FoundationService.Application.Services
             //创建租户账号
             Users user = new Users()
             {
-                TenantId = tenant.Id,
                 AccessFailedCount = 0,
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 Email = "",
@@ -305,7 +304,9 @@ namespace Awine.Teach.FoundationService.Application.Services
                 TwoFactorEnabled = false,
                 Gender = 0,
                 IsActive = true,
-                RoleId = role.Id
+                TenantId = tenant.Id,
+                RoleId = role.Id,
+                DepartmentId = Guid.NewGuid().ToString()
             };
 
             if (await _tenantsRepository.Enter(tenant, user, role, rolesOwnedModules))

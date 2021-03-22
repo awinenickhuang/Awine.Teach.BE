@@ -29,5 +29,10 @@ namespace Awine.Teach.TeachingAffairService.Application.ViewModels
         /// 描述
         /// </summary>
         public string Describe { get; set; }
+
+        /// <summary>
+        /// 本次上传的图片大小
+        /// </summary>
+        public int AttachmentSize { get; set; }
     }
 }

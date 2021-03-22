@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Awine.Teach.FoundationService.Domain.Models
+namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 机构设置
+    /// 租户设置 -> 更析
     /// </summary>
-    public class TenantSettings
+    public class TenantSettingsUpdateViewModel
     {
         /// <summary>
         /// ID
         /// </summary>
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; }
 
         /// <summary>
         /// 允许添加的分支机构个数
@@ -43,20 +44,5 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// 最大存储空间
         /// </summary>
         public int MaxStorageSpace { get; set; }
-
-        /// <summary>
-        /// 租户标识
-        /// </summary>
-        public string TenantId { get; set; }
-
-        /// <summary>
-        /// 删除标识
-        /// </summary>
-        public bool IsDeleted { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CreateTime { get; set; } = DateTime.Now;
     }
 }
