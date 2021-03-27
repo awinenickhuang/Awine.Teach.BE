@@ -64,7 +64,6 @@ namespace Awine.Teach.OperationService.Application.Extensions
             //租户登录信息
             services.Add(ServiceDescriptor.Singleton<ITenantLoggingRepository, TenantLoggingRepository>());
             services.Add(ServiceDescriptor.Singleton<ITenantLoggingService, TenantLoggingService>());
-            services.Add(ServiceDescriptor.Singleton<ITenantLoggingSubscriberService, TenantLoggingSubscriberService>());
 
             return services;
         }

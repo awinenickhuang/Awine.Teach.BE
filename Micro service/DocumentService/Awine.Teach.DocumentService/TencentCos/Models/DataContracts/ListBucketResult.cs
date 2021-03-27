@@ -9,6 +9,9 @@ namespace Awine.Teach.DocumentService.TencentCos
     /// </summary>
     public class ListBucketResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public ListBucketResult()
         {
             Contents = new List<CloudObjectMetadata>();
@@ -129,6 +132,9 @@ namespace Awine.Teach.DocumentService.TencentCos
         public XCosStorageClass GetStorageClass() { return new TEnumParser<XCosStorageClass>().ParseFromShortName(XCosStorageClassShortName); }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ContainerOwner
     {
         [XmlElement("ID")]

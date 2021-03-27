@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Awine.Teach.DocumentService.TencentCos
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CosRegion
     {
         /// <summary>
@@ -16,6 +19,11 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// </summary>
         public string Code { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="code"></param>
         public CosRegion(string name, string code)
         {
             Name = name;

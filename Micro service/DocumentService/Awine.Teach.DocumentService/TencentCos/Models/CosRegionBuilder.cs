@@ -4,8 +4,14 @@ using System.Text;
 
 namespace Awine.Teach.DocumentService.TencentCos
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CosRegionBuilder
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static List<CosRegion> CosRegions { get; private set; } = new List<CosRegion>()
         {
             new CosRegion("北京一区（华北）", "ap-beijing-1"),
@@ -26,11 +32,21 @@ namespace Awine.Teach.DocumentService.TencentCos
             new CosRegion( "莫斯科", "eu-moscow"),
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public static CosRegion FindByCode(string code)
         {
             return CosRegions.Find(x => x.Code == code);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static CosRegion FindByPartialName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

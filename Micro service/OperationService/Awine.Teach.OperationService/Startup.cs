@@ -8,6 +8,7 @@ using Awine.Framework.AspNetCore.Authorize;
 using Awine.Framework.AspNetCore.Consul;
 using Awine.Framework.AspNetCore.Extensions;
 using Awine.Teach.OperationService.Application.Extensions;
+using Awine.Teach.OperationService.Application.SubscriberService;
 using Awine.Teach.OperationService.Configurations;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
@@ -100,6 +101,8 @@ namespace Awine.Teach.OperationService
                 option.FailedRetryCount = 2;
                 option.FailedRetryInterval = 5;
             });
+
+            services.Add(ServiceDescriptor.Singleton<ITenantLoggingSubscriberService, TenantLoggingSubscriberService>());
         }
 
         /// <summary>

@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Awine.Teach.DocumentService.TencentCos
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class CosRegionExtensions
     {
         /// <summary>

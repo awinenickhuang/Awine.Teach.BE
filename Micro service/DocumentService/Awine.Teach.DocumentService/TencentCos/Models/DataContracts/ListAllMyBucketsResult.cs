@@ -19,6 +19,9 @@ namespace Awine.Teach.DocumentService.TencentCos
         public List<BucketResult> Buckets { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class BucketOwnerResult
     {
         [XmlElement("ID")]
@@ -27,6 +30,9 @@ namespace Awine.Teach.DocumentService.TencentCos
         public string DisplayName { get; set; }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [XmlType("Bucket")]
     public class BucketResult
     {

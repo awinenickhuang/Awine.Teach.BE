@@ -326,7 +326,15 @@ namespace Awine.Teach.FoundationService.Application.Services
         {
             try
             {
+                var industry = await _industryCategoryRepository.GetModel(model.IndustryId);
+                if (null == industry)
+                {
+                    return new Result { Success = false, Message = "未找到指定的业务类型分类信息！" };
+                }
+
                 var entity = _mapper.Map<TenantsUpdateViewModel, Tenants>(model);
+
+                entity.IndustryName = industry.Name;
 
                 if (null != await _tenantsRepository.GetModel(entity))
                 {

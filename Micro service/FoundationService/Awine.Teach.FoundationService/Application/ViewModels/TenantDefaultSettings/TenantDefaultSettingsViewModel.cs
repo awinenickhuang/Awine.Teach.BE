@@ -43,7 +43,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// <summary>
         /// 最大存储空间
         /// </summary>
-        public int MaxStorageSpace { get; set; }
+        public long MaxStorageSpace { get; set; }
 
         /// <summary>
         /// 应用版本标识

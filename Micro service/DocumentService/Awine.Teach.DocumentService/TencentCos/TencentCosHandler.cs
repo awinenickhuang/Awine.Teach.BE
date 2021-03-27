@@ -359,8 +359,10 @@ namespace Awine.Teach.DocumentService.TencentCos
             }
         }
 
+        #region Private Methods
+
         /// <summary>
-        /// 
+        /// COS请求失败错误描述
         /// </summary>
         /// <param name="method"></param>
         /// <param name="respStatusCode"></param>
@@ -379,7 +381,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         }
 
         /// <summary>
-        /// 
+        /// 发送请求
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
@@ -403,5 +405,7 @@ namespace Awine.Teach.DocumentService.TencentCos
                 throw ex;
             }
         }
+
+        #endregion
     }
 }

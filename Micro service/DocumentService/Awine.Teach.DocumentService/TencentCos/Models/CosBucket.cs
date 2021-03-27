@@ -8,36 +8,73 @@ namespace Awine.Teach.DocumentService.TencentCos
     /// </summary>
     public class CosBucket
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public BucketName BucketName { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CosRegion CosRegion { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="cosRegion"></param>
         public CosBucket(BucketName bucketName, CosRegion cosRegion)
         {
             BucketName = bucketName;
             CosRegion = cosRegion;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="cosRegionCode"></param>
         public CosBucket(BucketName bucketName, string cosRegionCode)
             : this(bucketName, CosRegionBuilder.FindByCode(cosRegionCode))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bucketName"></param>
+        /// <param name="cosRegionCode"></param>
         public CosBucket(string bucketName, string cosRegionCode)
             : this(new BucketName(bucketName), CosRegionBuilder.FindByCode(cosRegionCode))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="appId"></param>
+        /// <param name="cosRegion"></param>
         public CosBucket(string name, string appId, CosRegion cosRegion)
             : this(new BucketName(name, appId), cosRegion)
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="appId"></param>
+        /// <param name="cosRegionCode"></param>
         public CosBucket(string name, string appId, string cosRegionCode)
             : this(new BucketName(name, appId), CosRegionBuilder.FindByCode(cosRegionCode))
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bucketResult"></param>
         public CosBucket(BucketResult bucketResult)
             : this(new BucketName(bucketResult.Name), CosRegionBuilder.FindByCode(bucketResult.Location))
         {
@@ -60,8 +97,18 @@ namespace Awine.Teach.DocumentService.TencentCos
             return uri;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="relativeUri"></param>
+        /// <returns></returns>
         public Uri ToHttps(string relativeUri) => ToUri("https", relativeUri);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="relativeUri"></param>
+        /// <returns></returns>
         public Uri ToHttp(string relativeUri) => ToUri("http", relativeUri);
 
         /// <summary>
