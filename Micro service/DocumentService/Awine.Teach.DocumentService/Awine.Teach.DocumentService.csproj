@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Framework\Awine.Framework.AspNetCore\Awine.Framework.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Awine.Framework.Identity\Awine.Framework.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

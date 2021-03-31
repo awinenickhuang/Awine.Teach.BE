@@ -1,4 +1,7 @@
-﻿using IdentityServer4.Models;
+﻿using Awine.IdpCenter.ExtensionGrants.SMS;
+using Awine.IdpCenter.IRepositories;
+using Awine.IdpCenter.Regular;
+using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -9,28 +12,32 @@ using System.Threading.Tasks;
 
 namespace Awine.IdpCenter.ExtensionGrants
 {
-    /*
+    /// <summary>
+    /// 扩展手机短信验证码登录
+    /// </summary>
     public class SmsGrantValidator : IExtensionGrantValidator
     {
         private readonly IHttpContextAccessor _contextAccessor;
 
         private readonly IValidationComponent _validationComponent;
 
-        private readonly IUserService _userService;
+        private readonly IUserRepository _userRepository;
+
+        public string GrantType { get; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="contextAccessor"></param>
-        /// <param name="validationComponent"></param>
-        /// <param name="userService"></param>
-        public SmsGrantValidator(IHttpContextAccessor contextAccessor, IValidationComponent validationComponent, IUserService userService)
+        /// <param name="userRepository"></param>
+        /// <param name="userRepository"></param>
+        public SmsGrantValidator(IHttpContextAccessor contextAccessor, IValidationComponent validationComponent, IUserRepository userRepository)
         {
             _contextAccessor = contextAccessor;
 
             _validationComponent = validationComponent;
 
-            _userService = userService;
+            _userRepository = userRepository;
 
             GrantType = CustomGrantType.Sms;
         }
@@ -75,7 +82,7 @@ namespace Awine.IdpCenter.ExtensionGrants
                     return;
                 }
 
-                var userEntity = await _userService.GetUserByPhoneAsync(phone);
+                var userEntity = await _userRepository.GetUserByPhoneAsync(phone);
 
                 if (userEntity == null)
                 {
@@ -86,7 +93,7 @@ namespace Awine.IdpCenter.ExtensionGrants
 
                 }
 
-                if (userEntity.Enabled == false)
+                if (userEntity.IsActive == false)
                 {
 
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, "您的账号已被禁止登录");
@@ -95,21 +102,13 @@ namespace Awine.IdpCenter.ExtensionGrants
 
                 }
 
-                await _userService.SaveSuccessLoginInfo(context.Request.ClientId.ToInt32(),
-                    userEntity.Id,
-                    _contextAccessor.HttpContext.GetIp(),
-
-            UserLoginModel.SmsCode);
+                //Query GetLoginClaims
             }
             catch (Exception ex)
             {
 
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, ex.Message);
             }
-
         }
-
-        public string GrantType { get; }
     }
-    */
 }

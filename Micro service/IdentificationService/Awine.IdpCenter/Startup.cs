@@ -1,5 +1,6 @@
 using Awine.IdpCenter.Configuration;
 using Awine.IdpCenter.Entities;
+using Awine.IdpCenter.ExtensionGrants;
 using Awine.IdpCenter.Services;
 using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.Cookies;

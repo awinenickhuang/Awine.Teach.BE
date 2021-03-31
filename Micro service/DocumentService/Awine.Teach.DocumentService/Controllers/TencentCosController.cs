@@ -1,4 +1,5 @@
-﻿using Awine.Teach.DocumentService.Extensions;
+﻿using Awine.Framework.Identity;
+using Awine.Teach.DocumentService.Extensions;
 using Awine.Teach.DocumentService.Models;
 using Awine.Teach.DocumentService.TencentCos;
 using Microsoft.AspNetCore.Http;
@@ -37,17 +38,25 @@ namespace Awine.Teach.DocumentService.Controllers
         /// <summary>
         /// 
         /// </summary>
+        private readonly ICurrentUser _currentUser;
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="fileUploadOptionsAccessor"></param>
         /// <param name="cosUploadOptionsAccessor"></param>
         /// <param name="cosHandler"></param>
+        /// <param name="currentUser"></param>
         public TencentCosController(
             IOptions<FileUploadOptions> fileUploadOptionsAccessor,
             IOptions<CosUploadOptions> cosUploadOptionsAccessor,
-            ITencentCosHandler cosHandler)
+            ITencentCosHandler cosHandler,
+            ICurrentUser currentUser)
         {
             _fileUploadOptions = fileUploadOptionsAccessor?.Value ?? throw new ArgumentNullException(nameof(fileUploadOptionsAccessor));
             _cosUploadOptions = cosUploadOptionsAccessor?.Value ?? throw new ArgumentNullException(nameof(cosUploadOptionsAccessor));
             _cosHandler = cosHandler ?? throw new ArgumentNullException(nameof(cosHandler));
+            _currentUser = currentUser;
         }
 
         /// <summary>
@@ -96,8 +105,16 @@ namespace Awine.Teach.DocumentService.Controllers
 
             if (!containerExists)
             {
-                return Response(success: false, message: "未找到指定文件");
+                return Response(success: false, message: "未找到指定存储位置");
             }
+
+            //如果企业目录不存在，则创建
+            //var tenantStorageUri = storageUri + $"/{_currentUser.TenantId}";
+            //var tenantContainerExists = await _cosHandler.ExistsAsync(tenantStorageUri);
+            //if (!tenantContainerExists)
+            //{
+            //    await _cosHandler.PutBucketAsync(_currentUser.TenantId, "ap-chengdu");
+            //}
 
             var filePath = new Uri(new Uri(storageUri), file.FileName);
             var fileExists = await _cosHandler.ExistsAsync(filePath.ToString());

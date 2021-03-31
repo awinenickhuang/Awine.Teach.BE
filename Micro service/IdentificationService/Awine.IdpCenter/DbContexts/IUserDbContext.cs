@@ -14,7 +14,7 @@ namespace Awine.IdpCenter.DbContexts
     public interface IUserDbContext : IDisposable
     {
         /// <summary>
-        /// Gets or sets the users.
+        /// Gets or sets the Users.
         /// </summary>
         /// <value>
         /// The users.
@@ -22,7 +22,7 @@ namespace Awine.IdpCenter.DbContexts
         DbSet<User> Users { get; set; }
 
         /// <summary>
-        /// Gets or sets the tenants.
+        /// Gets or sets the Tenants.
         /// </summary>
         /// <value>
         /// The tenants.
@@ -30,7 +30,7 @@ namespace Awine.IdpCenter.DbContexts
         DbSet<Tenant> Tenants { get; set; }
 
         /// <summary>
-        /// Gets or sets the roles.
+        /// Gets or sets the Roles.
         /// </summary>
         /// <value>
         /// The roles.
@@ -38,12 +38,17 @@ namespace Awine.IdpCenter.DbContexts
         DbSet<Role> Roles { get; set; }
 
         /// <summary>
-        /// Gets or sets the departments.
+        /// Gets or sets the Departments.
         /// </summary>
         /// <value>
         /// The departments.
         /// </value>
         DbSet<Department> Departments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SmsRecord.
+        /// </summary>
+        DbSet<SmsRecord> SmsRecord { get; set; }
 
         /// <summary>
         /// Saves the changes.

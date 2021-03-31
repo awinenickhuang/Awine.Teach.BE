@@ -69,7 +69,7 @@ namespace Awine.IdpCenter.DbContexts
         public DbSet<Tenant> Tenants { get; set; }
 
         /// <summary>
-        /// Gets or sets the Tenants.
+        /// Gets or sets the Roles.
         /// </summary>
         /// <value>
         /// The Tenants.
@@ -77,12 +77,17 @@ namespace Awine.IdpCenter.DbContexts
         public DbSet<Role> Roles { get; set; }
 
         /// <summary>
-        /// Gets or sets the Tenants.
+        /// Gets or sets the Departments.
         /// </summary>
         /// <value>
         /// The Tenants.
         /// </value>
         public DbSet<Department> Departments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the SmsRecord.
+        /// </summary>
+        public DbSet<SmsRecord> SmsRecord { get; set; }
 
         /// <summary>
         /// Saves the changes.

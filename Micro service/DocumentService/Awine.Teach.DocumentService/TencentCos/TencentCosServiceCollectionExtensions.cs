@@ -1,9 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using Awine.Teach.DocumentService.TencentCos;
 using System;
+using Awine.Framework.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class TencentCosServiceCollectionExtensions
     {
         /// <summary>
@@ -24,8 +29,15 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.Configure(setupAction); //IOptions<TencentCosOptions>
             }
 
+            // ASP.NET HttpContext dependency
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            // Identity
+            services.TryAddSingleton<ICurrentUser, CurrentUser>();
+
             services.AddHttpClient();
-            services.TryAddScoped<ITencentCosHandler, TencentCosHandler>();
+
+            services.TryAddSingleton<ITencentCosHandler, TencentCosHandler>();
 
             return services;
         }

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 namespace Awine.Teach.DocumentService.TencentCos
 {
     /// <summary>
-    /// COS存储桶。
+    /// COS存储桶
     /// </summary>
     public class CosBucket
     {

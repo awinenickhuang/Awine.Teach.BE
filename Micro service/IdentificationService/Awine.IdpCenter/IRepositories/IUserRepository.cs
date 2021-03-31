@@ -26,6 +26,13 @@ namespace Awine.IdpCenter.IRepositories
         Task<User> GetByAccount(string account);
 
         /// <summary>
+        /// 按手机号码查询
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        Task<User> GetUserByPhoneAsync(string phone);
+
+        /// <summary>
         /// 更新
         /// </summary>
         /// <param name="model"></param>

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Awine.IdpCenter.Repositories
 {
+    /// <summary>
+    /// 用户信息
+    /// </summary>
     public class UserRepository : IUserRepository
     {
         /// <summary>
@@ -72,6 +75,28 @@ namespace Awine.IdpCenter.Repositories
 
             var user = (await baseQuery.ToArrayAsync())
                 .SingleOrDefault(x => x.Account.Equals(account));
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user;
+        }
+
+        /// <summary>
+        /// 按手机号码查询
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public async Task<User> GetUserByPhoneAsync(string phone)
+        {
+            IQueryable<User> baseQuery = Context.Users;
+
+            await baseQuery.Include(x => x.Tenant).Include(x => x.Role).LoadAsync();
+
+            var user = (await baseQuery.ToArrayAsync())
+                .SingleOrDefault(x => x.Account.Equals(phone));
 
             if (user == null)
             {

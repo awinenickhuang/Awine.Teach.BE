@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Awine.Teach.DocumentService.TencentCos
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ITencentCosHandler
     {
         /// <summary>
@@ -69,7 +72,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <remarks>
         /// 删除一个不存在的文件时，返回 204 No Content。
         /// </remarks>
-        /// <param name="url"></param>
+        /// <param name="uri"></param>
         /// <returns></returns>
         Task<bool> DeleteObjectAsync(string uri);
 
@@ -81,7 +84,7 @@ namespace Awine.Teach.DocumentService.TencentCos
         /// <summary>
         /// 判断存储桶或文件是否存在
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="uri"></param>
         /// <returns></returns>
         Task<bool> ExistsAsync(string uri);
     }
