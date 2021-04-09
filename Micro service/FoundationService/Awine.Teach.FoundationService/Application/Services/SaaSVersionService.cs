@@ -14,19 +14,19 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Services
 {
     /// <summary>
-    /// 应用版本
+    /// SaaS版本
     /// </summary>
-    public class ApplicationVersionService : IApplicationVersionService
+    public class SaaSVersionService : ISaaSVersionService
     {
         /// <summary>
-        /// 应用版本
+        /// SaaS版本
         /// </summary>
-        private readonly IApplicationVersionRepository _applicationVersionRepository;
+        private readonly ISaaSVersionRepository _applicationVersionRepository;
 
         /// <summary>
-        /// 应用版本对应的系统模块
+        /// SaaS版本包括的系统模块
         /// </summary>
-        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+        private readonly ISaaSVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
 
         /// <summary>
         /// AutoMapper
@@ -36,7 +36,7 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <summary>
         /// Log
         /// </summary>
-        private readonly ILogger<ApplicationVersionService> _logger;
+        private readonly ILogger<SaaSVersionService> _logger;
 
         /// <summary>
         /// 构造
@@ -45,9 +45,9 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="applicationVersionOwnedModuleRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
-        public ApplicationVersionService(IApplicationVersionRepository applicationVersionRepository,
-            IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
-            IMapper mapper, ILogger<ApplicationVersionService> logger)
+        public SaaSVersionService(ISaaSVersionRepository applicationVersionRepository,
+            ISaaSVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
+            IMapper mapper, ILogger<SaaSVersionService> logger)
         {
             _applicationVersionRepository = applicationVersionRepository;
             _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
@@ -63,11 +63,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        public async Task<IPagedList<ApplicationVersionViewModel>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
+        public async Task<IPagedList<SaaSVersionViewModel>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
         {
             var entities = await _applicationVersionRepository.GetPageList(page, limit, name, identifying);
 
-            return _mapper.Map<IPagedList<ApplicationVersion>, IPagedList<ApplicationVersionViewModel>>(entities);
+            return _mapper.Map<IPagedList<SaaSVersion>, IPagedList<SaaSVersionViewModel>>(entities);
         }
 
         /// <summary>
@@ -76,11 +76,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ApplicationVersionViewModel>> GetAll(string name = "", string identifying = "")
+        public async Task<IEnumerable<SaaSVersionViewModel>> GetAll(string name = "", string identifying = "")
         {
             var entities = await _applicationVersionRepository.GetAll();
 
-            return _mapper.Map<IEnumerable<ApplicationVersion>, IEnumerable<ApplicationVersionViewModel>>(entities);
+            return _mapper.Map<IEnumerable<SaaSVersion>, IEnumerable<SaaSVersionViewModel>>(entities);
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Result> Add(ApplicationVersionAddViewModel model)
+        public async Task<Result> Add(SaaSVersionAddViewModel model)
         {
-            var entity = _mapper.Map<ApplicationVersionAddViewModel, ApplicationVersion>(model);
+            var entity = _mapper.Map<SaaSVersionAddViewModel, SaaSVersion>(model);
 
             var existing = await _applicationVersionRepository.GetModel(entity);
 
@@ -99,9 +99,25 @@ namespace Awine.Teach.FoundationService.Application.Services
                 return new Result { Success = false, Message = "数据已存在" };
             }
 
-            var result = await _applicationVersionRepository.Add(entity);
+            TenantDefaultSettings settings = new TenantDefaultSettings()
+            {
+                Id = Guid.NewGuid().ToString(),
+                MaxNumberOfDepartments = 0,
+                MaxNumberOfRoles = 0,
+                MaxNumberOfUser = 0,
+                MaxNumberOfCourse = 0,
+                MaxNumberOfClass = 0,
+                MaxNumberOfClassRoom = 0,
+                MaxNumberOfStudent = 0,
+                MaxStorageSpace = 0,
+                SaaSVersionId = entity.Id,
+                IsDeleted = false,
+                CreateTime = entity.CreateTime
+            };
 
-            if (result > 0)
+            var result = await _applicationVersionRepository.Add(entity, settings);
+
+            if (result)
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }
@@ -114,9 +130,9 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Result> Update(ApplicationVersionUpdateViewModel model)
+        public async Task<Result> Update(SaaSVersionUpdateViewModel model)
         {
-            var entity = _mapper.Map<ApplicationVersionUpdateViewModel, ApplicationVersion>(model);
+            var entity = _mapper.Map<SaaSVersionUpdateViewModel, SaaSVersion>(model);
 
             var existing = await _applicationVersionRepository.GetModel(entity);
 
@@ -145,7 +161,7 @@ namespace Awine.Teach.FoundationService.Application.Services
             var modules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(id);
             if (modules.Count() > 0)
             {
-                return new Result { Success = false, Message = "应用版本设置了模块信息，不允许删除操作！" };
+                return new Result { Success = false, Message = "SaaS版本设置了模块信息，不允许删除操作！" };
             }
 
             var result = await _applicationVersionRepository.Delete(id);
@@ -162,11 +178,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ApplicationVersionViewModel> GetModel(string id)
+        public async Task<SaaSVersionViewModel> GetModel(string id)
         {
             var entity = await _applicationVersionRepository.GetModel(id);
 
-            return _mapper.Map<ApplicationVersion, ApplicationVersionViewModel>(entity);
+            return _mapper.Map<SaaSVersion, SaaSVersionViewModel>(entity);
         }
     }
 }

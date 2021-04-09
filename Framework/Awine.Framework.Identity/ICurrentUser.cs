@@ -13,7 +13,7 @@ namespace Awine.Framework.Identity
         /// <summary>
         /// Name
         /// </summary>
-        string Name { get; }
+        string UserName { get; }
 
         /// <summary>
         /// UserId
@@ -34,6 +34,11 @@ namespace Awine.Framework.Identity
         /// TenantName
         /// </summary>
         string TenantName { get; }
+
+        /// <summary>
+        /// TenantClassification
+        /// </summary>
+        int TenantClassiFication { get; }
 
         /// <summary>
         /// IsAuthenticated

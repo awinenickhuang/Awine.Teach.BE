@@ -16,8 +16,14 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// 全部数据
         /// </summary>
         /// <param name="tenantId"></param>
+        /// <param name="classiFication"></param>
+        /// <param name="saaSVersionId"></param>
+        /// <param name="status"></param>
+        /// <param name="industryId"></param>
+        /// <param name="creatorId"></param>
+        /// <param name="creatorTenantId"></param>
         /// <returns></returns>
-        Task<IEnumerable<Tenants>> GetAll(string tenantId);
+        Task<IEnumerable<Tenants>> GetAll(string tenantId = "", int classiFication = 0, string saaSVersionId = "", int status = 0, string industryId = "", string creatorId = "", string creatorTenantId = "");
 
         /// <summary>
         /// 分页列表
@@ -25,8 +31,14 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <param name="tenantId"></param>
+        /// <param name="classiFication"></param>
+        /// <param name="saaSVersionId"></param>
+        /// <param name="status"></param>
+        /// <param name="industryId"></param>
+        /// <param name="creatorId"></param>
+        /// <param name="creatorTenantId"></param>
         /// <returns></returns>
-        Task<IPagedList<Tenants>> GetPageList(int page = 1, int limit = 15, string tenantId = "");
+        Task<IPagedList<Tenants>> GetPageList(int page = 1, int limit = 15, string tenantId = "", int classiFication = 0, string saaSVersionId = "", int status = 0, string industryId = "", string creatorId = "", string creatorTenantId = "");
 
         /// <summary>
         /// 获取一条数据
@@ -36,13 +48,6 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         Task<Tenants> GetModel(string id);
 
         /// <summary>
-        /// 取某一类型租户
-        /// </summary>
-        /// <param name="classiFication"></param>
-        /// <returns></returns>
-        Task<IEnumerable<Tenants>> GetClassiFication(int classiFication);
-
-        /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="model"></param>
@@ -50,11 +55,16 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         Task<Tenants> GetModel(Tenants model);
 
         /// <summary>
-        /// 添加
+        /// 租户开通
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="tenant"></param>
+        /// <param name="department"></param>
+        /// <param name="user"></param>
+        /// <param name="role"></param>
+        /// <param name="rolesOwnedModules"></param>
+        /// <param name="order"></param>
         /// <returns></returns>
-        Task<int> Add(Tenants model);
+        Task<bool> Add(Tenants tenant, Departments department, Users user, Roles role, IList<RolesOwnedModules> rolesOwnedModules, Orders order);
 
         /// <summary>
         /// 更新 -> 基本信息
@@ -64,34 +74,10 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         Task<int> Update(Tenants model);
 
         /// <summary>
-        /// 更新 -> 租户类型 1-免费 2-试用 3-付费（VIP）
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        Task<int> UpdateClassiFication(Tenants model);
-
-        /// <summary>
         /// 更新 -> 租户状态 1-正常 2-锁定（异常）3-锁定（过期）
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         Task<int> UpdateStatus(Tenants model);
-
-        /// <summary>
-        /// 更新 -> 允许添加的分支机构个数
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        Task<int> UpdateNumberOfBranches(Tenants model);
-
-        /// <summary>
-        /// 入驻 -> 注册
-        /// </summary>
-        /// <param name="tenantModel"></param>
-        /// <param name="userModel"></param>
-        /// <param name="rolesModel"></param>
-        /// <param name="rolesOwnedModules"></param>
-        /// <returns></returns>
-        Task<bool> Enter(Tenants tenantModel, Users userModel, Roles rolesModel, IList<RolesOwnedModules> rolesOwnedModules);
     }
 }

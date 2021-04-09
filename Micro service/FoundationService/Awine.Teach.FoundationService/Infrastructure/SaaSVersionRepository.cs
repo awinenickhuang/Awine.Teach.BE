@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Infrastructure.Repository
 {
     /// <summary>
-    /// 应用版本
+    /// SaaS版本
     /// </summary>
-    public class ApplicationVersionRepository : IApplicationVersionRepository
+    public class SaaSVersionRepository : ISaaSVersionRepository
     {
         /// <summary>
         /// MySQLProviderOptions
@@ -27,14 +27,14 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// ILogger
         /// </summary>
-        private readonly ILogger<ButtonsRepository> _logger;
+        private readonly ILogger<SaaSVersionRepository> _logger;
 
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="mySQLProviderOptions"></param>
         /// <param name="logger"></param>
-        public ApplicationVersionRepository(MySQLProviderOptions mySQLProviderOptions, ILogger<ButtonsRepository> logger)
+        public SaaSVersionRepository(MySQLProviderOptions mySQLProviderOptions, ILogger<SaaSVersionRepository> logger)
         {
             this._mySQLProviderOptions = mySQLProviderOptions ?? throw new ArgumentNullException(nameof(mySQLProviderOptions));
             _logger = logger;
@@ -48,14 +48,14 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        public async Task<IPagedList<ApplicationVersion>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
+        public async Task<IPagedList<SaaSVersion>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT Id,Name,Identifying,DisplayOrder,IsDeleted,CreateTime FROM ApplicationVersions WHERE IsDeleted=0 ");
+                sqlStr.Append(" SELECT Id,Name,Identifying,DisplayOrder,IsDeleted,CreateTime FROM SaaSVersions WHERE IsDeleted=0 ");
 
                 if (!string.IsNullOrEmpty(name))
                 {
@@ -69,26 +69,26 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     parameters.Add("Identifying", identifying);
                 }
 
-                var list = await connection.QueryAsync<ApplicationVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                var list = await connection.QueryAsync<SaaSVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                 return list.ToPagedList(page, limit);
             }
         }
 
         /// <summary>
-        /// 查询全部
+        /// 列表
         /// </summary>
         /// <param name="name"></param>
         /// <param name="identifying"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ApplicationVersion>> GetAll(string name = "", string identifying = "")
+        public async Task<IEnumerable<SaaSVersion>> GetAll(string name = "", string identifying = "")
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 DynamicParameters parameters = new DynamicParameters();
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT Id,Name,Identifying,DisplayOrder,IsDeleted,CreateTime FROM ApplicationVersions WHERE IsDeleted=0 ");
+                sqlStr.Append(" SELECT Id,Name,Identifying,DisplayOrder,IsDeleted,CreateTime FROM SaaSVersions WHERE IsDeleted=0 ");
 
                 if (!string.IsNullOrEmpty(name))
                 {
@@ -102,7 +102,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     parameters.Add("Identifying", identifying);
                 }
 
-                return await connection.QueryAsync<ApplicationVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                return await connection.QueryAsync<SaaSVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
 
@@ -110,17 +110,41 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// 添加
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="tenantsDefaultSettingsModel"></param>
         /// <returns></returns>
-        public async Task<int> Add(ApplicationVersion model)
+        public async Task<bool> Add(SaaSVersion model, TenantDefaultSettings tenantsDefaultSettingsModel)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" insert into ApplicationVersions ");
-                sqlStr.Append(" (Id,Name,Identifying,DisplayOrder,IsDeleted,CreateTime) ");
-                sqlStr.Append(" values");
-                sqlStr.Append(" (@Id,@Name,@Identifying,@DisplayOrder,@IsDeleted,@CreateTime) ");
-                return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        StringBuilder sqlStr = new StringBuilder();
+
+                        //写SaaS版本
+                        sqlStr.Append(" INSERT INTO SaaSVersions ");
+                        sqlStr.Append(" (Id,Name,Identifying,DisplayOrder,IsDeleted,CreateTime) ");
+                        sqlStr.Append(" VALUES");
+                        sqlStr.Append(" (@Id,@Name,@Identifying,@DisplayOrder,@IsDeleted,@CreateTime) ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        //写SaaS版本默认参数配置
+                        sqlStr.Clear();
+                        sqlStr.Append(" INSERT INTO TenantsDefaultSettings (Id,MaxNumberOfBranch,MaxNumberOfDepartments,MaxNumberOfRoles,MaxNumberOfUser,MaxNumberOfCourse,MaxNumberOfClass,MaxNumberOfClassRoom,MaxNumberOfStudent,MaxStorageSpace,SaaSVersionId,IsDeleted,CreateTime) VALUES (@Id,@MaxNumberOfBranch,@MaxNumberOfDepartments,@MaxNumberOfRoles,@MaxNumberOfUser,@MaxNumberOfCourse,@MaxNumberOfClass,@MaxNumberOfClassRoom,@MaxNumberOfStudent,@MaxStorageSpace,@SaaSVersionId,@IsDeleted,@CreateTime) ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), tenantsDefaultSettingsModel, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"添加SaaS版本时发生异常-{ex.Message}");
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -129,12 +153,12 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<int> Update(ApplicationVersion model)
+        public async Task<int> Update(SaaSVersion model)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" update ApplicationVersions set ");
+                sqlStr.Append(" update SaaSVersions set ");
                 sqlStr.Append(" Name=@Name,Identifying=@Identifying,DisplayOrder=@DisplayOrder,CreateTime=@CreateTime");
                 sqlStr.Append(" where Id=@Id");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
@@ -150,7 +174,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = "delete from ApplicationVersions where Id=@Id";
+                string sqlStr = " DELETE FROM SaaSVersions where Id=@Id";
                 return await connection.ExecuteAsync(sqlStr, new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -160,13 +184,13 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ApplicationVersion> GetModel(string id)
+        public async Task<SaaSVersion> GetModel(string id)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM ApplicationVersions WHERE Id=@Id");
-                return await connection.QueryFirstOrDefaultAsync<ApplicationVersion>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Id=@Id");
+                return await connection.QueryFirstOrDefaultAsync<SaaSVersion>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
 
@@ -175,20 +199,20 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<ApplicationVersion> GetModel(ApplicationVersion model)
+        public async Task<SaaSVersion> GetModel(SaaSVersion model)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    sqlStr.Append(" SELECT * FROM ApplicationVersions WHERE Id!=@Id AND (Name=@Name OR Identifying=@Identifying) ");
+                    sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Id!=@Id AND (Name=@Name OR Identifying=@Identifying) ");
                 }
                 else
                 {
-                    sqlStr.Append(" SELECT * FROM ApplicationVersions WHERE Name=@Name OR Identifying=@Identifying ");
+                    sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Name=@Name OR Identifying=@Identifying ");
                 }
-                return await connection.QueryFirstOrDefaultAsync<ApplicationVersion>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                return await connection.QueryFirstOrDefaultAsync<SaaSVersion>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
     }

@@ -18,11 +18,11 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string Id { get; set; }
 
         /// <summary>
-        /// 租户标识
+        /// 父级部门
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "租户标识必填")]
-        [RegularExpression(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$", ErrorMessage = "租户标识不正确")]
-        public string TenantId { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "父级部门必填")]
+        [RegularExpression(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$", ErrorMessage = "父级部门不正确")]
+        public string ParentId { get; set; }
 
         /// <summary>
         /// 名称
@@ -44,5 +44,12 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         [Required(ErrorMessage = "显示顺序必填")]
         [RegularExpression(@"^\+?[1-9][0-9]*$", ErrorMessage = "显示顺序只能输入正整数")]
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// 租户标识
+        /// </summary>
+        [Required(AllowEmptyStrings = false, ErrorMessage = "租户标识必填")]
+        [RegularExpression(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$", ErrorMessage = "租户标识不正确")]
+        public string TenantId { get; set; }
     }
 }

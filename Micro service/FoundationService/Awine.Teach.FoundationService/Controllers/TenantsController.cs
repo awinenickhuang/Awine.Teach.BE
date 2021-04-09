@@ -34,12 +34,18 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <summary>
         /// 所有数据
         /// </summary>
+        /// <param name="classiFication"></param>
+        /// <param name="saaSVersionId"></param>
+        /// <param name="status"></param>
+        /// <param name="industryId"></param>
+        /// <param name="creatorId"></param>
+        /// <param name="creatorTenantId"></param>
         /// <returns></returns>
         [HttpGet("list")]
         //[AuthorizeCode("TenantList")]
-        public async Task<IActionResult> GetTreeList()
+        public async Task<IActionResult> GetTreeList(int classiFication = 0, string saaSVersionId = "", int status = 0, string industryId = "", string creatorId = "", string creatorTenantId = "")
         {
-            return Response(success: true, data: await _tenantsService.GetAll());
+            return Response(success: true, data: await _tenantsService.GetAll(classiFication, saaSVersionId, status, industryId, creatorId, creatorTenantId));
         }
 
         /// <summary>
@@ -47,12 +53,18 @@ namespace Awine.Teach.FoundationService.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
+        /// <param name="classiFication"></param>
+        /// <param name="saaSVersionId"></param>
+        /// <param name="status"></param>
+        /// <param name="industryId"></param>
+        /// <param name="creatorId"></param>
+        /// <param name="creatorTenantId"></param>
         /// <returns></returns>
         [HttpGet("pagelist")]
         //[AuthorizeCode("TenantPageList")]
-        public async Task<IActionResult> GetPageList(int page = 1, int limit = 15)
+        public async Task<IActionResult> GetPageList(int page = 1, int limit = 15, int classiFication = 0, string saaSVersionId = "", int status = 0, string industryId = "", string creatorId = "", string creatorTenantId = "")
         {
-            return Response(success: true, data: await _tenantsService.GetPageList(page, limit));
+            return Response(success: true, data: await _tenantsService.GetPageList(page, limit, classiFication, saaSVersionId, status, industryId, creatorId, creatorTenantId));
         }
 
         /// <summary>
@@ -104,24 +116,6 @@ namespace Awine.Teach.FoundationService.Controllers
         }
 
         /// <summary>
-        /// 更新 -> 租户类型
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("updateclassfication")]
-        //[AuthorizeCode("TenantUpdateClassiFication")]
-        public async Task<IActionResult> UpdateClassiFication([FromForm] TenantsUpdateClassiFicationViewModel model)
-        {
-            var result = await _tenantsService.UpdateClassiFication(model);
-
-            if (result.Success)
-            {
-                return Response(success: true, message: result.Message);
-            }
-            return Response(success: false, message: result.Message);
-        }
-
-        /// <summary>
         /// 更新 -> 租户状态
         /// </summary>
         /// <param name="model"></param>
@@ -139,24 +133,6 @@ namespace Awine.Teach.FoundationService.Controllers
             return Response(success: false, message: result.Message);
         }
 
-        /// <summary>
-        /// 更新 -> 允许添加的分支机构个数
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost("updatenumberofbranches")]
-        //[AuthorizeCode("UpdateNumberOfBranches")]
-        public async Task<IActionResult> UpdateNumberOfBranches([FromForm] TenantsUpdateNumberOfBranchesViewModel model)
-        {
-            var result = await _tenantsService.UpdateNumberOfBranches(model);
-
-            if (result.Success)
-            {
-                return Response(success: true, message: result.Message);
-            }
-            return Response(success: false, message: result.Message);
-        }
-
         #region 开放接口
 
         /// <summary>
@@ -166,9 +142,9 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpPost("enter")]
         [AllowAnonymous]
-        public async Task<IActionResult> Enter([FromForm] TenantsEnterViewModel model)
+        public async Task<IActionResult> Enter([FromForm] TenantsAddViewModel model)
         {
-            var result = await _tenantsService.Enter(model);
+            var result = await _tenantsService.Add(model);
 
             if (result.Success)
             {

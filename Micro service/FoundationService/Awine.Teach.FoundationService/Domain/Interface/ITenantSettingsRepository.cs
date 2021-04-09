@@ -38,6 +38,13 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <summary>
         /// 取一条数据
         /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        Task<TenantSettings> GetModelForTenant(string tenantId);
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         Task<TenantSettings> GetModel(TenantSettings model);

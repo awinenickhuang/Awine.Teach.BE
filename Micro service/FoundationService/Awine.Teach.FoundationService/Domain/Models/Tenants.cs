@@ -11,11 +11,6 @@ namespace Awine.Teach.FoundationService.Domain.Models
     public class Tenants : Entity
     {
         /// <summary>
-        /// 父级租户标识
-        /// </summary>
-        public string ParentId { get; set; }
-
-        /// <summary>
         /// 租户名称
         /// </summary>
         public string Name { get; set; }
@@ -31,9 +26,19 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public string ContactsPhone { get; set; }
 
         /// <summary>
-        /// 租户类型 1-免费 2-试用 3-付费（VIP）4-代理商 5-运营商
+        /// 租户类型 1-机构 2-代理商 3-运营商
         /// </summary>
         public int ClassiFication { get; set; } = 1;
+
+        /// <summary>
+        /// 版本标识
+        /// </summary>
+        public string SaaSVersionId { get; set; }
+
+        /// <summary>
+        /// 版本名称
+        /// </summary>
+        public string SaaSVersionName { get; set; }
 
         /// <summary>
         /// 租户状态 1-正常 2-锁定（异常）3-锁定（过期）
@@ -91,8 +96,28 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public string IndustryName { get; set; }
 
         /// <summary>
-        /// 允许添加的分支机构个数
+        /// 创建人标识
         /// </summary>
-        public int NumberOfBranches { get; set; } = 0;
+        public string CreatorId { get; set; }
+
+        /// <summary>
+        /// 创建人姓名
+        /// </summary>
+        public string Creator { get; set; }
+
+        /// <summary>
+        /// 创建人租户标识
+        /// </summary>
+        public string CreatorTenantId { get; set; }
+
+        /// <summary>
+        /// 创建人租户名称
+        /// </summary>
+        public string CreatorTenantName { get; set; }
+
+        /// <summary>
+        /// 删除标识
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
     }
 }

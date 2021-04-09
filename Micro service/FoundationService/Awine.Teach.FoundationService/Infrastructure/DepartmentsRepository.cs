@@ -52,25 +52,15 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
                 DynamicParameters parameters = new DynamicParameters();
-                sqlStr.Append(" SELECT departments.*,tenant.Id,tenant.Name");
-                sqlStr.Append(" FROM Departments as departments");
-                sqlStr.Append(" LEFT JOIN Tenants as tenant on departments.TenantId=tenant.Id WHERE departments.IsDeleted=0 ");
-
+                sqlStr.Append(" SELECT * FROM Departments WHERE IsDeleted=0 ");
                 if (!string.IsNullOrEmpty(tenantId))
                 {
-                    sqlStr.Append(" AND departments.TenantId=@TenantId ");
+                    sqlStr.Append(" AND TenantId=@TenantId ");
                     parameters.Add("TenantId", tenantId);
                 }
-                sqlStr.Append(" ORDER BY DisplayOrder ");
-
-                var result = await connection.QueryAsync<Departments, Tenants, Departments>(sqlStr.ToString(), (departments, tenant)
-                     =>
-                {
-                    departments.Tenant = tenant;
-                    return departments;
-                }, parameters, splitOn: "Id", commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
-                
-                return result.ToPagedList(page, limit);
+                sqlStr.Append(" ORDER BY TenantId, DisplayOrder ");
+                var list = await connection.QueryAsync<Departments>(sqlStr.ToString(), new { TenantId = tenantId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                return list.ToPagedList(page, limit);
             }
         }
 
@@ -111,7 +101,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 DynamicParameters parameters = new DynamicParameters();
                 sqlStr.Append(" SELECT * FROM Departments WHERE Id=@Id ");
                 parameters.Add("Id", id);
-                return await connection.QueryFirstOrDefaultAsync<Departments>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut,                    commandType: CommandType.Text);
+                return await connection.QueryFirstOrDefaultAsync<Departments>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
 
@@ -145,7 +135,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("INSERT INTO Departments (Id,TenantId,`Name`,`Describe`,DisplayOrder,IsDeleted,CreateTime) VALUES (@Id,@TenantId,@Name,@Describe,@DisplayOrder,@IsDeleted,@CreateTime) ");
+                sqlStr.Append("INSERT INTO Departments (Id,ParentId,`Name`,`Describe`,DisplayOrder,TenantId,IsDeleted,CreateTime) VALUES (@Id,@ParentId,@Name,@Describe,@DisplayOrder,@TenantId,@IsDeleted,@CreateTime) ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -174,7 +164,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE Departments SET TenantId=@TenantId,`Name`=@Name,`Describe`=@Describe,DisplayOrder=@DisplayOrder WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE Departments SET ParentId=@ParentId,`Name`=@Name,`Describe`=@Describe,DisplayOrder=@DisplayOrder,TenantId=@TenantId WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

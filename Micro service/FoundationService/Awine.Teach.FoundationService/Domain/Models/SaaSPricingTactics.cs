@@ -6,29 +6,29 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Domain.Models
 {
     /// <summary>
-    /// 应用版本
+    /// SaaS版本定价策略
     /// </summary>
-    public class ApplicationVersion
+    public class SaaSPricingTactics
     {
         /// <summary>
-        /// 唯一标识
+        /// 主键ID
         /// </summary>
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// 版本名称
+        /// 版本ID
         /// </summary>
-        public string Name { get; set; }
+        public string SaaSVersionId { get; set; }
 
         /// <summary>
-        /// 版本标识
+        /// 年数
         /// </summary>
-        public int Identifying { get; set; }
+        public int NumberOfYears { get; set; }
 
         /// <summary>
-        /// 显示顺序
+        /// 收费标准
         /// </summary>
-        public int DisplayOrder { get; set; } = 0;
+        public decimal ChargeRates { get; set; }
 
         /// <summary>
         /// 删除标识

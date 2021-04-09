@@ -65,6 +65,18 @@ namespace Awine.Teach.FoundationService.Controllers
         }
 
         /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="saaSVersionId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("singleappversion")]
+        public async Task<IActionResult> GetModelForAppVersion(string saaSVersionId)
+        {
+            return Response(success: true, data: await _tenantDefaultSettingsService.GetModelForAppVersion(saaSVersionId));
+        }
+
+        /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>

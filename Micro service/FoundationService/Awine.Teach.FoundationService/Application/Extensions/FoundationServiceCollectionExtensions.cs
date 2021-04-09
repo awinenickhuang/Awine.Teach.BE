@@ -79,11 +79,17 @@ namespace Awine.Teach.FoundationService.Application.Extensions
             services.Add(ServiceDescriptor.Singleton<IUsersRepository, UsersRepository>());
             services.Add(ServiceDescriptor.Singleton<IUsersService, UsersService>());
 
-            services.Add(ServiceDescriptor.Singleton<IApplicationVersionRepository, ApplicationVersionRepository>());
-            services.Add(ServiceDescriptor.Singleton<IApplicationVersionService, ApplicationVersionService>());
+            services.Add(ServiceDescriptor.Singleton<ISaaSVersionRepository, SaaSVersionRepository>());
+            services.Add(ServiceDescriptor.Singleton<ISaaSVersionService, SaaSVersionService>());
 
-            services.Add(ServiceDescriptor.Singleton<IApplicationVersionOwnedModuleRepository, ApplicationVersionOwnedModuleRepository>());
-            services.Add(ServiceDescriptor.Singleton<IApplicationVersionOwnedModuleService, ApplicationVersionOwnedModuleService>());
+            services.Add(ServiceDescriptor.Singleton<ISaaSPricingTacticsRepository, SaaSPricingTacticsRepository>());
+            services.Add(ServiceDescriptor.Singleton<ISaaSPricingTacticsService, SaaSPricingTacticsService>());
+
+            services.Add(ServiceDescriptor.Singleton<ISaaSVersionOwnedModuleRepository, SaaSVersionOwnedModuleRepository>());
+            services.Add(ServiceDescriptor.Singleton<ISaaSVersionOwnedModuleService, SaaSVersionOwnedModuleService>());
+
+            services.Add(ServiceDescriptor.Singleton<IOrdersRepository, OrdersRepository>());
+            services.Add(ServiceDescriptor.Singleton<IOrdersService, OrdersService>());
 
             // Identity
             services.Add(ServiceDescriptor.Singleton<ICurrentUser, CurrentUser>());

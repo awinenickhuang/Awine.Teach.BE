@@ -10,22 +10,22 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Controllers
 {
     /// <summary>
-    /// 应用版本管理
+    /// SaaS版本管理
     /// </summary>
-    public class ApplicationVersionController : ApiController
+    public class SaaSVersionController : ApiController
     {
         /// <summary>
-        /// IApplicationVersionService
+        /// SaaS版本管理
         /// </summary>
-        private readonly IApplicationVersionService _applicationVersionService;
+        private readonly ISaaSVersionService _saaSVersionService;
 
         /// <summary>
-        /// ApplicationVersionController
+        /// 构造
         /// </summary>
-        /// <param name="applicationVersionService"></param>
-        public ApplicationVersionController(IApplicationVersionService applicationVersionService)
+        /// <param name="saaSVersionService"></param>
+        public SaaSVersionController(ISaaSVersionService saaSVersionService)
         {
-            _applicationVersionService = applicationVersionService;
+            _saaSVersionService = saaSVersionService;
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Awine.Teach.FoundationService.Controllers
         [HttpGet("pagelist")]
         public async Task<IActionResult> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "")
         {
-            var result = await _applicationVersionService.GetPageList(page, limit, name, identifying);
+            var result = await _saaSVersionService.GetPageList(page, limit, name, identifying);
             return Response(success: true, data: result);
         }
 
@@ -52,7 +52,7 @@ namespace Awine.Teach.FoundationService.Controllers
         [HttpGet("list")]
         public async Task<IActionResult> GetAll(string name = "", string identifying = "")
         {
-            var result = await _applicationVersionService.GetAll(name, identifying);
+            var result = await _saaSVersionService.GetAll(name, identifying);
             return Response(success: true, data: result);
         }
 
@@ -61,9 +61,9 @@ namespace Awine.Teach.FoundationService.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("add")]
-        public async Task<IActionResult> Add([FromForm] ApplicationVersionAddViewModel model)
+        public async Task<IActionResult> Add([FromForm] SaaSVersionAddViewModel model)
         {
-            var result = await _applicationVersionService.Add(model);
+            var result = await _saaSVersionService.Add(model);
             if (result.Success)
             {
                 return Response(success: true, message: result.Message);
@@ -79,7 +79,7 @@ namespace Awine.Teach.FoundationService.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetModel(string id)
         {
-            return Response(success: true, data: await _applicationVersionService.GetModel(id));
+            return Response(success: true, data: await _saaSVersionService.GetModel(id));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Awine.Teach.FoundationService.Controllers
         [HttpPost("delete")]
         public async Task<IActionResult> Delete([FromForm] string id)
         {
-            var result = await _applicationVersionService.Delete(id);
+            var result = await _saaSVersionService.Delete(id);
             if (result.Success)
             {
                 return Response(success: true, message: result.Message);
@@ -104,9 +104,9 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("update")]
-        public async Task<IActionResult> Update([FromForm] ApplicationVersionUpdateViewModel model)
+        public async Task<IActionResult> Update([FromForm] SaaSVersionUpdateViewModel model)
         {
-            var result = await _applicationVersionService.Update(model);
+            var result = await _saaSVersionService.Update(model);
             if (result.Success)
             {
                 return Response(success: true, message: result.Message);

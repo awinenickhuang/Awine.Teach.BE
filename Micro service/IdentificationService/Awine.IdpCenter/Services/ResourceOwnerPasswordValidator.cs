@@ -74,7 +74,7 @@ namespace Awine.IdpCenter.Services
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "密码模式验证失败 -> 机构状态异常");
             }
 
-            if (user.Tenant.ClassiFication != 1 && DateTime.Now > user.Tenant.VIPExpirationTime)
+            if (DateTime.Now > user.Tenant.VIPExpirationTime)
             {
                 _logger.LogDebug("[ResourceOwnerPasswordValidator] message: user account tenant VIP expired,validate failed.");
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, $"密码模式验证失败 -> 机构的使用权益已过期，过期时间：{user.Tenant.VIPExpirationTime.ToString("yyyy-MM-dd")}");

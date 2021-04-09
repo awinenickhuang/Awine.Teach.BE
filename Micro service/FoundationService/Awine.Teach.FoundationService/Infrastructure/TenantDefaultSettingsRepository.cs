@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Infrastructure.Repository
 {
     /// <summary>
-    /// 机构信息设置 不同的应用版本对应不同的配置
+    /// 机构信息设置 不同的SaaS版本对应不同的配置
     /// </summary>
     public class TenantDefaultSettingsRepository : ITenantDefaultSettingsRepository
     {
@@ -66,9 +66,9 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// 查询全部
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TenantDefaultSettings>> GetAll(string appVersionId = "")
+        public async Task<IEnumerable<TenantDefaultSettings>> GetAll(string saaSVersionId = "")
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -77,10 +77,10 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                 sqlStr.Append(" SELECT * FROM TenantsDefaultSettings WHERE IsDeleted=0 ");
 
-                if (!string.IsNullOrEmpty(appVersionId))
+                if (!string.IsNullOrEmpty(saaSVersionId))
                 {
-                    sqlStr.Append(" AND AppVersionId=@AppVersionId ");
-                    parameters.Add("AppVersionId", appVersionId);
+                    sqlStr.Append(" AND SaaSVersionId=@SaaSVersionId ");
+                    parameters.Add("SaaSVersionId", saaSVersionId);
                 }
 
                 sqlStr.Append(" ORDER BY CreateTime DESC ");
@@ -107,6 +107,21 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// 取一条数据
         /// </summary>
+        /// <param name="saaSVersionId"></param>
+        /// <returns></returns>
+        public async Task<TenantDefaultSettings> GetModelForAppVersion(string saaSVersionId)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                sqlStr.Append(" SELECT * FROM TenantsDefaultSettings WHERE SaaSVersionId=@SaaSVersionId ");
+                return await connection.QueryFirstOrDefaultAsync<TenantDefaultSettings>(sqlStr.ToString(), new { SaaSVersionId = saaSVersionId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         public async Task<TenantDefaultSettings> GetModel(TenantDefaultSettings model)
@@ -114,7 +129,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM TenantsDefaultSettings WHERE AppVersionId=@AppVersionId ");
+                sqlStr.Append(" SELECT * FROM TenantsDefaultSettings WHERE SaaSVersionId=@SaaSVersionId ");
                 if (!string.IsNullOrEmpty(model.Id))
                 {
                     sqlStr.Append(" AND Id!=@Id ");
@@ -133,7 +148,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("INSERT INTO TenantsDefaultSettings (Id,NumberOfBranches,`MaxNumberOfUser`,`MaxNumberOfCourse`,MaxNumberOfClass,MaxNumberOfStudent,MaxStorageSpace,AppVersionId,IsDeleted,CreateTime) VALUES (@Id,@NumberOfBranches,@MaxNumberOfUser,@MaxNumberOfCourse,@MaxNumberOfClass,@MaxNumberOfStudent,@MaxStorageSpace,@AppVersionId,@IsDeleted,@CreateTime) ");
+                sqlStr.Append("INSERT INTO TenantsDefaultSettings (Id,MaxNumberOfBranch,MaxNumberOfDepartments,MaxNumberOfRoles,`MaxNumberOfUser`,`MaxNumberOfCourse`,MaxNumberOfClass,MaxNumberOfClassRoom,MaxNumberOfStudent,MaxStorageSpace,SaaSVersionId,IsDeleted,CreateTime) VALUES (@Id,@MaxNumberOfBranch,@MaxNumberOfDepartments,@MaxNumberOfRoles,@MaxNumberOfUser,@MaxNumberOfCourse,@MaxNumberOfClass,@MaxNumberOfClassRoom,@MaxNumberOfStudent,@MaxStorageSpace,@SaaSVersionId,@IsDeleted,@CreateTime) ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -148,7 +163,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE TenantsDefaultSettings SET NumberOfBranches=@NumberOfBranches,`MaxNumberOfUser`=@MaxNumberOfUser,MaxNumberOfCourse=@MaxNumberOfCourse,MaxNumberOfClass=@MaxNumberOfClass,MaxNumberOfStudent=@MaxNumberOfStudent,MaxStorageSpace=@MaxStorageSpace,AppVersionId=@AppVersionId WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE TenantsDefaultSettings SET MaxNumberOfBranch=@MaxNumberOfBranch,MaxNumberOfDepartments=@MaxNumberOfDepartments,MaxNumberOfRoles=@MaxNumberOfRoles,`MaxNumberOfUser`=@MaxNumberOfUser,MaxNumberOfCourse=@MaxNumberOfCourse,MaxNumberOfClass=@MaxNumberOfClass,MaxNumberOfClassRoom=@MaxNumberOfClassRoom,MaxNumberOfStudent=@MaxNumberOfStudent,MaxStorageSpace=@MaxStorageSpace,SaaSVersionId=@SaaSVersionId WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

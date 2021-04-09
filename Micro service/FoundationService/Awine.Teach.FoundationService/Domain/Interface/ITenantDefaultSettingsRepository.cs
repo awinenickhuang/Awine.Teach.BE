@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Domain.Interface
 {
     /// <summary>
-    /// 机构信息设置 不同的应用版本对应不同的配置
+    /// 机构信息设置 不同的SaaS版本对应不同的配置
     /// </summary>
     public interface ITenantDefaultSettingsRepository
     {
@@ -23,9 +23,9 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <summary>
         /// 查询全部
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        Task<IEnumerable<TenantDefaultSettings>> GetAll(string appVersionId = "");
+        Task<IEnumerable<TenantDefaultSettings>> GetAll(string saaSVersionId = "");
 
         /// <summary>
         /// 取一条数据
@@ -33,6 +33,13 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <param name="id"></param>
         /// <returns></returns>
         Task<TenantDefaultSettings> GetModel(string id);
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="saaSVersionId"></param>
+        /// <returns></returns>
+        Task<TenantDefaultSettings> GetModelForAppVersion(string saaSVersionId);
 
         /// <summary>
         /// 取一条数据

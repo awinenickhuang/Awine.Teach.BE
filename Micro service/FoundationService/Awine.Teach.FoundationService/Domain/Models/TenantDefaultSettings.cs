@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Domain.Models
 {
     /// <summary>
-    /// 机构信息设置 不同的应用版本对应不同的配置
+    /// 机构信息设置 不同的SaaS版本对应不同的配置
     /// </summary>
     public class TenantDefaultSettings
     {
@@ -16,9 +16,19 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// 允许添加的分支机构个数
+        /// 最大分支机构数量
         /// </summary>
-        public int NumberOfBranches { get; set; }
+        public int MaxNumberOfBranch { get; set; }
+
+        /// <summary>
+        /// 最大部门数量
+        /// </summary>
+        public int MaxNumberOfDepartments { get; set; }
+
+        /// <summary>
+        /// 最大角色数量
+        /// </summary>
+        public int MaxNumberOfRoles { get; set; }
 
         /// <summary>
         /// 最大用户数量
@@ -36,6 +46,11 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public int MaxNumberOfClass { get; set; }
 
         /// <summary>
+        /// 最大教室数量
+        /// </summary>
+        public int MaxNumberOfClassRoom { get; set; }
+
+        /// <summary>
         /// 最大学生数量
         /// </summary>
         public int MaxNumberOfStudent { get; set; }
@@ -46,9 +61,9 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public long MaxStorageSpace { get; set; }
 
         /// <summary>
-        /// 应用版本标识
+        /// SaaS版本标识
         /// </summary>
-        public string AppVersionId { get; set; }
+        public string SaaSVersionId { get; set; }
 
         /// <summary>
         /// 删除标识

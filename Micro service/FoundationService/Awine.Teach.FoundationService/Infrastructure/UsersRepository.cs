@@ -176,7 +176,14 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
                 sqlStr.Append(" SELECT * FROM Users WHERE Id=@Id ");
-                return await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                var user = await connection.QueryFirstOrDefaultAsync<Users>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                if (null != user)
+                {
+                    sqlStr.Clear();
+                    sqlStr.Append(" SELECT Id,TenantId,Name,Identifying FROM Roles WHERE Id=@Id ");
+                    user.AspnetRole = await connection.QueryFirstOrDefaultAsync<Roles>(sqlStr.ToString(), new { Id = user.RoleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                }
+                return user;
             }
         }
 

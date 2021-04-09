@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +18,9 @@ namespace Awine.Framework.Identity
             _accessor = accessor;
         }
 
-        public string Name => GetName();
+        public string UserName => GetUserName();
 
-        private string GetName()
+        private string GetUserName()
         {
             //return _accessor.HttpContext.User.Identity.Name ??
             //       _accessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
@@ -53,6 +54,13 @@ namespace Awine.Framework.Identity
         private string GetTenantName()
         {
             return _accessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "tenantname")?.Value;
+        }
+
+        public int TenantClassiFication => GetTenantClassiFication();
+
+        private int GetTenantClassiFication()
+        {
+            return Convert.ToInt32(_accessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "tenantclassification")?.Value);
         }
 
         public bool IsAuthenticated()

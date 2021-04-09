@@ -255,7 +255,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 DiscountAmount = model.DiscountAmount,
                 RealityAmount = model.RealityAmount,
                 OperatorId = _user.UserId,
-                OperatorName = _user.Name,
+                OperatorName = _user.UserName,
                 PurchaseQuantity = model.PurchaseQuantity,
                 NoteInformation = model.NoteInformation,
                 TenantId = _user.TenantId
@@ -390,7 +390,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 DiscountAmount = model.DiscountAmount,
                 RealityAmount = model.RealityAmount,
                 OperatorId = _user.UserId,
-                OperatorName = _user.Name,
+                OperatorName = _user.UserName,
                 PurchaseQuantity = model.PurchaseQuantity,
                 NoteInformation = model.NoteInformation,
                 TenantId = _user.TenantId
@@ -522,7 +522,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 CourseId = existingStudentOrderItem.CourseId,
                 CourseName = existingStudentOrderItem.CourseName,
                 OperatorId = _user.UserId,
-                OperatorName = _user.Name,
+                OperatorName = _user.UserName,
                 PurchaseQuantity = model.PurchaseQuantity,
                 DiscountAmount = model.DiscountAmount,
                 RealityAmount = model.RealityAmount,

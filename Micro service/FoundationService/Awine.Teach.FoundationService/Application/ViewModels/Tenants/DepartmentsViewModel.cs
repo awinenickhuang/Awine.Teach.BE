@@ -15,9 +15,9 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string Id { get; set; }
 
         /// <summary>
-        /// 租户标识
+        /// 父级部门
         /// </summary>
-        public string TenantId { get; set; }
+        public string ParentId { get; set; }
 
         /// <summary>
         /// 名称
@@ -38,10 +38,5 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
-
-        /// <summary>
-        /// 租户名称
-        /// </summary>
-        public string TenantName { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Services
 {
     /// <summary>
-    /// 机构信息设置 不同的应用版本对应不同的配置
+    /// 机构信息设置 不同的SaaS版本对应不同的配置
     /// </summary>
     public class TenantDefaultSettingsService : ITenantDefaultSettingsService
     {
@@ -80,6 +80,18 @@ namespace Awine.Teach.FoundationService.Application.Services
         public async Task<TenantDefaultSettingsViewModel> GetModel(string id)
         {
             var entity = await _tenantDefaultSettingsRepository.GetModel(id);
+
+            return _mapper.Map<TenantDefaultSettings, TenantDefaultSettingsViewModel>(entity);
+        }
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="saaSVersionId"></param>
+        /// <returns></returns>
+        public async Task<TenantDefaultSettingsViewModel> GetModelForAppVersion(string saaSVersionId)
+        {
+            var entity = await _tenantDefaultSettingsRepository.GetModelForAppVersion(saaSVersionId);
 
             return _mapper.Map<TenantDefaultSettings, TenantDefaultSettingsViewModel>(entity);
         }

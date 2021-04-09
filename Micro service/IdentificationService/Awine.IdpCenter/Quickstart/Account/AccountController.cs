@@ -186,10 +186,10 @@ namespace IdentityServerHost.Quickstart.UI
                     var v2 = await BuildLoginViewModelAsync(model);
                     return View(v2);
                 }
-                if ((aspnetUser.Tenant.ClassiFication != 1 && aspnetUser.Tenant.ClassiFication != 5) && DateTime.Now > aspnetUser.Tenant.VIPExpirationTime)
+                if (aspnetUser.Tenant.ClassiFication == 1 && DateTime.Now > aspnetUser.Tenant.VIPExpirationTime)
                 {
                     await _events.RaiseAsync(new UserLoginFailureEvent(model.Account, AccountOptions.AccountTenantStateAnomalyErrorMessage, clientId: context?.Client.ClientId));
-                    ModelState.AddModelError(string.Empty, $"机构的使用权益已过期，过期时间：{aspnetUser.Tenant.VIPExpirationTime.ToString("yyyy-MM-dd")}");
+                    ModelState.AddModelError(string.Empty, $"机构的使用权益已过期，过期时间：{aspnetUser.Tenant.VIPExpirationTime.ToString("yyyy-MM-dd")}，请联系运营商或续费。");
 
                     var v2 = await BuildLoginViewModelAsync(model);
                     return View(v2);

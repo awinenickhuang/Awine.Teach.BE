@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Interfaces
 {
     /// <summary>
-    /// 机构信息设置 不同的应用版本对应不同的配置
+    /// 机构信息设置 不同的SaaS版本对应不同的配置
     /// </summary>
     public interface ITenantDefaultSettingsService
     {
@@ -33,6 +33,13 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         Task<TenantDefaultSettingsViewModel> GetModel(string id);
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <param name="saaSVersionId"></param>
+        /// <returns></returns>
+        Task<TenantDefaultSettingsViewModel> GetModelForAppVersion(string saaSVersionId);
 
         /// <summary>
         /// 添加

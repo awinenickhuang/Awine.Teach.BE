@@ -108,7 +108,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             var entity = _mapper.Map<CommunicationRecordAddViewModel, CommunicationRecord>(model);
 
             entity.TrackingStafferId = _user.UserId;
-            entity.TrackingStafferName = _user.Name;
+            entity.TrackingStafferName = _user.UserName;
 
             if (await _communicationRecordRepository.Add(entity, model.TrackingState))
             {

@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 应用版本对应的系统模块
+    /// SaaS版本包括的系统模块
     /// </summary>
-    public class ApplicationVersionOwnedModuleAddViewModel
+    public class SaaSVersionOwnedModuleAddViewModel
     {
         /// <summary>
-        /// 应用版本标识
+        /// SaaS版本标识
         /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "应用版本标识必填")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "SaaS版本标识必填")]
         [RegularExpression(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$", ErrorMessage = "角色标识不正确")]
-        public string AppVersionId { get; set; }
+        public string SaaSVersionId { get; set; }
 
         /// <summary>
         /// 模块|菜单集合
         /// </summary>
-        public IList<AppVersionOwnedModules> AppVersionOwnedModules { get; set; } = new List<AppVersionOwnedModules>();
+        public IList<SaaSVersionOwnedModules> SaaSVersionOwnedModules { get; set; } = new List<SaaSVersionOwnedModules>();
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public class AppVersionOwnedModules
+    public class SaaSVersionOwnedModules
     {
         /// <summary>
         /// 模块|菜单标识

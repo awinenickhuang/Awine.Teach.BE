@@ -122,6 +122,7 @@ namespace Awine.Teach.FoundationService.Application.Services
             var entity = _mapper.Map<RolesAddViewModel, Roles>(model);
             entity.NormalizedName = entity.Name.ToLower();
             entity.ConcurrencyStamp = Guid.NewGuid().ToString();
+            entity.Identifying = 9;//只有在租户入驻或创建机构时才创建超管角色
 
             if (string.IsNullOrEmpty(entity.TenantId))
             {
@@ -151,11 +152,11 @@ namespace Awine.Teach.FoundationService.Application.Services
             var existing_role = await _rolesRepository.GetModel(id);
             if (null == existing_role)
             {
-                return new Result { Success = true, Message = "找不到角色信息！" };
+                return new Result { Success = false, Message = "找不到角色信息！" };
             }
             if (existing_role.Identifying == 1)
             {
-                return new Result { Success = true, Message = "平台管理员角色不允许删除！" };
+                return new Result { Success = false, Message = "平台管理员角色不允许删除！" };
             }
 
             //对于管理员类型的角色，只有平台超管可以删除
@@ -164,30 +165,30 @@ namespace Awine.Teach.FoundationService.Application.Services
                 var currentRole = await _rolesRepository.GetModel(_user.RoleId);
                 if (null == currentRole)
                 {
-                    return new Result { Success = true, Message = "无法识你的身份，操作失败！" };
+                    return new Result { Success = false, Message = "无法识你的身份，操作失败！" };
                 }
                 if (currentRole.Identifying != 1)
                 {
-                    return new Result { Success = true, Message = "你无权删除管理员角色，操作失败！" };
+                    return new Result { Success = false, Message = "你无权删除管理员角色，操作失败！" };
                 }
             }
 
             var roleOwnedModules = await _rolesOwnedModulesRepository.GetRoleOwnedModules(id);
             if (roleOwnedModules.Count() > 0)
             {
-                return new Result { Success = true, Message = "角色设置了模块，不允许删除！" };
+                return new Result { Success = false, Message = "角色设置了模块，不允许删除！" };
             }
 
             var roleClaims = await _rolesClaimsRepository.GetAll(id);
             if (roleClaims.Count() > 0)
             {
-                return new Result { Success = true, Message = "角色设置了权限，不允许删除！" };
+                return new Result { Success = false, Message = "角色设置了权限，不允许删除！" };
             }
 
             var users = await _usersRepository.GetAllInRole(id);
             if (users.Count() > 0)
             {
-                return new Result { Success = true, Message = "角色被用户使用，不允许删除！" };
+                return new Result { Success = false, Message = "角色被用户使用，不允许删除！" };
             }
 
             var result = await _rolesRepository.Delete(id);

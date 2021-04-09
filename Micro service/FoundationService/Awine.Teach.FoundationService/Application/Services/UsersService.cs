@@ -276,13 +276,30 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> EnableOrDisable(UsersUpdateStatusViewModel model)
         {
+            if (model.Id.Equals(_user.UserId))
+            {
+                return new Result { Success = false, Message = "不能禁用掉当前登录用户" };
+            }
+
             var exist = await _usersRepository.GetModel(model.Id);
             if (null == exist)
             {
                 return new Result { Success = false, Message = "未找到用户信息" };
             }
+
             if (exist.IsActive)
             {
+                //超管账号都不能被禁用，禁用了超管意味着禁用这个企业
+                if (exist.AspnetRole.Identifying == 1 || exist.AspnetRole.Identifying == 2 || exist.AspnetRole.Identifying == 3)
+                {
+                    return new Result { Success = false, Message = "超管账号不能被禁用" };
+                }
+
+                if (_user.RoleId.Equals(exist.RoleId))
+                {
+                    return new Result { Success = false, Message = "当前登录用户不能被禁用" };
+                }
+
                 exist.IsActive = false;
             }
             else

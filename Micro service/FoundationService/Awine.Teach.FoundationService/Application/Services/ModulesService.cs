@@ -36,14 +36,14 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IRolesOwnedModulesRepository _rolesOwnedModulesRepository;
 
         /// <summary>
-        /// 应用版本信息
+        /// SaaS版本信息
         /// </summary>
-        private readonly IApplicationVersionRepository _applicationVersionRepository;
+        private readonly ISaaSVersionRepository _applicationVersionRepository;
 
         /// <summary>
-        /// 应用版本包括的模块信息
+        /// SaaS版本包括的模块信息
         /// </summary>
-        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+        private readonly ISaaSVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
 
         /// <summary>
         /// 角色信息
@@ -80,8 +80,8 @@ namespace Awine.Teach.FoundationService.Application.Services
         public ModulesService(IModulesRepository modulesRepository,
             IButtonsRepository buttonsRepository,
             IRolesOwnedModulesRepository rolesOwnedModulesRepository,
-            IApplicationVersionRepository applicationVersionRepository,
-            IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
+            ISaaSVersionRepository applicationVersionRepository,
+            ISaaSVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
             IRolesRepository rolesRepository,
             IMapper mapper, ILogger<ModulesService> logger, ICurrentUser user)
         {
@@ -172,14 +172,14 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
-        /// 带选中状态的列表 -> 设置应用版本包括的模块
+        /// 带选中状态的列表 -> 设置SaaS版本包括的模块
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ModulesWithCheckedStatusViewModel>> GetAllWithChedkedStatusForAppVersion(string appVersionId)
+        public async Task<IEnumerable<ModulesWithCheckedStatusViewModel>> GetAllWithChedkedStatusForAppVersion(string saaSVersionId)
         {
-            //如果找不到应用版本信息，什么都不返回
-            var appversion = await _applicationVersionRepository.GetModel(appVersionId);
+            //如果找不到SaaS版本信息，什么都不返回
+            var appversion = await _applicationVersionRepository.GetModel(saaSVersionId);
             if (null == appversion)
             {
                 return new List<ModulesWithCheckedStatusViewModel>();
@@ -191,8 +191,8 @@ namespace Awine.Teach.FoundationService.Application.Services
             //对象转换
             var modulesWithCheckedStatusViewModels = _mapper.Map<IEnumerable<Modules>, IEnumerable<ModulesWithCheckedStatusViewModel>>(entities);
 
-            //当前应用版本包括的模块信息
-            var appVersionOwnedModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(appVersionId);
+            //当前SaaS版本包括的模块信息
+            var appVersionOwnedModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(saaSVersionId);
             foreach (var item in modulesWithCheckedStatusViewModels)
             {
                 if (appVersionOwnedModules.Where(x => x.ModuleId.Equals(item.Id)).Count() > 0)

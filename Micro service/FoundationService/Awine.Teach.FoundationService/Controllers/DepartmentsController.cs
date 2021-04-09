@@ -57,12 +57,23 @@ namespace Awine.Teach.FoundationService.Controllers
         }
 
         /// <summary>
+        /// 树型列表
+        /// </summary>
+        /// <param name="departmentParentId"></param>
+        /// <returns></returns>
+        [HttpGet("treelist")]
+        public async Task<IActionResult> GetTreeList(string departmentParentId = "")
+        {
+            return Response(success: true, data: await _departmentsService.GetTreeList(departmentParentId));
+        }
+
+        /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("add")]
-        public async Task<IActionResult> Add([FromForm]DepartmentsAddViewModel model)
+        public async Task<IActionResult> Add([FromForm] DepartmentsAddViewModel model)
         {
             var result = await _departmentsService.Add(model);
             if (result.Success)
@@ -78,7 +89,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("update")]
-        public async Task<IActionResult> Put([FromForm]DepartmentsUpdateViewModel model)
+        public async Task<IActionResult> Put([FromForm] DepartmentsUpdateViewModel model)
         {
             var result = await _departmentsService.Update(model);
             if (result.Success)
@@ -94,7 +105,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost("delete")]
-        public async Task<IActionResult> Delete([FromForm]string id)
+        public async Task<IActionResult> Delete([FromForm] string id)
         {
             var result = await _departmentsService.Delete(id);
             if (result.Success)

@@ -20,7 +20,7 @@ body {
     position: absolute;
     right: 35%;
     top: 35%;
-    z-index: 99999999;
+    /*z-index: 1910;*/
     border-radius: 5px;
     /*padding: 15px;*/
 }

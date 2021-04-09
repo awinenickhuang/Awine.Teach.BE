@@ -52,14 +52,29 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly IAdministrativeDivisionsRepository _administrativeDivisionsRepository;
 
         /// <summary>
-        /// 应用版本
+        /// SaaSSaaS版本
         /// </summary>
-        private readonly IApplicationVersionRepository _applicationVersionRepository;
+        private readonly ISaaSVersionRepository _applicationVersionRepository;
 
         /// <summary>
-        /// 应用版本对应的系统模块
+        /// SaaSSaaS版本定价策略
         /// </summary>
-        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+        private readonly ISaaSPricingTacticsRepository _applicationPricingTacticsRepository;
+
+        /// <summary>
+        /// SaaSSaaS版本包含的系统模块信息
+        /// </summary>
+        private readonly ISaaSVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+
+        /// <summary>
+        /// 租户默认参数配置信息
+        /// </summary>
+        private readonly ITenantDefaultSettingsRepository _tenantDefaultSettingsRepository;
+
+        /// <summary>
+        /// 租户参数配置信息
+        /// </summary>
+        private readonly ITenantSettingsRepository _tenantSettingsRepository;
 
         /// <summary>
         /// 用户信息
@@ -76,7 +91,10 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="industryCategoryRepository"></param>
         /// <param name="administrativeDivisionsRepository"></param>
         /// <param name="applicationVersionRepository"></param>
+        /// <param name="applicationPricingTacticsRepository"></param>
         /// <param name="applicationVersionOwnedModuleRepository"></param>
+        /// <param name="tenantDefaultSettingsRepository"></param>
+        /// <param name="tenantSettingsRepository"></param>
         /// <param name="usersRepository"></param>
         public TenantsService(
             IMapper mapper,
@@ -85,8 +103,11 @@ namespace Awine.Teach.FoundationService.Application.Services
             ITenantsRepository tenantsRepository,
             IIndustryCategoryRepository industryCategoryRepository,
             IAdministrativeDivisionsRepository administrativeDivisionsRepository,
-            IApplicationVersionRepository applicationVersionRepository,
-            IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
+            ISaaSVersionRepository applicationVersionRepository,
+            ISaaSPricingTacticsRepository applicationPricingTacticsRepository,
+            ISaaSVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
+            ITenantDefaultSettingsRepository tenantDefaultSettingsRepository,
+            ITenantSettingsRepository tenantSettingsRepository,
             IUsersRepository usersRepository)
         {
             _mapper = mapper;
@@ -96,17 +117,45 @@ namespace Awine.Teach.FoundationService.Application.Services
             _industryCategoryRepository = industryCategoryRepository;
             _administrativeDivisionsRepository = administrativeDivisionsRepository;
             _applicationVersionRepository = applicationVersionRepository;
+            _applicationPricingTacticsRepository = applicationPricingTacticsRepository;
             _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
+            _tenantDefaultSettingsRepository = tenantDefaultSettingsRepository;
+            _tenantSettingsRepository = tenantSettingsRepository;
             _usersRepository = usersRepository;
         }
 
         /// <summary>
         /// 全部数据
         /// </summary>
+        /// <param name="classiFication"></param>
+        /// <param name="saaSVersionId"></param>
+        /// <param name="status"></param>
+        /// <param name="industryId"></param>
+        /// <param name="creatorId"></param>
+        /// <param name="creatorTenantId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TenantsViewModel>> GetAll()
+        public async Task<IEnumerable<TenantsViewModel>> GetAll(int classiFication = 0, string saaSVersionId = "", int status = 0, string industryId = "", string creatorId = "", string creatorTenantId = "")
         {
-            var entities = await _tenantsRepository.GetAll(_user.TenantId);
+            var tenantId = string.Empty;
+
+            if (string.IsNullOrEmpty(creatorTenantId))
+            {
+                if (_user.TenantClassiFication == 3)
+                {
+                    creatorTenantId = "";                  //运营商查询所有
+                }
+                else if (_user.TenantClassiFication == 2)
+                {
+                    creatorTenantId = _user.TenantId;      //代理商只能查询自己的机构
+                }
+                else                                       //机构只能查询自己所在机构
+                {
+                    creatorTenantId = "";
+                    tenantId = _user.TenantId;
+                }
+            }
+
+            var entities = await _tenantsRepository.GetAll(tenantId, classiFication, saaSVersionId, status, industryId, creatorId, creatorTenantId);
 
             return _mapper.Map<IEnumerable<Tenants>, IEnumerable<TenantsViewModel>>(entities);
         }
@@ -116,10 +165,35 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
+        /// <param name="classiFication"></param>
+        /// <param name="saaSVersionId"></param>
+        /// <param name="status"></param>
+        /// <param name="industryId"></param>
+        /// <param name="creatorId"></param>
+        /// <param name="creatorTenantId"></param>
         /// <returns></returns>
-        public async Task<IPagedList<TenantsViewModel>> GetPageList(int page = 1, int limit = 15)
+        public async Task<IPagedList<TenantsViewModel>> GetPageList(int page = 1, int limit = 15, int classiFication = 0, string saaSVersionId = "", int status = 0, string industryId = "", string creatorId = "", string creatorTenantId = "")
         {
-            var entities = await _tenantsRepository.GetPageList(page, limit, _user.TenantId);
+            var tenantId = string.Empty;
+
+            if (string.IsNullOrEmpty(creatorTenantId))
+            {
+                if (_user.TenantClassiFication == 3)
+                {
+                    creatorTenantId = "";                  //运营商查询所有
+                }
+                else if (_user.TenantClassiFication == 2)
+                {
+                    creatorTenantId = _user.TenantId;      //代理商只能查询自己的机构
+                }
+                else                                       //机构只能查询自己所在机构
+                {
+                    creatorTenantId = "";
+                    tenantId = _user.TenantId;
+                }
+            }
+
+            var entities = await _tenantsRepository.GetPageList(page, limit, tenantId, classiFication, saaSVersionId, status, industryId, creatorId, creatorTenantId);
 
             return _mapper.Map<IPagedList<Tenants>, IPagedList<TenantsViewModel>>(entities);
         }
@@ -136,124 +210,82 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
-        /// 添加
+        /// 租户开通
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         public async Task<Result> Add(TenantsAddViewModel model)
         {
-            var currentTenant = await _tenantsRepository.GetModel(_user.TenantId);
-            if (null == currentTenant)
-            {
-                return new Result { Success = false, Message = "当前租户信息解析出错！" };
-            }
-
-            var tenants = await _tenantsRepository.GetAll(_user.TenantId);
-            if (tenants.Count() >= currentTenant.NumberOfBranches)
-            {
-                return new Result { Success = false, Message = $"抱歉，您当前只能有{currentTenant.NumberOfBranches}个分支机构！" };
-            }
-
-            var industry = await _industryCategoryRepository.GetModel(model.IndustryId);
-
-            if (null == industry)
-            {
-                return new Result { Success = false, Message = "未找到所属行业信息！" };
-            }
-
-            var entity = _mapper.Map<TenantsAddViewModel, Tenants>(model);
-
-            if (null != await _tenantsRepository.GetModel(entity))
-            {
-                return new Result { Success = false, Message = "数据已存在！" };
-            }
-
-            entity.IndustryName = industry.Name;
-            entity.ParentId = _user.TenantId;
-
-            if (await _tenantsRepository.Add(entity) > 0)
-            {
-                return new Result { Success = true, Message = "操作成功！" };
-            }
-
-            return new Result { Success = false, Message = "操作失败！" };
-        }
-
-        /// <summary>
-        /// 入驻 -> 注册
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// TODO:这个注册是可以消息解耦呢？
-        /// </remarks>
-        public async Task<Result> Enter(TenantsEnterViewModel model)
-        {
             var existUser = await _usersRepository.GetModel(account: model.ContactsPhone, phoneNumber: model.ContactsPhone);
+
             if (null != existUser)
             {
-                return new Result { Success = false, Message = "手机号码已被注册！" };
+                return new Result { Success = false, Message = "手机号码已被占用！" };
             }
 
             var existTenant = await _tenantsRepository.GetModel(new Tenants() { Name = model.Name });
+
             if (null != existTenant)
             {
-                return new Result { Success = false, Message = "机构名称已被注册！" };
+                return new Result { Success = false, Message = "机构名称已被占用！" };
             }
 
             var industry = await _industryCategoryRepository.GetModel(model.IndustryId);
 
             if (null == industry)
             {
-                return new Result { Success = false, Message = "未找到所属行业信息！" };
+                return new Result { Success = false, Message = "未找到行业信息！" };
             }
 
-            //注册的租户信息
-            var tenant = _mapper.Map<TenantsEnterViewModel, Tenants>(model);
-
-            if (null != await _tenantsRepository.GetModel(tenant))
+            //购买版本
+            var version = await _applicationVersionRepository.GetModel(model.SaaSVersionId);
+            if (null == version)
             {
-                return new Result { Success = false, Message = "数据已存在！" };
+                return new Result { Success = false, Message = "未找到版本信息！" };
             }
+            //购买版本 -> 版本定价策略
+            var pricingTactics = await _applicationPricingTacticsRepository.GetModel(model.PricingTacticsId);
+            if (null == pricingTactics)
+            {
+                return new Result { Success = false, Message = "未找到购买版本定价策略信息！" };
+            }
+
+            //租户信息
+            var tenant = _mapper.Map<TenantsAddViewModel, Tenants>(model);
 
             tenant.IndustryName = industry.Name;
             tenant.ClassiFication = 1;
+            tenant.SaaSVersionName = version.Name;
             tenant.Status = 1;
-            tenant.VIPExpirationTime = DateTime.Now;
-            tenant.NumberOfBranches = 0;
-
-            //官网注册机构统归于平台
-            var topTenants = await _tenantsRepository.GetClassiFication(5);
-
-            tenant.ParentId = topTenants.FirstOrDefault().Id;
+            tenant.VIPExpirationTime = DateTime.Now.AddYears(pricingTactics.NumberOfYears);//过期时间为当前时间加购买年数
 
             var province = await _administrativeDivisionsRepository.GetModelByCode(tenant.ProvinceId);
             if (null == province)
             {
-                return new Result { Success = false, Message = "省信息不存在！" };
+                return new Result { Success = false, Message = "未找到省信息！" };
             }
             tenant.ProvinceName = province.Name;
 
             var city = await _administrativeDivisionsRepository.GetModelByCode(tenant.CityId);
             if (null == city)
             {
-                return new Result { Success = false, Message = "市信息不存在！" };
+                return new Result { Success = false, Message = "未找到市信息！" };
             }
             tenant.CityName = city.Name;
 
             var district = await _administrativeDivisionsRepository.GetModelByCode(tenant.DistrictId);
             if (null == district)
             {
-                return new Result { Success = false, Message = "区信息不存在！" };
+                return new Result { Success = false, Message = "未找到区信息！" };
             }
             tenant.DistrictName = district.Name;
 
-            //创建租户超管角色
+            //租户管理员角色
             var role = new Roles()
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "管理员",
-                NormalizedName = "Admin",
+                NormalizedName = "TenantAdmin",
                 ConcurrencyStamp = Guid.NewGuid().ToString(),
                 Identifying = 3,
                 TenantId = tenant.Id,
@@ -261,18 +293,12 @@ namespace Awine.Teach.FoundationService.Application.Services
                 CreateTime = DateTime.Now
             };
 
-            //赋予角色操作权限（模块权限）
+            //赋予租户管理员角色操作权限（模块权限）
             IList<Domain.Models.RolesOwnedModules> rolesOwnedModules = new List<Domain.Models.RolesOwnedModules>();
-            var versions = await _applicationVersionRepository.GetAll();
-            var versionsId = versions.Where(x => x.Identifying == 1).FirstOrDefault()?.Id;
-            if (string.IsNullOrEmpty(versionsId))
-            {
-                return new Result { Success = false, Message = "注册失败，平台未开放免费版本，请联系客服！" };
-            }
-            var versionModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(versionsId);
+            var versionModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(version.Id);
             if (versionModules.Count() <= 0)
             {
-                return new Result { Success = false, Message = "注册失败，平台未设置初始权限，请联系客服！" };
+                return new Result { Success = false, Message = "开通失败，未找到版本设置信息！" };
             }
             foreach (var m in versionModules)
             {
@@ -284,6 +310,20 @@ namespace Awine.Teach.FoundationService.Application.Services
                     RoleId = role.Id
                 });
             }
+
+            //创建机构信息
+            Departments departments = new Departments()
+            {
+                Id = Guid.NewGuid().ToString(),
+                ParentId = Guid.Empty.ToString(),
+                Name = tenant.Name,
+                Describe = tenant.Name,
+                DisplayOrder = 1,
+                TenantId = tenant.Id,
+                IsDeleted = false,
+                CreateTime = tenant.CreateTime
+            };
+
             //创建租户账号
             Users user = new Users()
             {
@@ -306,10 +346,37 @@ namespace Awine.Teach.FoundationService.Application.Services
                 IsActive = true,
                 TenantId = tenant.Id,
                 RoleId = role.Id,
-                DepartmentId = Guid.NewGuid().ToString()
+                DepartmentId = departments.Id
             };
 
-            if (await _tenantsRepository.Enter(tenant, user, role, rolesOwnedModules))
+            //创建订单
+            Orders order = new Orders()
+            {
+                TenantId = tenant.Id,
+                TenantName = tenant.Name,
+                NumberOfYears = pricingTactics.NumberOfYears,
+                PayTheAmount = pricingTactics.ChargeRates,
+                PerformanceOwnerId = _user.UserId,
+                PerformanceOwner = _user.UserName,
+                PerformanceTenantId = _user.TenantId,
+                PerformanceTenant = _user.TenantName,
+                TradeCategories = 1,
+                SaaSVersionId = version.Id,
+                SaaSVersionName = version.Name
+            };
+
+            if (!string.IsNullOrEmpty(model.PerformanceOwnerId))
+            {
+                var performanceOwner = await _usersRepository.GetModel(model.PerformanceOwnerId);
+                if (null == performanceOwner)
+                {
+                    return new Result { Success = false, Message = "未找到业务归属人！" };
+                }
+                order.PerformanceOwnerId = performanceOwner.Id;
+                order.PerformanceOwner = performanceOwner.UserName;
+            }
+
+            if (await _tenantsRepository.Add(tenant, departments, user, role, rolesOwnedModules, order))
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }
@@ -326,20 +393,7 @@ namespace Awine.Teach.FoundationService.Application.Services
         {
             try
             {
-                var industry = await _industryCategoryRepository.GetModel(model.IndustryId);
-                if (null == industry)
-                {
-                    return new Result { Success = false, Message = "未找到指定的业务类型分类信息！" };
-                }
-
                 var entity = _mapper.Map<TenantsUpdateViewModel, Tenants>(model);
-
-                entity.IndustryName = industry.Name;
-
-                if (null != await _tenantsRepository.GetModel(entity))
-                {
-                    return new Result { Success = false, Message = "数据已存在！" };
-                }
 
                 if (await _tenantsRepository.Update(entity) > 0)
                 {
@@ -355,35 +409,6 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
-        /// 更新 -> 租户类型 1-免费 2-试用 3-付费（VIP）
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public async Task<Result> UpdateClassiFication(TenantsUpdateClassiFicationViewModel model)
-        {
-            var exist = await _tenantsRepository.GetModel(model.Id);
-
-            if (null == exist)
-            {
-                return new Result { Success = false, Message = "数据不存在！" };
-            }
-
-            var entity = new Tenants()
-            {
-                Id = model.Id,
-                ClassiFication = model.ClassiFication
-            };
-
-            var result = await _tenantsRepository.UpdateClassiFication(entity);
-
-            if (result > 0)
-            {
-                return new Result { Success = true, Message = "操作成功！" };
-            }
-            return new Result { Success = false, Message = "操作失败！" };
-        }
-
-        /// <summary>
         /// 更新 -> 租户状态 1-正常 2-锁定（异常）3-锁定（过期）
         /// </summary>
         /// <param name="model"></param>
@@ -394,7 +419,7 @@ namespace Awine.Teach.FoundationService.Application.Services
 
             if (null == exist)
             {
-                return new Result { Success = false, Message = "数据不存在！" };
+                return new Result { Success = false, Message = "未找到机构信息！" };
             }
 
             var entity = new Tenants()
@@ -404,36 +429,6 @@ namespace Awine.Teach.FoundationService.Application.Services
             };
 
             var result = await _tenantsRepository.UpdateStatus(entity);
-
-            if (result > 0)
-            {
-                return new Result { Success = true, Message = "操作成功！" };
-            }
-
-            return new Result { Success = false, Message = "操作失败！" };
-        }
-
-        /// <summary>
-        /// 更新 -> 允许添加的分支机构个数
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public async Task<Result> UpdateNumberOfBranches(TenantsUpdateNumberOfBranchesViewModel model)
-        {
-            var exist = await _tenantsRepository.GetModel(model.Id);
-
-            if (null == exist)
-            {
-                return new Result { Success = false, Message = "数据不存在！" };
-            }
-
-            var entity = new Tenants()
-            {
-                Id = model.Id,
-                NumberOfBranches = model.NumberOfBranches
-            };
-
-            var result = await _tenantsRepository.UpdateNumberOfBranches(entity);
 
             if (result > 0)
             {

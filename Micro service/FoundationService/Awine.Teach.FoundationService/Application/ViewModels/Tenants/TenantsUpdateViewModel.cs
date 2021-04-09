@@ -76,12 +76,5 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         [Required(AllowEmptyStrings = false, ErrorMessage = "地址必填")]
         [StringLength(128, ErrorMessage = "地址长度为2-128个字符", MinimumLength = 2)]
         public string Address { get; set; }
-
-        /// <summary>
-        /// 行业类型ID
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "行业类型ID必填")]
-        [RegularExpression(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$", ErrorMessage = "行业类型ID不正确")]
-        public string IndustryId { get; set; }
     }
 }

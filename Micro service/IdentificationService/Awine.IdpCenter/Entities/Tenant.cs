@@ -15,11 +15,6 @@ namespace Awine.IdpCenter.Entities
         public string Id { get; set; }
 
         /// <summary>
-        /// 所属机构ID
-        /// </summary>
-        public string ParentId { get; set; }
-
-        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
@@ -35,9 +30,14 @@ namespace Awine.IdpCenter.Entities
         public string ContactsPhone { get; set; }
 
         /// <summary>
-        /// 租户类型 1-免费 2-试用 3-付费（VIP）4-代理商 5-运营商
+        /// 租户类型 1-机构 2-代理商 3-运营商
         /// </summary>
         public int ClassiFication { get; set; }
+
+        /// <summary>
+        /// 版本标识
+        /// </summary>
+        public string SaaSVersionId { get; set; }
 
         /// <summary>
         /// 租户状态 1-正常 2-锁定（异常）3-锁定（过期）
@@ -95,9 +95,24 @@ namespace Awine.IdpCenter.Entities
         public string IndustryName { get; set; }
 
         /// <summary>
-        /// 允许添加的分支机构个数
+        /// 创建人标识
         /// </summary>
-        public int NumberOfBranches { get; set; }
+        public string CreatorId { get; set; }
+
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string Creator { get; set; }
+
+        /// <summary>
+        /// 创建人租户标识
+        /// </summary>
+        public string CreatorTenantId { get; set; }
+
+        /// <summary>
+        /// 删除标识
+        /// </summary>
+        public bool IsDeleted { get; set; } = false;
 
         /// <summary>
         /// 创建时间

@@ -80,7 +80,6 @@ namespace Awine.IdpCenter.Extensions
                 //tenant.Property(x => x.VIPExpirationTime).IsRequired();
                 //tenant.Property(x => x.IndustryId).IsRequired();
                 //tenant.Property(x => x.IndustryName).IsRequired();
-                //tenant.Property(x => x.NumberOfBranches).IsRequired();
                 //tenant.Property(x => x.CreateTime).IsRequired();
 
                 //tenant.HasIndex(x => new { x.Id });

@@ -157,7 +157,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             }
 
             entity.CreatorId = _user.UserId;
-            entity.CreatorName = _user.Name;
+            entity.CreatorName = _user.UserName;
 
             if (await _consultRecordRepository.Add(entity) > 0)
             {

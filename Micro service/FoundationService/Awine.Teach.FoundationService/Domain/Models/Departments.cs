@@ -11,6 +11,11 @@ namespace Awine.Teach.FoundationService.Domain.Models
     public class Departments : Entity
     {
         /// <summary>
+        /// 父级部门标识
+        /// </summary>
+        public string ParentId { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
@@ -34,10 +39,5 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// 删除标识
         /// </summary>
         public bool IsDeleted { get; set; } = false;
-
-        /// <summary>
-        /// 租户信息
-        /// </summary>
-        public Tenants Tenant { get; set; }
     }
 }

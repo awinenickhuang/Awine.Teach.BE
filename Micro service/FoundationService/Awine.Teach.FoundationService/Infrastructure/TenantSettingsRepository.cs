@@ -114,6 +114,21 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// 取一条数据
         /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        public async Task<TenantSettings> GetModelForTenant(string tenantId)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                sqlStr.Append(" SELECT * FROM TenantSettings WHERE TenantId=@TenantId ");
+                return await connection.QueryFirstOrDefaultAsync<TenantSettings>(sqlStr.ToString(), new { TenantId = tenantId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         public async Task<TenantSettings> GetModel(TenantSettings model)
@@ -140,7 +155,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("INSERT INTO TenantSettings (Id,NumberOfBranches,`MaxNumberOfUser`,`MaxNumberOfCourse`,MaxNumberOfClass,MaxNumberOfStudent,MaxStorageSpace,TenantId,IsDeleted,CreateTime) VALUES (@Id,@NumberOfBranches,@MaxNumberOfUser,@MaxNumberOfCourse,@MaxNumberOfClass,@MaxNumberOfStudent,@MaxStorageSpace,@TenantId,@IsDeleted,@CreateTime) ");
+                sqlStr.Append("INSERT INTO TenantSettings (Id,MaxNumberOfBranch,MaxNumberOfDepartments,MaxNumberOfRoles,`MaxNumberOfUser`,`MaxNumberOfCourse`,MaxNumberOfClass,MaxNumberOfClassRoom,MaxNumberOfStudent,MaxStorageSpace,TenantId,IsDeleted,CreateTime) VALUES (@Id,@MaxNumberOfBranch,@MaxNumberOfDepartments,@MaxNumberOfRoles,@MaxNumberOfUser,@MaxNumberOfCourse,@MaxNumberOfClass,@MaxNumberOfClassRoom,@MaxNumberOfStudent,@MaxStorageSpace,@TenantId,@IsDeleted,@CreateTime) ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
@@ -155,7 +170,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE TenantSettings SET NumberOfBranches=@NumberOfBranches,`MaxNumberOfUser`=@MaxNumberOfUser,MaxNumberOfCourse=@MaxNumberOfCourse,MaxNumberOfClass=@MaxNumberOfClass,MaxNumberOfStudent=@MaxNumberOfStudent,MaxStorageSpace=@MaxStorageSpace WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE TenantSettings SET MaxNumberOfBranch=@MaxNumberOfBranch,MaxNumberOfDepartments=@MaxNumberOfDepartments,MaxNumberOfRoles=@MaxNumberOfRoles,`MaxNumberOfUser`=@MaxNumberOfUser,MaxNumberOfCourse=@MaxNumberOfCourse,MaxNumberOfClass=@MaxNumberOfClass,MaxNumberOfClassRoom=@MaxNumberOfClassRoom,MaxNumberOfStudent=@MaxNumberOfStudent,MaxStorageSpace=@MaxStorageSpace WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

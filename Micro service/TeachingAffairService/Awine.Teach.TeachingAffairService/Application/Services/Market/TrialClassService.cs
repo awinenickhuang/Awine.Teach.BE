@@ -163,7 +163,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 StudentId = model.StudentId,
                 TrialClassGenre = 1,
                 CreatorId = _user.UserId,
-                CreatorName = _user.Name,
+                CreatorName = _user.UserName,
                 TeacherId = _user.TenantId,
                 CourseScheduleId = model.CourseScheduleId,
                 TenantId = _user.TenantId,
@@ -231,7 +231,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
                 StudentId = model.StudentId,
                 TrialClassGenre = 2,
                 CreatorId = _user.UserId,
-                CreatorName = _user.Name,
+                CreatorName = _user.UserName,
                 TenantId = _user.TenantId,
                 IsDeleted = false
             };

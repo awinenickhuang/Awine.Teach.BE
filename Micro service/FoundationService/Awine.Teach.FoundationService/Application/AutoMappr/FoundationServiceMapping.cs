@@ -27,7 +27,6 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             //租户信息
             CreateMap<Tenants, TenantsViewModel>();
             CreateMap<TenantsAddViewModel, Tenants>();
-            CreateMap<TenantsEnterViewModel, Tenants>();
             CreateMap<TenantsUpdateViewModel, Tenants>();
             CreateMap<IPagedList<Tenants>, IPagedList<TenantsViewModel>>().ConvertUsing<PagedListConverter<Tenants, TenantsViewModel>>();
 
@@ -47,8 +46,7 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             CreateMap<DepartmentsAddViewModel, Departments>();
             CreateMap<DepartmentsUpdateViewModel, Departments>();
             CreateMap<DepartmentsViewModel, Departments>();
-            CreateMap<Departments, DepartmentsViewModel>()
-                .ForMember(dest => dest.TenantName, options => options.MapFrom(src => src.Tenant.Name));
+            CreateMap<Departments, DepartmentsViewModel>();
             CreateMap<IPagedList<Departments>, IPagedList<DepartmentsViewModel>>().ConvertUsing<PagedListConverter<Departments, DepartmentsViewModel>>();
 
             //模块信息
@@ -83,14 +81,24 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
                 .ForMember(dest => dest.AspnetRoleName, options => options.MapFrom(src => src.AspnetRole.Name));
             CreateMap<IPagedList<Users>, IPagedList<UsersViewModel>>().ConvertUsing<PagedListConverter<Users, UsersViewModel>>();
 
-            //应用版本
-            CreateMap<ApplicationVersion, ApplicationVersionViewModel>().ReverseMap();
-            CreateMap<ApplicationVersionAddViewModel, ApplicationVersion>();
-            CreateMap<ApplicationVersionUpdateViewModel, ApplicationVersion>();
-            CreateMap<IPagedList<ApplicationVersion>, IPagedList<ApplicationVersionViewModel>>().ConvertUsing<PagedListConverter<ApplicationVersion, ApplicationVersionViewModel>>();
+            //SaaS版本
+            CreateMap<SaaSVersion, SaaSVersionViewModel>().ReverseMap();
+            CreateMap<SaaSVersionAddViewModel, SaaSVersion>();
+            CreateMap<SaaSVersionUpdateViewModel, SaaSVersion>();
+            CreateMap<IPagedList<SaaSVersion>, IPagedList<SaaSVersionViewModel>>().ConvertUsing<PagedListConverter<SaaSVersion, SaaSVersionViewModel>>();
 
-            //应用版本包括的模块信息
-            CreateMap<ApplicationVersionOwnedModule, ApplicationVersionOwnedModuleViewModel>();
+            //SaaS版本定价策略
+            CreateMap<SaaSPricingTactics, SaaSPricingTacticsViewModel>().ReverseMap();
+            CreateMap<SaaSPricingTacticsAddViewModel, SaaSPricingTactics>();
+            CreateMap<SaaSPricingTacticsUpdateViewModel, SaaSPricingTactics>();
+            CreateMap<IPagedList<SaaSPricingTactics>, IPagedList<SaaSPricingTacticsViewModel>>().ConvertUsing<PagedListConverter<SaaSPricingTactics, SaaSPricingTacticsViewModel>>();
+
+            //SaaS版本包括的模块信息
+            CreateMap<SaaSVersionOwnedModule, SaaSVersionOwnedModuleViewModel>();
+
+            //订单信息
+            CreateMap<Orders, OrdersViewModel>();
+            CreateMap<IPagedList<Orders>, IPagedList<OrdersViewModel>>().ConvertUsing<PagedListConverter<Orders, OrdersViewModel>>();
         }
     }
 }

@@ -6,24 +6,29 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Domain.Models
 {
     /// <summary>
-    /// 应用版本对应的系统模块
+    /// SaaS版本
     /// </summary>
-    public class ApplicationVersionOwnedModule
+    public class SaaSVersion
     {
         /// <summary>
-        /// 主键标识
+        /// 唯一标识
         /// </summary>
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// 应用版本ID
+        /// 版本名称
         /// </summary>
-        public string AppVersionId { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// 模块|菜单标识
+        /// 版本标识
         /// </summary>
-        public string ModuleId { get; set; }
+        public int Identifying { get; set; }
+
+        /// <summary>
+        /// 显示顺序
+        /// </summary>
+        public int DisplayOrder { get; set; } = 0;
 
         /// <summary>
         /// 删除标识

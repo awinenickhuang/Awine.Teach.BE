@@ -13,14 +13,14 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Services
 {
     /// <summary>
-    /// 应用版本对应的系统模块
+    /// SaaS版本包括的系统模块
     /// </summary>
-    public class ApplicationVersionOwnedModuleService : IApplicationVersionOwnedModuleService
+    public class SaaSVersionOwnedModuleService : ISaaSVersionOwnedModuleService
     {
         /// <summary>
-        /// 应用版本对应的系统模块
+        /// SaaS版本包括的系统模块
         /// </summary>
-        private readonly IApplicationVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
+        private readonly ISaaSVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
 
         /// <summary>
         /// AutoMapper
@@ -30,7 +30,7 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <summary>
         /// Log
         /// </summary>
-        private readonly ILogger<ApplicationVersionOwnedModuleService> _logger;
+        private readonly ILogger<SaaSVersionOwnedModuleService> _logger;
 
         /// <summary>
         /// 构造
@@ -38,7 +38,7 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="applicationVersionOwnedModuleRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
-        public ApplicationVersionOwnedModuleService(IApplicationVersionOwnedModuleRepository applicationVersionOwnedModuleRepository, IMapper mapper, ILogger<ApplicationVersionOwnedModuleService> logger)
+        public SaaSVersionOwnedModuleService(ISaaSVersionOwnedModuleRepository applicationVersionOwnedModuleRepository, IMapper mapper, ILogger<SaaSVersionOwnedModuleService> logger)
         {
             _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
             _mapper = mapper;
@@ -46,26 +46,26 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
-        /// 设置应用版本包括的模块信息
+        /// 设置SaaS版本包括的模块信息
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public async Task<Result> SaveAppVersionOwnedModules(ApplicationVersionOwnedModuleAddViewModel module)
+        public async Task<Result> SaveAppVersionOwnedModules(SaaSVersionOwnedModuleAddViewModel module)
         {
-            IList<ApplicationVersionOwnedModule> modules = new List<ApplicationVersionOwnedModule>();
-            foreach (var model in module.AppVersionOwnedModules)
+            IList<SaaSVersionOwnedModule> modules = new List<SaaSVersionOwnedModule>();
+            foreach (var model in module.SaaSVersionOwnedModules)
             {
-                var addModule = new ApplicationVersionOwnedModule()
+                var addModule = new SaaSVersionOwnedModule()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    AppVersionId = module.AppVersionId,
+                    SaaSVersionId = module.SaaSVersionId,
                     ModuleId = model.ModuleId,
                     IsDeleted = false,
                     CreateTime = DateTime.Now
                 };
                 modules.Add(addModule);
             }
-            var result = await _applicationVersionOwnedModuleRepository.SaveAppVersionOwnedModules(module.AppVersionId, modules);
+            var result = await _applicationVersionOwnedModuleRepository.SaveAppVersionOwnedModules(module.SaaSVersionId, modules);
             if (result)
             {
                 return new Result() { Success = true, Message = "操作成功" };
@@ -74,14 +74,14 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
-        /// 查询应用版本包括的模块信息
+        /// 查询SaaS版本包括的模块信息
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ApplicationVersionOwnedModuleViewModel>> GetAppVersionOwnedModules(string appVersionId)
+        public async Task<IEnumerable<SaaSVersionOwnedModuleViewModel>> GetAppVersionOwnedModules(string saaSVersionId)
         {
-            var list = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(appVersionId);
-            return _mapper.Map<IEnumerable<ApplicationVersionOwnedModule>, IEnumerable<ApplicationVersionOwnedModuleViewModel>>(list);
+            var list = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(saaSVersionId);
+            return _mapper.Map<IEnumerable<SaaSVersionOwnedModule>, IEnumerable<SaaSVersionOwnedModuleViewModel>>(list);
         }
     }
 }

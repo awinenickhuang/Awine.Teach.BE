@@ -15,9 +15,19 @@ namespace Awine.Teach.FoundationService.Domain.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         /// <summary>
-        /// 允许添加的分支机构个数
+        /// 最大分支机构数量
         /// </summary>
-        public int NumberOfBranches { get; set; }
+        public int MaxNumberOfBranch { get; set; }
+
+        /// <summary>
+        /// 最大部门数量
+        /// </summary>
+        public int MaxNumberOfDepartments { get; set; }
+
+        /// <summary>
+        /// 最大角色数量
+        /// </summary>
+        public int MaxNumberOfRoles { get; set; }
 
         /// <summary>
         /// 最大用户数量
@@ -33,6 +43,11 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// 最大班级数量
         /// </summary>
         public int MaxNumberOfClass { get; set; }
+
+        /// <summary>
+        /// 最大教室数量
+        /// </summary>
+        public int MaxNumberOfClassRoom { get; set; }
 
         /// <summary>
         /// 最大学生数量

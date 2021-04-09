@@ -37,6 +37,13 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         Task<DepartmentsViewModel> GetModel(string id);
 
         /// <summary>
+        /// 树型列表
+        /// </summary>
+        /// <param name="departmentParentId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<DepartmentsTreeViewModel>> GetTreeList(string departmentParentId = "");
+
+        /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>

@@ -105,7 +105,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             entity.TenantId = _user.TenantId;
             entity.Id = Guid.NewGuid().ToString();
             entity.CreatorId = _user.UserId;
-            entity.CreatorName = _user.Name;
+            entity.CreatorName = _user.UserName;
 
             var student = await _studentRepository.GetModel(model.StudentId);
             if (null == student)
@@ -143,7 +143,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
         {
             var entity = _mapper.Map<StudentGrowthRecordUpdateViewModel, StudentGrowthRecord>(model);
             entity.CreatorId = _user.UserId;
-            entity.CreatorName = _user.Name;
+            entity.CreatorName = _user.UserName;
             var exist = await _studentGrowthRecordRepository.GetModel(entity);
             if (null != exist)
             {

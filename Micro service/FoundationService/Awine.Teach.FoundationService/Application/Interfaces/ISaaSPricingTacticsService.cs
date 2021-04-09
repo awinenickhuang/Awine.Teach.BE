@@ -9,41 +9,39 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Interfaces
 {
     /// <summary>
-    /// 应用版本
+    /// SaaS版本定价策略
     /// </summary>
-    public interface IApplicationVersionService
+    public interface ISaaSPricingTacticsService
     {
+        /// <summary>
+        /// 列表
+        /// </summary>
+        /// <param name="saaSVersionId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<SaaSPricingTacticsViewModel>> GetAll(string saaSVersionId);
+
         /// <summary>
         /// 分页列表
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
-        /// <param name="name"></param>
-        /// <param name="identifying"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        Task<IPagedList<ApplicationVersionViewModel>> GetPageList(int page = 1, int limit = 15, string name = "", string identifying = "");
+        Task<IPagedList<SaaSPricingTacticsViewModel>> GetPageList(int page = 1, int limit = 15, string saaSVersionId = "");
 
         /// <summary>
-        /// 查询全部
+        /// 获取一条数据
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="identifying"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        Task<IEnumerable<ApplicationVersionViewModel>> GetAll(string name = "", string identifying = "");
+        Task<SaaSPricingTacticsViewModel> GetModel(string id);
 
         /// <summary>
         /// 添加
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<Result> Add(ApplicationVersionAddViewModel model);
-
-        /// <summary>
-        /// 更新
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        Task<Result> Update(ApplicationVersionUpdateViewModel model);
+        Task<Result> Add(SaaSPricingTacticsAddViewModel model);
 
         /// <summary>
         /// 删除
@@ -53,10 +51,10 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         Task<Result> Delete(string id);
 
         /// <summary>
-        /// 获取一条数据
+        /// 更新
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        Task<ApplicationVersionViewModel> GetModel(string id);
+        Task<Result> Update(SaaSPricingTacticsUpdateViewModel model);
     }
 }

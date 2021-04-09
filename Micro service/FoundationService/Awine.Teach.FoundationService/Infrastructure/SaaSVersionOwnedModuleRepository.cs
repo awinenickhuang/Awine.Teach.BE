@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Infrastructure.Repository
 {
     /// <summary>
-    /// 应用版本对应的系统模块
+    /// SaaS版本包括的系统模块
     /// </summary>
-    public class ApplicationVersionOwnedModuleRepository : IApplicationVersionOwnedModuleRepository
+    public class SaaSVersionOwnedModuleRepository : ISaaSVersionOwnedModuleRepository
     {
         /// <summary>
         /// MySQLProviderOptions
@@ -26,26 +26,26 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// ILogger
         /// </summary>
-        private readonly ILogger<ApplicationVersionOwnedModuleRepository> _logger;
+        private readonly ILogger<SaaSVersionOwnedModuleRepository> _logger;
 
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="mySQLProviderOptions"></param>
         /// <param name="logger"></param>
-        public ApplicationVersionOwnedModuleRepository(MySQLProviderOptions mySQLProviderOptions, ILogger<ApplicationVersionOwnedModuleRepository> logger)
+        public SaaSVersionOwnedModuleRepository(MySQLProviderOptions mySQLProviderOptions, ILogger<SaaSVersionOwnedModuleRepository> logger)
         {
             this._mySQLProviderOptions = mySQLProviderOptions ?? throw new ArgumentNullException(nameof(mySQLProviderOptions));
             _logger = logger;
         }
 
         /// <summary>
-        /// 设置应用版本包括的模块信息
+        /// 设置SaaS版本包括的模块信息
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <param name="modules"></param>
         /// <returns></returns>
-        public async Task<bool> SaveAppVersionOwnedModules(string appVersionId, IList<ApplicationVersionOwnedModule> modules)
+        public async Task<bool> SaveAppVersionOwnedModules(string saaSVersionId, IList<SaaSVersionOwnedModule> modules)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -58,13 +58,13 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                         //删除
                         sqlStr.Clear();
-                        sqlStr.Append(" DELETE FROM ApplicationVersionsOwnedModules WHERE AppVersionId=@AppVersionId ");
-                        await connection.ExecuteAsync(sqlStr.ToString(), new { AppVersionId = appVersionId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                        sqlStr.Append(" DELETE FROM SaaSVersionsOwnedModules WHERE SaaSVersionId=@SaaSVersionId ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), new { SaaSVersionId = saaSVersionId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         //写入
                         sqlStr.Clear();
-                        sqlStr.Append(" INSERT INTO ApplicationVersionsOwnedModules ");
-                        sqlStr.Append(" (Id,AppVersionId,ModuleId,IsDeleted,CreateTime) VALUES (@Id,@AppVersionId,@ModuleId,@IsDeleted,@CreateTime)");
+                        sqlStr.Append(" INSERT INTO SaaSVersionsOwnedModules ");
+                        sqlStr.Append(" (Id,SaaSVersionId,ModuleId,IsDeleted,CreateTime) VALUES (@Id,@SaaSVersionId,@ModuleId,@IsDeleted,@CreateTime)");
                         await connection.ExecuteAsync(sqlStr.ToString(), modules, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         transaction.Commit();
@@ -72,7 +72,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError($"设置应用版本模块时发生异常-{ex.Message}");
+                        _logger.LogError($"设置SaaS版本模块时发生异常-{ex.Message}");
                         transaction.Rollback();
                         return false;
                     }
@@ -81,31 +81,31 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         }
 
         /// <summary>
-        /// 查询应用版本包括的模块信息
+        /// 查询SaaS版本包括的模块信息
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ApplicationVersionOwnedModule>> GetAppVersionOwnedModules(string appVersionId)
+        public async Task<IEnumerable<SaaSVersionOwnedModule>> GetAppVersionOwnedModules(string saaSVersionId)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append("SELECT * FROM ApplicationVersionsOwnedModules WHERE AppVersionId=@AppVersionId");
-                return await connection.QueryAsync<ApplicationVersionOwnedModule>(sqlStr.ToString(), new { AppVersionId = appVersionId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                sqlStr.Append("SELECT * FROM SaaSVersionsOwnedModules WHERE SaaSVersionId=@SaaSVersionId");
+                return await connection.QueryAsync<SaaSVersionOwnedModule>(sqlStr.ToString(), new { SaaSVersionId = saaSVersionId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
 
         /// <summary>
-        /// 获取模块集合，以识别模块是否被应用版本使用
+        /// 获取模块集合，以识别模块是否被SaaS版本使用
         /// </summary>
         /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<ApplicationVersionOwnedModule>> GetModels(string moduleId)
+        public async Task<IEnumerable<SaaSVersionOwnedModule>> GetModels(string moduleId)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = " SELECT * FROM ApplicationVersionsOwnedModules WHERE ModuleId=@ModuleId";
-                return await connection.QueryAsync<ApplicationVersionOwnedModule>(sqlStr.ToString(), new { ModuleId = moduleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                string sqlStr = " SELECT * FROM SaaSVersionsOwnedModules WHERE ModuleId=@ModuleId";
+                return await connection.QueryAsync<SaaSVersionOwnedModule>(sqlStr.ToString(), new { ModuleId = moduleId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
     }

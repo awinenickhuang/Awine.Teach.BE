@@ -106,7 +106,7 @@ namespace Awine.Teach.TeachingAffairService.Application.Services
             var entity = _mapper.Map<StudentGrowthRecordCommentAddViewModel, StudentGrowthRecordComment>(model);
             entity.TenantId = studentGrowthRecord.TenantId;
             entity.CreatorId = _user.UserId;
-            entity.CreatorName = _user.Name;
+            entity.CreatorName = _user.UserName;
 
             if (await _studentGrowthRecordCommentRepository.Add(entity) > 0)
             {

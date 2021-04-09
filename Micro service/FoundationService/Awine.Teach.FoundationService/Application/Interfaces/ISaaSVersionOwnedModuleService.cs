@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.Interfaces
 {
     /// <summary>
-    /// 应用版本对应的系统模块
+    /// SaaS版本包括的系统模块
     /// </summary>
-    public interface IApplicationVersionOwnedModuleService
+    public interface ISaaSVersionOwnedModuleService
     {
         /// <summary>
-        /// 设置应用版本包括的模块信息
+        /// 设置SaaS版本包括的模块信息
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        Task<Result> SaveAppVersionOwnedModules(ApplicationVersionOwnedModuleAddViewModel module);
+        Task<Result> SaveAppVersionOwnedModules(SaaSVersionOwnedModuleAddViewModel module);
 
         /// <summary>
-        /// 查询应用版本包括的模块信息
+        /// 查询SaaS版本包括的模块信息
         /// </summary>
-        /// <param name="appVersionId"></param>
+        /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        Task<IEnumerable<ApplicationVersionOwnedModuleViewModel>> GetAppVersionOwnedModules(string appVersionId);
+        Task<IEnumerable<SaaSVersionOwnedModuleViewModel>> GetAppVersionOwnedModules(string saaSVersionId);
     }
 }
