@@ -223,9 +223,10 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <param name="user"></param>
         /// <param name="role"></param>
         /// <param name="rolesOwnedModules"></param>
+        /// <param name="tenantSettings"></param>
         /// <param name="order"></param>
         /// <returns></returns>
-        public async Task<bool> Add(Tenants tenant, Departments department, Users user, Roles role, IList<RolesOwnedModules> rolesOwnedModules, Orders order)
+        public async Task<bool> Add(Tenants tenant, Departments department, Users user, Roles role, IList<RolesOwnedModules> rolesOwnedModules, TenantSettings tenantSettings, Orders order)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -238,12 +239,13 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                         //写租户信息
                         sqlStr.Append(" INSERT INTO Tenants ");
-                        sqlStr.Append(" (Id,Name,Contacts,ContactsPhone,ClassiFication,SaaSVersionId,AppVersionName,Status,ProvinceId,ProvinceName,CityId,CityName,DistrictId,DistrictName,Address,VIPExpirationTime,IndustryId,IndustryName,CreatorId,Creator,CreatorTenantId,CreatorTenantName,IsDeleted,CreateTime) ");
+                        sqlStr.Append(" (Id,Name,Contacts,ContactsPhone,ClassiFication,SaaSVersionId,SaaSVersionName,Status,ProvinceId,ProvinceName,CityId,CityName,DistrictId,DistrictName,Address,VIPExpirationTime,IndustryId,IndustryName,CreatorId,Creator,CreatorTenantId,CreatorTenantName,IsDeleted,CreateTime) ");
                         sqlStr.Append(" VALUES ");
-                        sqlStr.Append(" (@Id,@Name,@Contacts,@ContactsPhone,@ClassiFication,@SaaSVersionId,@AppVersionName,@Status,@ProvinceId,@ProvinceName,@CityId,@CityName,@DistrictId,@DistrictName,@Address,@VIPExpirationTime,@IndustryId,@IndustryName,@CreatorId,@Creator,@CreatorTenantId,@CreatorTenantName,@IsDeleted,@CreateTime) ");
+                        sqlStr.Append(" (@Id,@Name,@Contacts,@ContactsPhone,@ClassiFication,@SaaSVersionId,@SaaSVersionName,@Status,@ProvinceId,@ProvinceName,@CityId,@CityName,@DistrictId,@DistrictName,@Address,@VIPExpirationTime,@IndustryId,@IndustryName,@CreatorId,@Creator,@CreatorTenantId,@CreatorTenantName,@IsDeleted,@CreateTime) ");
                         await connection.ExecuteAsync(sqlStr.ToString(), tenant, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         //创建部门 - 组织机构
+                        sqlStr.Clear();
                         sqlStr.Append("INSERT INTO Departments (Id,ParentId,`Name`,`Describe`,DisplayOrder,TenantId,IsDeleted,CreateTime) VALUES (@Id,@ParentId,@Name,@Describe,@DisplayOrder,@TenantId,@IsDeleted,@CreateTime) ");
                         await connection.ExecuteAsync(sqlStr.ToString(), department, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
@@ -271,11 +273,20 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                         sqlStr.Append(" (@Id,@AccessFailedCount,@ConcurrencyStamp,@Email,@EmailConfirmed,@LockoutEnabled,@LockoutEnd,@NormalizedEmail,@NormalizedUserName,@UserName,@Account,@PhoneNumber,@PasswordHash,@PhoneNumberConfirmed,@SecurityStamp,@TwoFactorEnabled,@RoleId,@IsActive,@TenantId,@DepartmentId,@Gender,@IsDeleted,@CreateTime)");
                         await connection.ExecuteAsync(sqlStr.ToString(), user, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
-                        //写订单信息
-                        sqlStr.Append(" INSERT INTO Orders ");
-                        sqlStr.Append(" (Id,TenantId,TenantName,NumberOfYears,PayTheAmount,PerformanceOwnerId,PerformanceOwner,PerformanceTenantId,PerformanceTenant,TradeCategories,IsDeleted,CreateTime) ");
+                        //写机构设置
+                        sqlStr.Clear();
+                        sqlStr.Append(" INSERT INTO TenantSettings ");
+                        sqlStr.Append(" (Id,MaxNumberOfBranch,MaxNumberOfDepartments,MaxNumberOfRoles,`MaxNumberOfUser`,`MaxNumberOfCourse`,MaxNumberOfClass,MaxNumberOfClassRoom,MaxNumberOfStudent,MaxStorageSpace,AvailableStorageSpace,UsedStorageSpace,TenantId,IsDeleted,CreateTime) ");
                         sqlStr.Append(" VALUES ");
-                        sqlStr.Append(" (@Id,@TenantId,@TenantName,@NumberOfYears,@PayTheAmount,@PerformanceOwnerId,@PerformanceOwner,@PerformanceTenantId,@PerformanceTenant,@TradeCategories,@IsDeleted,@CreateTime) ");
+                        sqlStr.Append(" (@Id,@MaxNumberOfBranch,@MaxNumberOfDepartments,@MaxNumberOfRoles,@MaxNumberOfUser,@MaxNumberOfCourse,@MaxNumberOfClass,@MaxNumberOfClassRoom,@MaxNumberOfStudent,@MaxStorageSpace,@AvailableStorageSpace,@UsedStorageSpace,@TenantId,@IsDeleted,@CreateTime) ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), tenantSettings, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        //写订单信息
+                        sqlStr.Clear();
+                        sqlStr.Append(" INSERT INTO Orders ");
+                        sqlStr.Append(" (Id,TenantId,TenantName,NumberOfYears,PayTheAmount,PerformanceOwnerId,PerformanceOwner,PerformanceTenantId,PerformanceTenant,TradeCategories,SaaSVersionId,SaaSVersionName,IsDeleted,CreateTime) ");
+                        sqlStr.Append(" VALUES ");
+                        sqlStr.Append(" (@Id,@TenantId,@TenantName,@NumberOfYears,@PayTheAmount,@PerformanceOwnerId,@PerformanceOwner,@PerformanceTenantId,@PerformanceTenant,@TradeCategories,@SaaSVersionId,@SaaSVersionName,@IsDeleted,@CreateTime) ");
                         await connection.ExecuteAsync(sqlStr.ToString(), order, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         transaction.Commit();

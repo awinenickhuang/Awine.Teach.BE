@@ -50,7 +50,7 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<int> Delete(string id);
+        Task<bool> Delete(string id);
 
         /// <summary>
         /// 获取一条数据

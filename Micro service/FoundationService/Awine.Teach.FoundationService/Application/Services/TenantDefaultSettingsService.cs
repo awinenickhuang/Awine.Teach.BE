@@ -89,9 +89,9 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<TenantDefaultSettingsViewModel> GetModelForAppVersion(string saaSVersionId)
+        public async Task<TenantDefaultSettingsViewModel> GetModelForSaaSVersion(string saaSVersionId)
         {
-            var entity = await _tenantDefaultSettingsRepository.GetModelForAppVersion(saaSVersionId);
+            var entity = await _tenantDefaultSettingsRepository.GetModelForSaaSVersion(saaSVersionId);
 
             return _mapper.Map<TenantDefaultSettings, TenantDefaultSettingsViewModel>(entity);
         }

@@ -22,7 +22,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// 最大分支机构数量
         /// </summary>
         [Required(ErrorMessage = "最大分支机构数量必填")]
-        [RegularExpression(@"^\+?[1-9][0-9]*$", ErrorMessage = "最大分支机构数量只能输入正整数")]
+        [RegularExpression(@"^\+?0|[1-9][0-9]*$", ErrorMessage = "最大分支机构数量只能输入整数")]
         public int MaxNumberOfBranch { get; set; }
 
         /// <summary>

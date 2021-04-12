@@ -37,11 +37,17 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         Task<DepartmentsViewModel> GetModel(string id);
 
         /// <summary>
-        /// 树型列表
+        /// 树型列表 -> 返回 Layui XMSelect 数据结构
         /// </summary>
-        /// <param name="departmentParentId"></param>
+        /// <param name="parentId"></param>
         /// <returns></returns>
-        Task<IEnumerable<DepartmentsTreeViewModel>> GetTreeList(string departmentParentId = "");
+        Task<IEnumerable<DepartmentsXMSelectViewModel>> GetXMSelectTree(string parentId = "");
+
+        /// <summary>
+        /// 树型列表 -> 返回 Layui Tree 数据结构
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<DepartmentsTreeViewModel>> GetTree();
 
         /// <summary>
         /// 添加

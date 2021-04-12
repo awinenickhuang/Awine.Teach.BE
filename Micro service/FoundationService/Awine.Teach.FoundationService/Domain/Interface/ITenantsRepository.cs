@@ -62,9 +62,10 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <param name="user"></param>
         /// <param name="role"></param>
         /// <param name="rolesOwnedModules"></param>
+        /// <param name="tenantSettings"></param>
         /// <param name="order"></param>
         /// <returns></returns>
-        Task<bool> Add(Tenants tenant, Departments department, Users user, Roles role, IList<RolesOwnedModules> rolesOwnedModules, Orders order);
+        Task<bool> Add(Tenants tenant, Departments department, Users user, Roles role, IList<RolesOwnedModules> rolesOwnedModules, TenantSettings tenantSettings, Orders order);
 
         /// <summary>
         /// 更新 -> 基本信息

@@ -166,9 +166,9 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
 
                         //写版本
                         sqlStr.Append(" INSERT INTO Orders ");
-                        sqlStr.Append(" (Id,TenantId,TenantName,NumberOfYears,PayTheAmount,PerformanceOwnerId,PerformanceOwner,PerformanceTenantId,PerformanceTenant,TradeCategories,SaaSVersionId,AppVersionName,IsDeleted,CreateTime) ");
+                        sqlStr.Append(" (Id,TenantId,TenantName,NumberOfYears,PayTheAmount,PerformanceOwnerId,PerformanceOwner,PerformanceTenantId,PerformanceTenant,TradeCategories,SaaSVersionId,SaaSVersionName,IsDeleted,CreateTime) ");
                         sqlStr.Append(" VALUES");
-                        sqlStr.Append(" (@Id,@TenantId,@TenantName,@NumberOfYears,@PayTheAmount,@PerformanceOwnerId,@PerformanceOwner,@PerformanceTenantId,@PerformanceTenant,@TradeCategories,@SaaSVersionId,@AppVersionName,@IsDeleted,@CreateTime) ");
+                        sqlStr.Append(" (@Id,@TenantId,@TenantName,@NumberOfYears,@PayTheAmount,@PerformanceOwnerId,@PerformanceOwner,@PerformanceTenantId,@PerformanceTenant,@TradeCategories,@SaaSVersionId,@SaaSVersionName,@IsDeleted,@CreateTime) ");
                         await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                         transaction.Commit();

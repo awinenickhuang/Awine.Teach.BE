@@ -77,7 +77,7 @@ namespace Awine.Teach.FoundationService.Domain.Models
         /// <summary>
         /// 删除标识
         /// </summary>
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         /// <summary>
         /// 创建时间

@@ -17,14 +17,14 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <param name="saaSVersionId"></param>
         /// <param name="modules"></param>
         /// <returns></returns>
-        Task<bool> SaveAppVersionOwnedModules(string saaSVersionId, IList<SaaSVersionOwnedModule> modules);
+        Task<bool> SaveSaaSVersionOwnedModules(string saaSVersionId, IList<SaaSVersionOwnedModule> modules);
 
         /// <summary>
         /// 查询SaaS版本包括的模块信息
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        Task<IEnumerable<SaaSVersionOwnedModule>> GetAppVersionOwnedModules(string saaSVersionId);
+        Task<IEnumerable<SaaSVersionOwnedModule>> GetSaaSVersionOwnedModules(string saaSVersionId);
 
         /// <summary>
         /// 获取模块集合，以识别模块是否被SaaS版本使用

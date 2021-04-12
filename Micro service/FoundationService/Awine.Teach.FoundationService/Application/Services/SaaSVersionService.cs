@@ -24,6 +24,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         private readonly ISaaSVersionRepository _applicationVersionRepository;
 
         /// <summary>
+        /// SaaS版本定价策略
+        /// </summary>
+        private readonly ISaaSPricingTacticsRepository _saaSPricingTacticsRepository;
+
+        /// <summary>
         /// SaaS版本包括的系统模块
         /// </summary>
         private readonly ISaaSVersionOwnedModuleRepository _applicationVersionOwnedModuleRepository;
@@ -42,14 +47,17 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// 构造
         /// </summary>
         /// <param name="applicationVersionRepository"></param>
+        /// <param name="saaSPricingTacticsRepository"></param>
         /// <param name="applicationVersionOwnedModuleRepository"></param>
         /// <param name="mapper"></param>
         /// <param name="logger"></param>
         public SaaSVersionService(ISaaSVersionRepository applicationVersionRepository,
+            ISaaSPricingTacticsRepository saaSPricingTacticsRepository,
             ISaaSVersionOwnedModuleRepository applicationVersionOwnedModuleRepository,
             IMapper mapper, ILogger<SaaSVersionService> logger)
         {
             _applicationVersionRepository = applicationVersionRepository;
+            _saaSPricingTacticsRepository = saaSPricingTacticsRepository;
             _applicationVersionOwnedModuleRepository = applicationVersionOwnedModuleRepository;
             _mapper = mapper;
             _logger = logger;
@@ -158,14 +166,21 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Delete(string id)
         {
-            var modules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(id);
+            var modules = await _applicationVersionOwnedModuleRepository.GetSaaSVersionOwnedModules(id);
             if (modules.Count() > 0)
             {
-                return new Result { Success = false, Message = "SaaS版本设置了模块信息，不允许删除操作！" };
+                return new Result { Success = false, Message = "SaaS版本设置了模块信息，不允许删除！" };
+            }
+
+            var pricingTactics = await _saaSPricingTacticsRepository.GetAll(id);
+            if (pricingTactics.Count() > 0)
+            {
+                return new Result { Success = false, Message = "SaaS版本设置了定价策略，不允许删除！" };
             }
 
             var result = await _applicationVersionRepository.Delete(id);
-            if (result > 0)
+
+            if (result)
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }

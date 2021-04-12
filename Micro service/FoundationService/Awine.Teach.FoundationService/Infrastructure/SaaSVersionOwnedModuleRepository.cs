@@ -45,7 +45,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <param name="saaSVersionId"></param>
         /// <param name="modules"></param>
         /// <returns></returns>
-        public async Task<bool> SaveAppVersionOwnedModules(string saaSVersionId, IList<SaaSVersionOwnedModule> modules)
+        public async Task<bool> SaveSaaSVersionOwnedModules(string saaSVersionId, IList<SaaSVersionOwnedModule> modules)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
@@ -85,7 +85,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SaaSVersionOwnedModule>> GetAppVersionOwnedModules(string saaSVersionId)
+        public async Task<IEnumerable<SaaSVersionOwnedModule>> GetSaaSVersionOwnedModules(string saaSVersionId)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {

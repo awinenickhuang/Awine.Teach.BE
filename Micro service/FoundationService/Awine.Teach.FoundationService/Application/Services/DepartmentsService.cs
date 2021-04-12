@@ -116,21 +116,21 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
-        /// 树型列表
+        /// 树型列表 -> 返回 Layui XMSelect 数据结构
         /// </summary>
-        /// <param name="departmentParentId"></param>
+        /// <param name="parentId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<DepartmentsTreeViewModel>> GetTreeList(string departmentParentId = "")
+        public async Task<IEnumerable<DepartmentsXMSelectViewModel>> GetXMSelectTree(string parentId = "")
         {
             var entities = await _departmentsRepository.GetAll(_user.TenantId);
-            var result = _mapper.Map<IEnumerable<Departments>, IEnumerable<DepartmentsTreeViewModel>>(entities);
-            List<DepartmentsTreeViewModel> rootNodes = new List<DepartmentsTreeViewModel>();
+            var result = _mapper.Map<IEnumerable<Departments>, IEnumerable<DepartmentsXMSelectViewModel>>(entities);
+            List<DepartmentsXMSelectViewModel> rootNodes = new List<DepartmentsXMSelectViewModel>();
 
-            foreach (DepartmentsTreeViewModel n in result)
+            foreach (DepartmentsXMSelectViewModel n in result)
             {
-                if (!string.IsNullOrEmpty(departmentParentId))
+                if (!string.IsNullOrEmpty(parentId))
                 {
-                    if (n.Id.Equals(departmentParentId))
+                    if (n.Id.Equals(parentId))
                     {
                         n.Selected = true;
                     }
@@ -138,7 +138,29 @@ namespace Awine.Teach.FoundationService.Application.Services
                 if (n.ParentId.Equals(Guid.Empty.ToString()))
                 {
                     rootNodes.Add(n);
-                    BuildChildNodes(n, result, departmentParentId);
+                    BuildXMSelectChildNodes(n, result, parentId);
+                }
+            }
+
+            return rootNodes;
+        }
+
+        /// <summary>
+        /// 树型列表 -> 返回 Layui Tree 数据结构
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<DepartmentsTreeViewModel>> GetTree()
+        {
+            var entities = await _departmentsRepository.GetAll(_user.TenantId);
+            var result = _mapper.Map<IEnumerable<Departments>, IEnumerable<DepartmentsTreeViewModel>>(entities);
+            List<DepartmentsTreeViewModel> rootNodes = new List<DepartmentsTreeViewModel>();
+
+            foreach (DepartmentsTreeViewModel n in result)
+            {
+                if (n.ParentId.Equals(Guid.Empty.ToString()))
+                {
+                    rootNodes.Add(n);
+                    BuildTreeChildNodes(n, result);
                 }
             }
 
@@ -154,22 +176,33 @@ namespace Awine.Teach.FoundationService.Application.Services
         {
             try
             {
-                //租户所有部门
-                var departments = await _departmentsRepository.GetAll(model.TenantId);
-                var tenantSettings = await _tenantSettingsRepository.GetModel(model.TenantId);
-
-                if (departments.Count() >= tenantSettings.MaxNumberOfDepartments)
+                var parent = await _departmentsRepository.GetModel(model.ParentId);
+                if (parent == null)
                 {
-                    return new Result { Success = false, Message = $"您已经有{departments.Count()}个部门了，不能再添加了哦！" };
+                    return new Result { Success = false, Message = "未到到指定的父级部门信息！" };
                 }
 
-                if (departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count() >= tenantSettings.MaxNumberOfBranch)
+                //当前登录租户部门数据
+                var departments = await _departmentsRepository.GetAll(_user.TenantId);
+                var tenantSettings = await _tenantSettingsRepository.GetModel(_user.TenantId);
+
+                if (_user.TenantClassiFication != 3)
                 {
-                    return new Result { Success = false, Message = $"您已经有{departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count()}个分支机构了，不能再添加了哦！" };
+
+                    if (departments.Count() >= tenantSettings.MaxNumberOfDepartments)
+                    {
+                        return new Result { Success = false, Message = $"您已经有{departments.Count()}个部门了，不能再添加了哦！" };
+                    }
+
+                    if (departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count() >= tenantSettings.MaxNumberOfBranch)
+                    {
+                        return new Result { Success = false, Message = $"您已经有{departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count()}个分支机构了，不能再添加了哦！" };
+                    }
                 }
 
                 var entity = _mapper.Map<DepartmentsAddViewModel, Departments>(model);
                 entity.Id = Guid.NewGuid().ToString();
+                entity.TenantId = _user.TenantId;
                 entity.CreateTime = DateTime.Now;
 
                 if (null != await _departmentsRepository.GetModel(entity))
@@ -199,6 +232,22 @@ namespace Awine.Teach.FoundationService.Application.Services
         {
             try
             {
+                if (model.Id.Equals(model.ParentId))
+                {
+                    return new Result { Success = false, Message = "父级部门不能是自己！" };
+                }
+
+                var exist = await _departmentsRepository.GetModel(model.Id);
+                if (null == exist)
+                {
+                    return new Result { Success = false, Message = "未到找部门信息！" };
+                }
+
+                if (exist.ParentId.Equals(Guid.Empty))
+                {
+                    return new Result { Success = false, Message = "当前部门不允许进行修改！" };
+                }
+
                 var entity = _mapper.Map<DepartmentsUpdateViewModel, Departments>(model);
 
                 if (null != await _departmentsRepository.GetModel(entity))
@@ -226,18 +275,28 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Delete(string id)
         {
+            var exist = await _departmentsRepository.GetModel(id);
+            if (null == exist)
+            {
+                return new Result { Success = false, Message = "未找到部门信息！" };
+            }
+            if (exist.ParentId.Equals(Guid.Empty))
+            {
+                return new Result { Success = false, Message = "根部门不允许删除！" };
+            }
+
             var departments = await _departmentsRepository.GetAll(_user.TenantId);
 
             if (departments.Where(x => x.ParentId.Equals(id)).Count() > 0)
             {
-                return new Result { Success = false, Message = "操作失败：该部门下子部门数据！" };
+                return new Result { Success = false, Message = "操作失败：部门有子部门数据！" };
             }
 
             var users = await _usersRepository.GetAllInDepartment(id);
 
             if (users.Count() > 0)
             {
-                return new Result { Success = false, Message = "操作失败：该部门下有员工数据！" };
+                return new Result { Success = false, Message = "操作失败：部门有员工数据！" };
             }
 
             var result = await _departmentsRepository.Delete(id);
@@ -249,7 +308,7 @@ namespace Awine.Teach.FoundationService.Application.Services
             return new Result { Success = false, Message = "操作失败！" };
         }
 
-        #region 树型结构TreeSelect列表
+        #region 树型结构 XMSelect TreeSelect 列表
 
         /// <summary>
         /// 获取父节点下所有的子节点
@@ -257,7 +316,52 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <param name="parentNode"></param>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        private List<DepartmentsTreeViewModel> GetChildNodes(DepartmentsTreeViewModel parentNode, IEnumerable<DepartmentsTreeViewModel> nodes)
+        private List<DepartmentsXMSelectViewModel> GetXMSelectChildNodes(DepartmentsXMSelectViewModel parentNode, IEnumerable<DepartmentsXMSelectViewModel> nodes)
+        {
+            List<DepartmentsXMSelectViewModel> childNodes = new List<DepartmentsXMSelectViewModel>();
+            foreach (DepartmentsXMSelectViewModel n in nodes)
+            {
+                if (parentNode.Id.Equals(n.ParentId))
+                {
+                    childNodes.Add(n);
+                }
+            }
+            return childNodes;
+        }
+
+        /// <summary>
+        /// 递归子节点
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="nodes"></param>
+        /// <param name="parentId"></param>
+        private void BuildXMSelectChildNodes(DepartmentsXMSelectViewModel node, IEnumerable<DepartmentsXMSelectViewModel> nodes, string parentId = "")
+        {
+            List<DepartmentsXMSelectViewModel> children = GetXMSelectChildNodes(node, nodes);
+            foreach (DepartmentsXMSelectViewModel child in children)
+            {
+                if (!string.IsNullOrEmpty(parentId))
+                {
+                    if (child.Id.Equals(parentId))
+                    {
+                        child.Selected = true;
+                    }
+                }
+                BuildXMSelectChildNodes(child, nodes);
+            }
+            node.Children = children;
+        }
+        #endregion
+
+        #region 树型结构 Layui Tree 列表
+
+        /// <summary>
+        /// 获取父节点下所有的子节点
+        /// </summary>
+        /// <param name="parentNode"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        private List<DepartmentsTreeViewModel> GetTreeChildNodes(DepartmentsTreeViewModel parentNode, IEnumerable<DepartmentsTreeViewModel> nodes)
         {
             List<DepartmentsTreeViewModel> childNodes = new List<DepartmentsTreeViewModel>();
             foreach (DepartmentsTreeViewModel n in nodes)
@@ -275,20 +379,12 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="node"></param>
         /// <param name="nodes"></param>
-        /// <param name="departmentParentId"></param>
-        private void BuildChildNodes(DepartmentsTreeViewModel node, IEnumerable<DepartmentsTreeViewModel> nodes, string departmentParentId = "")
+        private void BuildTreeChildNodes(DepartmentsTreeViewModel node, IEnumerable<DepartmentsTreeViewModel> nodes)
         {
-            List<DepartmentsTreeViewModel> children = GetChildNodes(node, nodes);
+            List<DepartmentsTreeViewModel> children = GetTreeChildNodes(node, nodes);
             foreach (DepartmentsTreeViewModel child in children)
             {
-                if (!string.IsNullOrEmpty(departmentParentId))
-                {
-                    if (child.Id.Equals(departmentParentId))
-                    {
-                        child.Selected = true;
-                    }
-                }
-                BuildChildNodes(child, nodes);
+                BuildTreeChildNodes(child, nodes);
             }
             node.Children = children;
         }

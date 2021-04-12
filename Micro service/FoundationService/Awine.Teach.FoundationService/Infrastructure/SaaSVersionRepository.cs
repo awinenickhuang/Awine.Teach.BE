@@ -69,6 +69,8 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     parameters.Add("Identifying", identifying);
                 }
 
+                sqlStr.Append(" ORDER BY DisplayOrder ");
+
                 var list = await connection.QueryAsync<SaaSVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
 
                 return list.ToPagedList(page, limit);
@@ -101,6 +103,8 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                     sqlStr.Append(" AND Identifying = @Identifying ");
                     parameters.Add("Identifying", identifying);
                 }
+
+                sqlStr.Append(" ORDER BY DisplayOrder ");
 
                 return await connection.QueryAsync<SaaSVersion>(sqlStr.ToString(), parameters, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
@@ -170,12 +174,34 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<int> Delete(string id)
+        public async Task<bool> Delete(string id)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
-                string sqlStr = " DELETE FROM SaaSVersions where Id=@Id";
-                return await connection.ExecuteAsync(sqlStr, new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+                connection.Open();
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        StringBuilder sqlStr = new StringBuilder();
+
+                        sqlStr.Append(" DELETE FROM SaaSVersions where Id=@Id ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        sqlStr.Clear();
+                        sqlStr.Append(" DELETE FROM TenantsDefaultSettings where SaaSVersionId=@SaaSVersionId ");
+                        await connection.ExecuteAsync(sqlStr.ToString(), new { SaaSVersionId = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"删除SaaS版本时发生异常-{ex.Message}");
+                        transaction.Rollback();
+                        return false;
+                    }
+                }
             }
         }
 
@@ -206,11 +232,11 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 if (!string.IsNullOrEmpty(model.Id))
                 {
-                    sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Id!=@Id AND (Name=@Name OR Identifying=@Identifying) ");
+                    sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Name=@Name AND Id!=@Id ");
                 }
                 else
                 {
-                    sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Name=@Name OR Identifying=@Identifying ");
+                    sqlStr.Append(" SELECT * FROM SaaSVersions WHERE Name=@Name ");
                 }
                 return await connection.QueryFirstOrDefaultAsync<SaaSVersion>(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }

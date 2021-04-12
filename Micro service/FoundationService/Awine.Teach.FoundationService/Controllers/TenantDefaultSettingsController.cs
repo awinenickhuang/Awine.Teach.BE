@@ -70,10 +70,10 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("singleappversion")]
-        public async Task<IActionResult> GetModelForAppVersion(string saaSVersionId)
+        [Route("singlesaasversion")]
+        public async Task<IActionResult> GetModelForSaaSVersion(string saaSVersionId)
         {
-            return Response(success: true, data: await _tenantDefaultSettingsService.GetModelForAppVersion(saaSVersionId));
+            return Response(success: true, data: await _tenantDefaultSettingsService.GetModelForSaaSVersion(saaSVersionId));
         }
 
         /// <summary>

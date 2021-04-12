@@ -164,7 +164,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {
                 StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" UPDATE Departments SET ParentId=@ParentId,`Name`=@Name,`Describe`=@Describe,DisplayOrder=@DisplayOrder,TenantId=@TenantId WHERE Id=@Id ");
+                sqlStr.Append(" UPDATE Departments SET ParentId=@ParentId,`Name`=@Name,`Describe`=@Describe,DisplayOrder=@DisplayOrder WHERE Id=@Id ");
                 return await connection.ExecuteAsync(sqlStr.ToString(), model, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }

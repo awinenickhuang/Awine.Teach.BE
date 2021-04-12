@@ -34,9 +34,9 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("savesaasversionownedmodules")]
-        public async Task<IActionResult> SaveAppVersionOwnedModules([FromForm] SaaSVersionOwnedModuleAddViewModel model)
+        public async Task<IActionResult> SaveSaaSVersionOwnedModules([FromForm] SaaSVersionOwnedModuleAddViewModel model)
         {
-            var result = await _saaSVersionOwnedModuleService.SaveAppVersionOwnedModules(model);
+            var result = await _saaSVersionOwnedModuleService.SaveSaaSVersionOwnedModules(model);
             if (result.Success)
             {
                 return Response(success: true, message: result.Message);
@@ -50,10 +50,10 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <param name="saaSVersionId">SaaS版本ID</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("getsaasversionownedmodules")]
-        public async Task<IActionResult> GetRoleOwnedModules(string saaSVersionId)
+        [Route("loadsaasversionownedmodules")]
+        public async Task<IActionResult> GetSaaSVersionOwnedModules(string saaSVersionId)
         {
-            var result = await _saaSVersionOwnedModuleService.GetAppVersionOwnedModules(saaSVersionId);
+            var result = await _saaSVersionOwnedModuleService.GetSaaSVersionOwnedModules(saaSVersionId);
             return Response(data: result);
         }
     }

@@ -39,7 +39,7 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        Task<TenantDefaultSettingsViewModel> GetModelForAppVersion(string saaSVersionId);
+        Task<TenantDefaultSettingsViewModel> GetModelForSaaSVersion(string saaSVersionId);
 
         /// <summary>
         /// 添加

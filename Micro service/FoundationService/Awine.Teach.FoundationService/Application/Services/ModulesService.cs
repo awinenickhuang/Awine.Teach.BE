@@ -192,7 +192,7 @@ namespace Awine.Teach.FoundationService.Application.Services
             var modulesWithCheckedStatusViewModels = _mapper.Map<IEnumerable<Modules>, IEnumerable<ModulesWithCheckedStatusViewModel>>(entities);
 
             //当前SaaS版本包括的模块信息
-            var appVersionOwnedModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(saaSVersionId);
+            var appVersionOwnedModules = await _applicationVersionOwnedModuleRepository.GetSaaSVersionOwnedModules(saaSVersionId);
             foreach (var item in modulesWithCheckedStatusViewModels)
             {
                 if (appVersionOwnedModules.Where(x => x.ModuleId.Equals(item.Id)).Count() > 0)
@@ -301,6 +301,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Update(ModulesUpdateViewModel model)
         {
+            if (model.Id.Equals(model.ParentId))
+            {
+                return new Result { Success = false, Message = "父级模块不能是自己" };
+            }
+
             var entity = _mapper.Map<ModulesUpdateViewModel, Modules>(model);
 
             var existing = await _modulesRepository.GetModel(entity);

@@ -109,7 +109,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<TenantDefaultSettings> GetModelForAppVersion(string saaSVersionId)
+        public async Task<TenantDefaultSettings> GetModelForSaaSVersion(string saaSVersionId)
         {
             using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
             {

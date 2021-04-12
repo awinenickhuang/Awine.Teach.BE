@@ -216,6 +216,13 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Add(TenantsAddViewModel model)
         {
+            if (model.ClassiFication > 1)
+            {
+                if (_user.TenantClassiFication != 3)
+                {
+                    return new Result { Success = false, Message = "账号未设置开通代理商权限！" };
+                }
+            }
             var existUser = await _usersRepository.GetModel(account: model.ContactsPhone, phoneNumber: model.ContactsPhone);
 
             if (null != existUser)
@@ -250,6 +257,13 @@ namespace Awine.Teach.FoundationService.Application.Services
                 return new Result { Success = false, Message = "未找到购买版本定价策略信息！" };
             }
 
+            //版本对应的参数
+            var tenantDefaultSettings = await _tenantDefaultSettingsRepository.GetModelForSaaSVersion(version.Id);
+            if (null == tenantDefaultSettings)
+            {
+                return new Result { Success = false, Message = "未找到购买版本的设置信息！" };
+            }
+
             //租户信息
             var tenant = _mapper.Map<TenantsAddViewModel, Tenants>(model);
 
@@ -258,6 +272,10 @@ namespace Awine.Teach.FoundationService.Application.Services
             tenant.SaaSVersionName = version.Name;
             tenant.Status = 1;
             tenant.VIPExpirationTime = DateTime.Now.AddYears(pricingTactics.NumberOfYears);//过期时间为当前时间加购买年数
+            tenant.CreatorId = _user.UserId;
+            tenant.Creator = _user.UserName;
+            tenant.CreatorTenantId = _user.TenantId;
+            tenant.CreatorTenantName = _user.TenantName;
 
             var province = await _administrativeDivisionsRepository.GetModelByCode(tenant.ProvinceId);
             if (null == province)
@@ -295,7 +313,7 @@ namespace Awine.Teach.FoundationService.Application.Services
 
             //赋予租户管理员角色操作权限（模块权限）
             IList<Domain.Models.RolesOwnedModules> rolesOwnedModules = new List<Domain.Models.RolesOwnedModules>();
-            var versionModules = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(version.Id);
+            var versionModules = await _applicationVersionOwnedModuleRepository.GetSaaSVersionOwnedModules(version.Id);
             if (versionModules.Count() <= 0)
             {
                 return new Result { Success = false, Message = "开通失败，未找到版本设置信息！" };
@@ -349,6 +367,23 @@ namespace Awine.Teach.FoundationService.Application.Services
                 DepartmentId = departments.Id
             };
 
+            //机构设置
+            var tenantSettings = new TenantSettings()
+            {
+                MaxNumberOfBranch = tenantDefaultSettings.MaxNumberOfBranch,
+                MaxNumberOfDepartments = tenantDefaultSettings.MaxNumberOfDepartments,
+                MaxNumberOfRoles = tenantDefaultSettings.MaxNumberOfRoles,
+                MaxNumberOfUser = tenantDefaultSettings.MaxNumberOfUser,
+                MaxNumberOfCourse = tenantDefaultSettings.MaxNumberOfCourse,
+                MaxNumberOfClass = tenantDefaultSettings.MaxNumberOfClass,
+                MaxNumberOfClassRoom = tenantDefaultSettings.MaxNumberOfClassRoom,
+                MaxNumberOfStudent = tenantDefaultSettings.MaxNumberOfStudent,
+                MaxStorageSpace = tenantDefaultSettings.MaxStorageSpace,
+                AvailableStorageSpace = tenantDefaultSettings.MaxStorageSpace,
+                UsedStorageSpace = 0,
+                TenantId = tenant.Id
+            };
+
             //创建订单
             Orders order = new Orders()
             {
@@ -376,7 +411,7 @@ namespace Awine.Teach.FoundationService.Application.Services
                 order.PerformanceOwner = performanceOwner.UserName;
             }
 
-            if (await _tenantsRepository.Add(tenant, departments, user, role, rolesOwnedModules, order))
+            if (await _tenantsRepository.Add(tenant, departments, user, role, rolesOwnedModules, tenantSettings, order))
             {
                 return new Result { Success = true, Message = "操作成功！" };
             }

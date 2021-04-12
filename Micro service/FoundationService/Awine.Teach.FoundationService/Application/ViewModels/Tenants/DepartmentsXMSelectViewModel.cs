@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Application.ViewModels
 {
     /// <summary>
-    /// 部部树型数据模型 -> 适用于 Layui Tree 数据结构
+    /// 适用于 Layui XMSelect 数据结构
     /// </summary>
-    public class DepartmentsTreeViewModel
+    public class DepartmentsXMSelectViewModel
     {
         /// <summary>
         /// 主键标识
@@ -23,7 +23,17 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// <summary>
         /// 名称
         /// </summary>
-        public string Title { get; set; }
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 描述
+        /// </summary>
+        public string Describe { get; set; }
+
+        /// <summary>
+        /// 显示顺序
+        /// </summary>
+        public int DisplayOrder { get; set; }
 
         /// <summary>
         /// 租户ID
@@ -31,13 +41,18 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string TenantId { get; set; }
 
         /// <summary>
-        /// 节点是否初始展开，默认 false
+        /// 创建时间
         /// </summary>
-        public bool Spread { get; set; } = true;
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 是否选中 -> XMSelect
+        /// </summary>
+        public bool Selected { get; set; } = false;
 
         /// <summary>
         /// 叶子节点
         /// </summary>
-        public IList<DepartmentsTreeViewModel> Children { get; set; }
+        public IList<DepartmentsXMSelectViewModel> Children { get; set; }
     }
 }

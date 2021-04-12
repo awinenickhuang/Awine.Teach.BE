@@ -47,6 +47,8 @@ namespace Awine.Teach.FoundationService.Application.AutoMappr
             CreateMap<DepartmentsUpdateViewModel, Departments>();
             CreateMap<DepartmentsViewModel, Departments>();
             CreateMap<Departments, DepartmentsViewModel>();
+            CreateMap<Departments, DepartmentsTreeViewModel>().ForMember(dest => dest.Title, options => options.MapFrom(src => src.Name));
+            CreateMap<Departments, DepartmentsXMSelectViewModel>();
             CreateMap<IPagedList<Departments>, IPagedList<DepartmentsViewModel>>().ConvertUsing<PagedListConverter<Departments, DepartmentsViewModel>>();
 
             //模块信息

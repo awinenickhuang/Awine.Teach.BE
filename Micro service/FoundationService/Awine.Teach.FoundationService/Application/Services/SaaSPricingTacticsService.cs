@@ -120,6 +120,11 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Delete(string id)
         {
+            var result = await _saaSPricingTacticsRepository.Delete(id);
+            if (result > 0)
+            {
+                return new Result { Success = true, Message = "操作成功！" };
+            }
             return new Result { Success = false, Message = "操作失败！" };
         }
 

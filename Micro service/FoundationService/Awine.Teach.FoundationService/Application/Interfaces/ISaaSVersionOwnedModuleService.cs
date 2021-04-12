@@ -17,13 +17,13 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        Task<Result> SaveAppVersionOwnedModules(SaaSVersionOwnedModuleAddViewModel module);
+        Task<Result> SaveSaaSVersionOwnedModules(SaaSVersionOwnedModuleAddViewModel module);
 
         /// <summary>
         /// 查询SaaS版本包括的模块信息
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        Task<IEnumerable<SaaSVersionOwnedModuleViewModel>> GetAppVersionOwnedModules(string saaSVersionId);
+        Task<IEnumerable<SaaSVersionOwnedModuleViewModel>> GetSaaSVersionOwnedModules(string saaSVersionId);
     }
 }

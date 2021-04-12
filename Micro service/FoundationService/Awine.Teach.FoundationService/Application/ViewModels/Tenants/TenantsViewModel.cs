@@ -43,7 +43,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         /// <summary>
         /// 版本名称
         /// </summary>
-        public string AppVersionName { get; set; }
+        public string SaaSVersionName { get; set; }
 
         /// <summary>
         /// 租户状态 1-正常 2-锁定（异常）3-锁定（过期）

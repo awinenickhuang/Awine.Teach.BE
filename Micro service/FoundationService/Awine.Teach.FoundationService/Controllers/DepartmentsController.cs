@@ -57,14 +57,34 @@ namespace Awine.Teach.FoundationService.Controllers
         }
 
         /// <summary>
-        /// 树型列表
+        /// 树型列表 -> 返回 Layui XMSelect 数据结构
         /// </summary>
-        /// <param name="departmentParentId"></param>
+        /// <param name="parentId"></param>
         /// <returns></returns>
-        [HttpGet("treelist")]
-        public async Task<IActionResult> GetTreeList(string departmentParentId = "")
+        [HttpGet("xmselecttree")]
+        public async Task<IActionResult> GetXMSelectTreeList(string parentId = "")
         {
-            return Response(success: true, data: await _departmentsService.GetTreeList(departmentParentId));
+            return Response(success: true, data: await _departmentsService.GetXMSelectTree(parentId));
+        }
+
+        /// <summary>
+        /// 树型列表 -> 返回 Layui Tree 数据结构
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("tree")]
+        public async Task<IActionResult> GetTree()
+        {
+            return Response(success: true, data: await _departmentsService.GetTree());
+        }
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("single")]
+        public async Task<IActionResult> GetModel(string id)
+        {
+            return Response(success: true, data: await _departmentsService.GetModel(id));
         }
 
         /// <summary>

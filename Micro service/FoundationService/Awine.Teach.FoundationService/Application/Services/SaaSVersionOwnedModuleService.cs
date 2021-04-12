@@ -50,7 +50,7 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="module"></param>
         /// <returns></returns>
-        public async Task<Result> SaveAppVersionOwnedModules(SaaSVersionOwnedModuleAddViewModel module)
+        public async Task<Result> SaveSaaSVersionOwnedModules(SaaSVersionOwnedModuleAddViewModel module)
         {
             IList<SaaSVersionOwnedModule> modules = new List<SaaSVersionOwnedModule>();
             foreach (var model in module.SaaSVersionOwnedModules)
@@ -65,7 +65,7 @@ namespace Awine.Teach.FoundationService.Application.Services
                 };
                 modules.Add(addModule);
             }
-            var result = await _applicationVersionOwnedModuleRepository.SaveAppVersionOwnedModules(module.SaaSVersionId, modules);
+            var result = await _applicationVersionOwnedModuleRepository.SaveSaaSVersionOwnedModules(module.SaaSVersionId, modules);
             if (result)
             {
                 return new Result() { Success = true, Message = "操作成功" };
@@ -78,9 +78,9 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="saaSVersionId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<SaaSVersionOwnedModuleViewModel>> GetAppVersionOwnedModules(string saaSVersionId)
+        public async Task<IEnumerable<SaaSVersionOwnedModuleViewModel>> GetSaaSVersionOwnedModules(string saaSVersionId)
         {
-            var list = await _applicationVersionOwnedModuleRepository.GetAppVersionOwnedModules(saaSVersionId);
+            var list = await _applicationVersionOwnedModuleRepository.GetSaaSVersionOwnedModules(saaSVersionId);
             return _mapper.Map<IEnumerable<SaaSVersionOwnedModule>, IEnumerable<SaaSVersionOwnedModuleViewModel>>(list);
         }
     }
