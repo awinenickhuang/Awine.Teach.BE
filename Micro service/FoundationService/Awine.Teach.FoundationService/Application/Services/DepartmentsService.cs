@@ -184,7 +184,7 @@ namespace Awine.Teach.FoundationService.Application.Services
 
                 //当前登录租户部门数据
                 var departments = await _departmentsRepository.GetAll(_user.TenantId);
-                var tenantSettings = await _tenantSettingsRepository.GetModel(_user.TenantId);
+                var tenantSettings = await _tenantSettingsRepository.GetModelForTenant(_user.TenantId);
 
                 if (_user.TenantClassiFication != 3)
                 {
@@ -194,10 +194,10 @@ namespace Awine.Teach.FoundationService.Application.Services
                         return new Result { Success = false, Message = $"您已经有{departments.Count()}个部门了，不能再添加了哦！" };
                     }
 
-                    if (departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count() >= tenantSettings.MaxNumberOfBranch)
-                    {
-                        return new Result { Success = false, Message = $"您已经有{departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count()}个分支机构了，不能再添加了哦！" };
-                    }
+                    //if (departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count() >= tenantSettings.MaxNumberOfBranch)
+                    //{
+                    //    return new Result { Success = false, Message = $"您已经有{departments.Where(x => x.ParentId.Equals(Guid.Empty)).Count()}个分支机构了，不能再添加了哦！" };
+                    //}
                 }
 
                 var entity = _mapper.Map<DepartmentsAddViewModel, Departments>(model);

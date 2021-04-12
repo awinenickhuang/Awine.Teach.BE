@@ -74,7 +74,7 @@ namespace Awine.Teach.FoundationService.Controllers
         /// <returns></returns>
         [HttpGet("single")]
         //[AuthorizeCode("TenantGetModel")]
-        public async Task<IActionResult> GetModel(string id)
+        public async Task<IActionResult> GetModel(string id = "")
         {
             return Response(success: true, data: await _tenantsService.GetModel(id));
         }

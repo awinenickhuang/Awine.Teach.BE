@@ -123,7 +123,7 @@ namespace Awine.Teach.FoundationService.Application.Services
             entity.NormalizedName = entity.Name.ToLower();
             entity.ConcurrencyStamp = Guid.NewGuid().ToString();
             entity.Identifying = 9;//只有在租户入驻或创建机构时才创建超管角色
-
+            entity.TenantId = _user.TenantId;
             if (string.IsNullOrEmpty(entity.TenantId))
             {
                 entity.TenantId = _user.TenantId;
@@ -219,7 +219,6 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// <returns></returns>
         public async Task<Result> Update(RolesUpdateViewModel model)
         {
-
             var entity = _mapper.Map<RolesUpdateViewModel, Roles>(model);
 
             if (null != await _rolesRepository.GetModel(entity))

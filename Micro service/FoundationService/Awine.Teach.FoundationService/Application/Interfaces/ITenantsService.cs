@@ -44,7 +44,7 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<TenantsViewModel> GetModel(string id);
+        Task<TenantsViewModel> GetModel(string id = "");
 
         /// <summary>
         /// 租户开通

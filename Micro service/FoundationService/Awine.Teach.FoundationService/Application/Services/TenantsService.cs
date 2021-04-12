@@ -203,8 +203,12 @@ namespace Awine.Teach.FoundationService.Application.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<TenantsViewModel> GetModel(string id)
+        public async Task<TenantsViewModel> GetModel(string id = "")
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                id = _user.TenantId;
+            }
             var entity = await _tenantsRepository.GetModel(id);
             return _mapper.Map<Tenants, TenantsViewModel>(entity);
         }

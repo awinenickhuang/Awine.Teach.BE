@@ -125,7 +125,7 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
             {
                 StringBuilder sqlStr = new StringBuilder();
 
-                sqlStr.Append(" SELECT * FROM Roles WHERE Name=@Name AND TenantId=@TenantId ");
+                sqlStr.Append(" SELECT * FROM Roles WHERE Name=@Name AND TenantId=@TenantId AND IsDeleted=0 ");
                 if (!string.IsNullOrEmpty(model.Id))
                 {
                     sqlStr.Append(" AND Id!=@Id ");

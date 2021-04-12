@@ -119,6 +119,7 @@ namespace Awine.Teach.FoundationService.Application.Services
         public async Task<Result> Add(UsersAddViewModel model)
         {
             var entity = _mapper.Map<UsersAddViewModel, Users>(model);
+            entity.TenantId = _user.TenantId;
 
             var globalModel = await _usersRepository.GetGlobalModel(entity);
 

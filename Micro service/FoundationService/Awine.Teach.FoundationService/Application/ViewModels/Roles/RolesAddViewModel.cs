@@ -11,13 +11,6 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
     public class RolesAddViewModel
     {
         /// <summary>
-        /// 租户标识
-        /// </summary>
-        [Required(AllowEmptyStrings = false, ErrorMessage = "租户标识必填")]
-        [RegularExpression(@"^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$", ErrorMessage = "租户标识不正确")]
-        public string TenantId { get; set; }
-
-        /// <summary>
         /// 角色名称
         /// </summary>
         [Required]
