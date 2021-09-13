@@ -140,11 +140,11 @@ namespace Awine.Teach.FoundationService.Application.Services
 
             if (string.IsNullOrEmpty(creatorTenantId))
             {
-                if (_user.TenantClassiFication == 3)
+                if (_user.TenantClassiFication == 9)
                 {
                     creatorTenantId = "";                  //运营商查询所有
                 }
-                else if (_user.TenantClassiFication == 2)
+                else if (_user.TenantClassiFication == 8)
                 {
                     creatorTenantId = _user.TenantId;      //代理商只能查询自己的机构
                 }

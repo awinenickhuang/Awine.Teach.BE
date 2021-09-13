@@ -59,6 +59,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awine.Framework.Swagger", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Awine.IdpCenter", "Micro service\IdentificationService\Awine.IdpCenter\Awine.IdpCenter.csproj", "{740310B8-563E-4FEA-91B7-D44224D4FE6D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Management", "Management", "{D47F956B-2497-489C-B0AB-6B688C59C10E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Awine.Teach.Management.TenantService", "Management\Awine.Teach.Management.TenantService\Awine.Teach.Management.TenantService.csproj", "{0C76C35A-6887-4252-86CE-25B78A14FFCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +137,10 @@ Global
 		{740310B8-563E-4FEA-91B7-D44224D4FE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{740310B8-563E-4FEA-91B7-D44224D4FE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{740310B8-563E-4FEA-91B7-D44224D4FE6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C76C35A-6887-4252-86CE-25B78A14FFCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C76C35A-6887-4252-86CE-25B78A14FFCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C76C35A-6887-4252-86CE-25B78A14FFCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C76C35A-6887-4252-86CE-25B78A14FFCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -161,6 +169,7 @@ Global
 		{78B2B53D-EF8F-4BD4-AA0D-233286A612E6} = {3562014C-6421-42BE-B925-2E5AF393E979}
 		{ACCE3BF2-AECC-456E-9E4A-225061F49D09} = {80B76C5D-B98F-4BAB-8BA2-89E9A0895EF7}
 		{740310B8-563E-4FEA-91B7-D44224D4FE6D} = {67732969-C883-42E4-9D40-0551D04F410D}
+		{0C76C35A-6887-4252-86CE-25B78A14FFCC} = {D47F956B-2497-489C-B0AB-6B688C59C10E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E713A0A-A2D4-4D7E-AF72-0B42FCA07FAC}

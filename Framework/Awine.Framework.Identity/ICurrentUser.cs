@@ -36,7 +36,7 @@ namespace Awine.Framework.Identity
         string TenantName { get; }
 
         /// <summary>
-        /// TenantClassification
+        /// 租户类型 1-免费 2-试用 3-付费（VIP）8-代理商 9-平台运营
         /// </summary>
         int TenantClassiFication { get; }
 

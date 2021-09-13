@@ -31,16 +31,16 @@ namespace Awine.Teach.FoundationService.Domain.Interface
         /// <summary>
         /// 取一条数据
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="tenantId"></param>
         /// <returns></returns>
-        Task<TenantSettings> GetModel(string id);
+        Task<TenantSettings> GetTenantSettings(string tenantId);
 
         /// <summary>
         /// 取一条数据
         /// </summary>
-        /// <param name="tenantId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        Task<TenantSettings> GetModelForTenant(string tenantId);
+        Task<TenantSettings> GetModel(string id);
 
         /// <summary>
         /// 取一条数据

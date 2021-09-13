@@ -28,6 +28,12 @@ namespace Awine.Teach.FoundationService.Application.Interfaces
         Task<IEnumerable<TenantSettingsViewModel>> GetAll();
 
         /// <summary>
+        /// 取当前登录机构的设置信息
+        /// </summary>
+        /// <returns></returns>
+        Task<TenantSettingsViewModel> GetTenantSettings();
+
+        /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="id"></param>

@@ -70,11 +70,11 @@ namespace Awine.IdpCenter
 
             services.AddIdentityServer(options =>
             {
-                options.IssuerUri = "https://uiac.cdzssy.cn";
+                /*options.IssuerUri = "https://uiac.cdzssy.cn";
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
+                options.Events.RaiseSuccessEvents = true;*/
                 // 获取或设置用户交互的选项
                 //options.UserInteraction = new IdentityServer4.Configuration.UserInteractionOptions()
                 //{

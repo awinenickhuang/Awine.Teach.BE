@@ -15,7 +15,7 @@ namespace Awine.IdpCenter.Entities
         public string Id { get; set; }
 
         /// <summary>
-        /// 名称
+        /// 租户名称
         /// </summary>
         public string Name { get; set; }
 
@@ -30,9 +30,9 @@ namespace Awine.IdpCenter.Entities
         public string ContactsPhone { get; set; }
 
         /// <summary>
-        /// 租户类型 1-机构 2-代理商 3-运营商
+        /// 租户类型 1-免费 2-试用 3-付费（VIP）8-代理商 9-平台运营
         /// </summary>
-        public int ClassiFication { get; set; }
+        public int ClassiFication { get; set; } = 1;
 
         /// <summary>
         /// 版本标识
@@ -40,12 +40,17 @@ namespace Awine.IdpCenter.Entities
         public string SaaSVersionId { get; set; }
 
         /// <summary>
-        /// 租户状态 1-正常 2-锁定（异常）3-锁定（过期）
+        /// 版本名称
         /// </summary>
-        public int Status { get; set; }
+        public string SaaSVersionName { get; set; }
 
         /// <summary>
-        /// 省ID
+        /// 租户状态 1-正常 2-锁定（异常）3-锁定（过期）
+        /// </summary>
+        public int Status { get; set; } = 1;
+
+        /// <summary>
+        /// 省标识
         /// </summary>
         public string ProvinceId { get; set; }
 
@@ -55,7 +60,7 @@ namespace Awine.IdpCenter.Entities
         public string ProvinceName { get; set; }
 
         /// <summary>
-        /// 市ID
+        /// 市标识
         /// </summary>
         public string CityId { get; set; }
 
@@ -65,7 +70,7 @@ namespace Awine.IdpCenter.Entities
         public string CityName { get; set; }
 
         /// <summary>
-        /// 区ID
+        /// 区标识
         /// </summary>
         public string DistrictId { get; set; }
 
@@ -75,7 +80,7 @@ namespace Awine.IdpCenter.Entities
         public string DistrictName { get; set; }
 
         /// <summary>
-        /// 地址
+        /// 详细地址
         /// </summary>
         public string Address { get; set; }
 
@@ -100,7 +105,7 @@ namespace Awine.IdpCenter.Entities
         public string CreatorId { get; set; }
 
         /// <summary>
-        /// 创建人
+        /// 创建人姓名
         /// </summary>
         public string Creator { get; set; }
 
@@ -108,6 +113,11 @@ namespace Awine.IdpCenter.Entities
         /// 创建人租户标识
         /// </summary>
         public string CreatorTenantId { get; set; }
+
+        /// <summary>
+        /// 创建人租户名称
+        /// </summary>
+        public string CreatorTenantName { get; set; }
 
         /// <summary>
         /// 删除标识

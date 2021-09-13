@@ -53,6 +53,17 @@ namespace Awine.Teach.FoundationService.Controllers
         }
 
         /// <summary>
+        /// 取当前登录机构的设置信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("tenantsettings")]
+        public async Task<IActionResult> GetTenantSettings()
+        {
+            return Response(success: true, data: await _tenantSettingsService.GetTenantSettings());
+        }
+
+        /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="id"></param>

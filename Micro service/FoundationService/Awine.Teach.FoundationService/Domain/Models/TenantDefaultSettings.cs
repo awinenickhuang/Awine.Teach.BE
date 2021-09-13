@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Awine.Teach.FoundationService.Domain.Models
 {
     /// <summary>
-    /// 机构信息设置 不同的SaaS版本对应不同的配置
+    /// 机构默认设置 不同的SaaS版本对应不同的默认配置
     /// </summary>
     public class TenantDefaultSettings
     {

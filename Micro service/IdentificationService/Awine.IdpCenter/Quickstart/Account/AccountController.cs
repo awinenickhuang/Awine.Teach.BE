@@ -186,7 +186,8 @@ namespace IdentityServerHost.Quickstart.UI
                     var v2 = await BuildLoginViewModelAsync(model);
                     return View(v2);
                 }
-                if (aspnetUser.Tenant.ClassiFication == 1 && DateTime.Now > aspnetUser.Tenant.VIPExpirationTime)
+
+                if (DateTime.Now > aspnetUser.Tenant.VIPExpirationTime)
                 {
                     await _events.RaiseAsync(new UserLoginFailureEvent(model.Account, AccountOptions.AccountTenantStateAnomalyErrorMessage, clientId: context?.Client.ClientId));
                     ModelState.AddModelError(string.Empty, $"机构的使用权益已过期，过期时间：{aspnetUser.Tenant.VIPExpirationTime.ToString("yyyy-MM-dd")}，请联系运营商或续费。");
@@ -197,7 +198,7 @@ namespace IdentityServerHost.Quickstart.UI
 
                 await _events.RaiseAsync(new UserLoginSuccessEvent(aspnetUser.Account, aspnetUser.Id, aspnetUser.UserName, clientId: context?.Client.ClientId));
 
-                // 只有在用户选择“记住我”时才显式设置过期。否则，我们依赖于cookie中间件中配置的过期。
+                // 只有在用户选择 (记住我) 时才显式设置过期。否则，我们依赖于 cookie 中间件中配置的过期。
                 AuthenticationProperties props = null;
                 if (AccountOptions.AllowRememberLogin && model.RememberLogin)
                 {

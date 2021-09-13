@@ -37,7 +37,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string ContactsPhone { get; set; }
 
         /// <summary>
-        /// 租户类型 1-机构 2-代理商 3-运营商
+        /// 租户类型 1-免费 2-试用 3-付费（VIP）8-代理商 9-平台运营
         /// </summary>
         [Required(ErrorMessage = "租户类型必填")]
         [RegularExpression(@"^\+?[1-9][0-9]*$", ErrorMessage = "租户类型只能输入正整数")]

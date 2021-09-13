@@ -31,7 +31,7 @@ namespace Awine.Teach.FoundationService.Application.ViewModels
         public string ContactsPhone { get; set; }
 
         /// <summary>
-        /// 租户类型 1-机构 2-代理商 3-运营商
+        /// 租户类型 1-免费 2-试用 3-付费（VIP）8-代理商 9-平台运营
         /// </summary>
         public int ClassiFication { get; set; } = 1;
 

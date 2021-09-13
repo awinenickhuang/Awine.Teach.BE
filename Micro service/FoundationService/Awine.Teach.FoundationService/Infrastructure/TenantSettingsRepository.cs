@@ -99,6 +99,21 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
         /// <summary>
         /// 取一条数据
         /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        public async Task<TenantSettings> GetTenantSettings(string tenantId)
+        {
+            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
+            {
+                StringBuilder sqlStr = new StringBuilder();
+                sqlStr.Append(" SELECT * FROM TenantSettings WHERE TenantId=@TenantId ");
+                return await connection.QueryFirstOrDefaultAsync<TenantSettings>(sqlStr.ToString(), new { TenantId = tenantId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
+        /// 取一条数据
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public async Task<TenantSettings> GetModel(string id)
@@ -108,21 +123,6 @@ namespace Awine.Teach.FoundationService.Infrastructure.Repository
                 StringBuilder sqlStr = new StringBuilder();
                 sqlStr.Append(" SELECT * FROM TenantSettings WHERE Id=@Id ");
                 return await connection.QueryFirstOrDefaultAsync<TenantSettings>(sqlStr.ToString(), new { Id = id }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
-            }
-        }
-
-        /// <summary>
-        /// 取一条数据
-        /// </summary>
-        /// <param name="tenantId"></param>
-        /// <returns></returns>
-        public async Task<TenantSettings> GetModelForTenant(string tenantId)
-        {
-            using (var connection = new MySqlConnection(_mySQLProviderOptions.ConnectionString))
-            {
-                StringBuilder sqlStr = new StringBuilder();
-                sqlStr.Append(" SELECT * FROM TenantSettings WHERE TenantId=@TenantId ");
-                return await connection.QueryFirstOrDefaultAsync<TenantSettings>(sqlStr.ToString(), new { TenantId = tenantId }, commandTimeout: _mySQLProviderOptions.CommandTimeOut, commandType: CommandType.Text);
             }
         }
 

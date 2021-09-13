@@ -80,6 +80,17 @@ namespace Awine.Teach.FoundationService.Application.Services
         }
 
         /// <summary>
+        /// 取当前登录机构的设置信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<TenantSettingsViewModel> GetTenantSettings()
+        {
+            var entity = await _tenantSettingsRepository.GetTenantSettings(_user.TenantId);
+
+            return _mapper.Map<TenantSettings, TenantSettingsViewModel>(entity);
+        }
+
+        /// <summary>
         /// 取一条数据
         /// </summary>
         /// <param name="id"></param>

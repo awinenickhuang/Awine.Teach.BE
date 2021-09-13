@@ -43,7 +43,7 @@ namespace IdentityServerHost.Quickstart.UI
         public static string AccountWithoutTenantErrorMessage = "账号无机构信息";
 
         /// <summary>
-        /// 账号被禁用
+        /// 机构状态异常
         /// </summary>
         public static string AccountTenantStateAnomalyErrorMessage = "机构状态异常";
     }
