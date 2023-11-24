@@ -1,5 +1,6 @@
 # Awint.Teach.RD
 Awine education platform back-end research and development source
+基于 .NetCore微服务 的教培行业SaaS管理平台，涵盖教培行业信息化管理的大部分功能。前端代码也一并开放。最近在做其他项目，未及时更新，未来计划优化部分功能并升级到.Net8。
 
 #### 一、支撑系统
 + 统一身份认证
