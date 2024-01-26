@@ -4,6 +4,7 @@ Awine education platform back-end research and development source
 
 #### 一、支撑系统
 + 统一身份认证
+  + 基于IDS4、OIDC实现，自带UI，独立部署；登成功后及未授权转跳等；
   + 端口：5000
 + API网关 
   + 端口：6000
